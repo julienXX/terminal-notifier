@@ -1,0 +1,300 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5199791915B1F92B003AFC57 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5199791815B1F92B003AFC57 /* Cocoa.framework */; };
+		5199792315B1F92B003AFC57 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5199792115B1F92B003AFC57 /* InfoPlist.strings */; };
+		5199792515B1F92B003AFC57 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5199792415B1F92B003AFC57 /* main.m */; };
+		5199792915B1F92B003AFC57 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 5199792715B1F92B003AFC57 /* Credits.rtf */; };
+		5199792C15B1F92B003AFC57 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5199792B15B1F92B003AFC57 /* AppDelegate.m */; };
+		5199792F15B1F92B003AFC57 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5199792D15B1F92B003AFC57 /* MainMenu.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5199791415B1F92B003AFC57 /* Terminal Notifier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Terminal Notifier.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5199791815B1F92B003AFC57 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		5199791B15B1F92B003AFC57 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		5199791C15B1F92B003AFC57 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		5199791D15B1F92B003AFC57 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5199792015B1F92B003AFC57 /* Terminal Notifier-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Terminal Notifier-Info.plist"; sourceTree = "<group>"; };
+		5199792215B1F92B003AFC57 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5199792415B1F92B003AFC57 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5199792615B1F92B003AFC57 /* Terminal Notifier-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Terminal Notifier-Prefix.pch"; sourceTree = "<group>"; };
+		5199792815B1F92B003AFC57 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		5199792A15B1F92B003AFC57 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		5199792B15B1F92B003AFC57 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5199792E15B1F92B003AFC57 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5199791115B1F92B003AFC57 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5199791915B1F92B003AFC57 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5199790915B1F92B003AFC57 = {
+			isa = PBXGroup;
+			children = (
+				5199791E15B1F92B003AFC57 /* Terminal Notifier */,
+				5199791715B1F92B003AFC57 /* Frameworks */,
+				5199791515B1F92B003AFC57 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5199791515B1F92B003AFC57 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5199791415B1F92B003AFC57 /* Terminal Notifier.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5199791715B1F92B003AFC57 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5199791815B1F92B003AFC57 /* Cocoa.framework */,
+				5199791A15B1F92B003AFC57 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5199791A15B1F92B003AFC57 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5199791B15B1F92B003AFC57 /* AppKit.framework */,
+				5199791C15B1F92B003AFC57 /* CoreData.framework */,
+				5199791D15B1F92B003AFC57 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5199791E15B1F92B003AFC57 /* Terminal Notifier */ = {
+			isa = PBXGroup;
+			children = (
+				5199792A15B1F92B003AFC57 /* AppDelegate.h */,
+				5199792B15B1F92B003AFC57 /* AppDelegate.m */,
+				5199792D15B1F92B003AFC57 /* MainMenu.xib */,
+				5199791F15B1F92B003AFC57 /* Supporting Files */,
+			);
+			path = "Terminal Notifier";
+			sourceTree = "<group>";
+		};
+		5199791F15B1F92B003AFC57 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5199792015B1F92B003AFC57 /* Terminal Notifier-Info.plist */,
+				5199792115B1F92B003AFC57 /* InfoPlist.strings */,
+				5199792415B1F92B003AFC57 /* main.m */,
+				5199792615B1F92B003AFC57 /* Terminal Notifier-Prefix.pch */,
+				5199792715B1F92B003AFC57 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5199791315B1F92B003AFC57 /* Terminal Notifier */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5199793215B1F92B003AFC57 /* Build configuration list for PBXNativeTarget "Terminal Notifier" */;
+			buildPhases = (
+				5199791015B1F92B003AFC57 /* Sources */,
+				5199791115B1F92B003AFC57 /* Frameworks */,
+				5199791215B1F92B003AFC57 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Terminal Notifier";
+			productName = "Terminal Notifier";
+			productReference = 5199791415B1F92B003AFC57 /* Terminal Notifier.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5199790B15B1F92B003AFC57 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Eloy Durán";
+			};
+			buildConfigurationList = 5199790E15B1F92B003AFC57 /* Build configuration list for PBXProject "Terminal Notifier" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5199790915B1F92B003AFC57;
+			productRefGroup = 5199791515B1F92B003AFC57 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5199791315B1F92B003AFC57 /* Terminal Notifier */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5199791215B1F92B003AFC57 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5199792315B1F92B003AFC57 /* InfoPlist.strings in Resources */,
+				5199792915B1F92B003AFC57 /* Credits.rtf in Resources */,
+				5199792F15B1F92B003AFC57 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5199791015B1F92B003AFC57 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5199792515B1F92B003AFC57 /* main.m in Sources */,
+				5199792C15B1F92B003AFC57 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5199792115B1F92B003AFC57 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5199792215B1F92B003AFC57 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		5199792715B1F92B003AFC57 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5199792815B1F92B003AFC57 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		5199792D15B1F92B003AFC57 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5199792E15B1F92B003AFC57 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5199793015B1F92B003AFC57 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5199793115B1F92B003AFC57 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5199793315B1F92B003AFC57 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Terminal Notifier/Terminal Notifier-Prefix.pch";
+				INFOPLIST_FILE = "Terminal Notifier/Terminal Notifier-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		5199793415B1F92B003AFC57 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Terminal Notifier/Terminal Notifier-Prefix.pch";
+				INFOPLIST_FILE = "Terminal Notifier/Terminal Notifier-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5199790E15B1F92B003AFC57 /* Build configuration list for PBXProject "Terminal Notifier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5199793015B1F92B003AFC57 /* Debug */,
+				5199793115B1F92B003AFC57 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5199793215B1F92B003AFC57 /* Build configuration list for PBXNativeTarget "Terminal Notifier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5199793315B1F92B003AFC57 /* Debug */,
+				5199793415B1F92B003AFC57 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5199790B15B1F92B003AFC57 /* Project object */;
+}

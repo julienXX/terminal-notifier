@@ -1,0 +1,4 @@
+.*.sw?
+.DS_Store
+DerivedData
+xcuserdata
