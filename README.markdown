@@ -22,13 +22,13 @@ the [downloads section](https://github.com/alloy/terminal-notifier/downloads).
 In order to use terminal-notifier, you have to call the binary _inside_ the app
 bundle. E.g.:
 
-``
+```
 $ ./terminal-notifier.app/Contents/MacOS/terminal-notifier
-``
+```
 
 The arguments required are shown by the tool. Here is a copy of the output:
 
-``
+```
 Usage: terminal-notifier sender-ID sender-name message [bundle-ID]
 
     sender-ID   A string which identifies the group the notifications belong to.
@@ -40,7 +40,7 @@ Usage: terminal-notifier sender-ID sender-name message [bundle-ID]
 
 When the user activates a notification, the results are logged to the system logs.
 Use Console.app to view these logs.
-``
+```
 
 
 ## License
