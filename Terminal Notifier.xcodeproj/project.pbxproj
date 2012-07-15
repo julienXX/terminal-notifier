@@ -18,7 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5199791415B1F92B003AFC57 /* Terminal Notifier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Terminal Notifier.app"; path = "terminal-notifier.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5199791415B1F92B003AFC57 /* terminal-notifier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "terminal-notifier.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5199791815B1F92B003AFC57 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5199791B15B1F92B003AFC57 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		5199791C15B1F92B003AFC57 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -62,7 +62,7 @@
 		5199791515B1F92B003AFC57 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5199791415B1F92B003AFC57 /* Terminal Notifier.app */,
+				5199791415B1F92B003AFC57 /* terminal-notifier.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -126,7 +126,7 @@
 			);
 			name = "terminal-notifier";
 			productName = "Terminal Notifier";
-			productReference = 5199791415B1F92B003AFC57 /* Terminal Notifier.app */;
+			productReference = 5199791415B1F92B003AFC57 /* terminal-notifier.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -261,11 +261,13 @@
 		5199793315B1F92B003AFC57 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application: Fingertips B.V.";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Terminal Notifier/Terminal Notifier-Prefix.pch";
 				INFOPLIST_FILE = "Terminal Notifier/Terminal Notifier-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -273,11 +275,13 @@
 		5199793415B1F92B003AFC57 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application: Fingertips B.V.";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Terminal Notifier/Terminal Notifier-Prefix.pch";
 				INFOPLIST_FILE = "Terminal Notifier/Terminal Notifier-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
