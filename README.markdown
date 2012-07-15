@@ -8,7 +8,7 @@ does not work from a ‘Foundation tool’. If you figure out a way to make this
 work, please send a pull-request.
 
 This tool is used by [Kicker](https://github.com/alloy/kicker) to show the
-status of commands being executed executed due to filesystem changes.
+status of commands being executed due to filesystem changes.
 
 
 ## Download
