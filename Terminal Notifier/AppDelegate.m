@@ -13,7 +13,11 @@
     NSArray *args = [[NSProcessInfo processInfo] arguments];
 
     if ([args count] < 4 || [args count] > 5) {
-      printf("Usage: %s sender-ID sender-name message [bundle-ID]\n" \
+      const char *appName = [[args[0] lastPathComponent] UTF8String];
+      const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
+      printf("%s (%s) is a command-line tool to send OS X User Notifications.\n" \
+             "\n" \
+             "Usage: %s sender-ID sender-name message [bundle-ID]\n" \
              "\n" \
              "    sender-ID\tA string which identifies the group the notifications belong to.\n" \
              "             \tOld notifications with the same ID will be removed.\n" \
@@ -24,7 +28,7 @@
              "\n" \
              "When the user activates a notification, the results are logged to the system logs.\n" \
              "Use Console.app to view these logs.\n",
-             [[args[0] lastPathComponent] UTF8String]);
+             appName, appVersion, appName);
       exit(1);
     }
 
