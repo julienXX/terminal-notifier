@@ -19,23 +19,37 @@
     NSLog(@"ARGS: %@", args);
 
     if ([args count] < 4 || [args count] > 5) {
-      printf("Usage: %s [sender PID] [sender name] [message] [activate app with bundle identifier]\n", [[args[0] lastPathComponent] UTF8String]);
+      printf("Usage: %s [sender PID] [sender name] [message] [activate app with bundle identifier]\n",
+             [[args[0] lastPathComponent] UTF8String]);
       exit(1);
     }
 
-    NSString *senderPID  = args[1];
-    NSString *senderName = args[2];
-    NSString *message    = args[3];
-
-    NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
-    center.delegate = self;
-
-    userNotification = [NSUserNotification new];
-    userNotification.title = senderName;
-    userNotification.informativeText = message;
-    userNotification.userInfo = @{ @"senderPID":senderPID };
-    [center scheduleNotification:userNotification];
+    [self deliverNotificationForProcess:args[1] name:args[2] message:args[3]];
   }
+}
+
+- (void)deliverNotificationForProcess:(NSString *)senderPID
+                                 name:(NSString *)senderName
+                              message:(NSString *)message;
+{
+  NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
+  NSUserNotification *userNotification = nil;
+
+  // First remove earlier notifications from same process.
+  for (userNotification in center.deliveredNotifications) {
+    if ([userNotification.userInfo[@"senderPID"] isEqualToString:senderPID]) {
+      [center removeDeliveredNotification:userNotification];
+    }
+  }
+
+  // Now create and deliver the new notification
+  userNotification = [NSUserNotification new];
+  userNotification.title = senderName;
+  userNotification.informativeText = message;
+  userNotification.userInfo = @{ @"senderPID":senderPID };
+
+  center.delegate = self;
+  [center scheduleNotification:userNotification];
 }
 
 // TODO is this needed?
