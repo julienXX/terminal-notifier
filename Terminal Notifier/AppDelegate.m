@@ -3,12 +3,6 @@
 
 @implementation AppDelegate
 
-// TODO See if we can get rid of the MainMenu nib completely, but for now just never show the window.
-- (void)applicationWillFinishLaunching:(NSNotification *)notification;
-{
-  [self.window close];
-}
-
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
   NSUserNotification *userNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
