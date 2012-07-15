@@ -13,7 +13,7 @@ status of commands being executed executed due to filesystem changes.
 
 ## Download
 
-Prebuild binaries, which are code-signed and ready to use, are available from
+Prebuilt binaries, which are code-signed and ready to use, are available from
 the [downloads section](https://github.com/alloy/terminal-notifier/downloads).
 
 
