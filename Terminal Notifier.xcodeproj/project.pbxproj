@@ -14,10 +14,11 @@
 		5199792C15B1F92B003AFC57 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5199792B15B1F92B003AFC57 /* AppDelegate.m */; };
 		5199792F15B1F92B003AFC57 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5199792D15B1F92B003AFC57 /* MainMenu.xib */; };
 		5199794215B2F908003AFC57 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5199794115B2F908003AFC57 /* ScriptingBridge.framework */; };
+		5199794C15B302F1003AFC57 /* Terminal.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5199794B15B302F1003AFC57 /* Terminal.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5199791415B1F92B003AFC57 /* Terminal Notifier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Terminal Notifier.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5199791415B1F92B003AFC57 /* Terminal Notifier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Terminal Notifier.app"; path = "terminal-notifier.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5199791815B1F92B003AFC57 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5199791B15B1F92B003AFC57 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		5199791C15B1F92B003AFC57 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -31,6 +32,7 @@
 		5199792B15B1F92B003AFC57 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		5199792E15B1F92B003AFC57 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5199794115B2F908003AFC57 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
+		5199794B15B302F1003AFC57 /* Terminal.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Terminal.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +51,7 @@
 		5199790915B1F92B003AFC57 = {
 			isa = PBXGroup;
 			children = (
+				5199794B15B302F1003AFC57 /* Terminal.icns */,
 				5199794115B2F908003AFC57 /* ScriptingBridge.framework */,
 				5199791E15B1F92B003AFC57 /* Terminal Notifier */,
 				5199791715B1F92B003AFC57 /* Frameworks */,
@@ -160,6 +163,7 @@
 				5199792315B1F92B003AFC57 /* InfoPlist.strings in Resources */,
 				5199792915B1F92B003AFC57 /* Credits.rtf in Resources */,
 				5199792F15B1F92B003AFC57 /* MainMenu.xib in Resources */,
+				5199794C15B302F1003AFC57 /* Terminal.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
