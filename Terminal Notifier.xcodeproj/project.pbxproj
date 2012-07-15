@@ -109,9 +109,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5199791315B1F92B003AFC57 /* Terminal Notifier */ = {
+		5199791315B1F92B003AFC57 /* terminal-notifier */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5199793215B1F92B003AFC57 /* Build configuration list for PBXNativeTarget "Terminal Notifier" */;
+			buildConfigurationList = 5199793215B1F92B003AFC57 /* Build configuration list for PBXNativeTarget "terminal-notifier" */;
 			buildPhases = (
 				5199791015B1F92B003AFC57 /* Sources */,
 				5199791115B1F92B003AFC57 /* Frameworks */,
@@ -121,7 +121,7 @@
 			);
 			dependencies = (
 			);
-			name = "Terminal Notifier";
+			name = "terminal-notifier";
 			productName = "Terminal Notifier";
 			productReference = 5199791415B1F92B003AFC57 /* Terminal Notifier.app */;
 			productType = "com.apple.product-type.application";
@@ -147,7 +147,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5199791315B1F92B003AFC57 /* Terminal Notifier */,
+				5199791315B1F92B003AFC57 /* terminal-notifier */,
 			);
 		};
 /* End PBXProject section */
@@ -290,7 +290,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5199793215B1F92B003AFC57 /* Build configuration list for PBXNativeTarget "Terminal Notifier" */ = {
+		5199793215B1F92B003AFC57 /* Build configuration list for PBXNativeTarget "terminal-notifier" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5199793315B1F92B003AFC57 /* Debug */,

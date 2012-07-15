@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5199791315B1F92B003AFC57"
-               BuildableName = "Terminal Notifier.app"
-               BlueprintName = "Terminal Notifier"
+               BuildableName = "terminal-notifier.app"
+               BlueprintName = "terminal-notifier"
                ReferencedContainer = "container:Terminal Notifier.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5199791315B1F92B003AFC57"
-            BuildableName = "Terminal Notifier.app"
-            BlueprintName = "Terminal Notifier"
+            BuildableName = "terminal-notifier.app"
+            BlueprintName = "terminal-notifier"
             ReferencedContainer = "container:Terminal Notifier.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -52,8 +52,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5199791315B1F92B003AFC57"
-            BuildableName = "Terminal Notifier.app"
-            BlueprintName = "Terminal Notifier"
+            BuildableName = "terminal-notifier.app"
+            BlueprintName = "terminal-notifier"
             ReferencedContainer = "container:Terminal Notifier.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -88,8 +88,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5199791315B1F92B003AFC57"
-            BuildableName = "Terminal Notifier.app"
-            BlueprintName = "Terminal Notifier"
+            BuildableName = "terminal-notifier.app"
+            BlueprintName = "terminal-notifier"
             ReferencedContainer = "container:Terminal Notifier.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
