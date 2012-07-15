@@ -11,13 +11,13 @@ This tool is used by [Kicker](https://github.com/alloy/kicker) to show the
 status of commands being executed executed due to filesystem changes.
 
 
-### Download
+## Download
 
 Prebuild binaries, which are code-signed and ready to use, are available from
 the [downloads section](https://github.com/alloy/terminal-notifier/downloads).
 
 
-### Usage
+## Usage
 
 In order to use terminal-notifier, you have to call the binary _inside_ the app
 bundle. E.g.:
@@ -43,7 +43,7 @@ Use Console.app to view these logs.
 ``
 
 
-### License
+## License
 
 All the works are available under the MIT license.
 
