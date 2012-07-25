@@ -1,14 +1,13 @@
 # terminal-notifier
 
-terminal-notifier is a command-line tool to send OS X User Notifications, which
-are available starting Mac OS X 10.8.
+terminal-notifier is a command-line tool to send Mac OS X User Notifications,
+which are available in Mac OS X 10.8.
 
 It is currently packaged as an application bundle, because `NSUserNotification`
-does not work from a ‘Foundation tool’. If you figure out a way to make this
-work, please send a pull-request.
+does not work from a ‘Foundation tool’. [radar://11956694](radar://11956694)
 
-This tool is used by [Kicker](https://github.com/alloy/kicker) to show the
-status of commands being executed due to filesystem changes.
+This tool will be used by [Kicker](https://github.com/alloy/kicker) to show the
+status of commands which are executed due to filesystem changes. (v3.0.0)
 
 
 ## Download
@@ -19,35 +18,35 @@ the [downloads section](https://github.com/alloy/terminal-notifier/downloads).
 
 ## Usage
 
+```
+$ ./terminal-notifier.app/Contents/MacOS/terminal-notifier group-ID sender-name message [bundle-ID]
+```
+
 In order to use terminal-notifier, you have to call the binary _inside_ the app
-bundle. E.g.:
+bundle.
 
-```
-$ ./terminal-notifier.app/Contents/MacOS/terminal-notifier
-```
+The first argument specifies the ‘group’ a notification belongs to. For
+any ‘group’ only _one_ notification will ever be shown, replacing
+previously posted notifications. Examples are: the sender’s process ID to
+scope the notifications by a unique process, or the current working directory
+to scope notifications by a project.
 
-The arguments required are shown by the tool. Here is a copy of the output:
+The second and third arguments describe the notification itself and are its
+‘title’ and ‘message’ respectively. For example, to communicate the sender of
+a notification to the user, you could specify the sender’s name as the title.
 
-```
-Usage: terminal-notifier sender-ID sender-name message [bundle-ID]
-
-    sender-ID   A string which identifies the group the notifications belong to.
-                Old notifications with the same ID will be removed.
-  sender-name   The name of the application which is used as the notification’s title.
-      message   The message that is shown in the notification.
-    bundle-ID   The bundle identifier of the application to activate when the user
-                activates (clicks) a notification. Defaults to `com.apple.Terminal'.
-
-When the user activates a notification, the results are logged to the system logs.
-Use Console.app to view these logs.
-```
+The fourth and last argument is an optional one. It specifies which application
+should be activated when the user clicks the notification. By default this will
+activate Terminal.app, to launch another application instead specify the
+application’s bundle identifier. For example, to launch Safari.app use:
+`com.apple.Safari`.
 
 
 ## License
 
-All the works are available under the MIT license.
-
-**Except** for `Terminal.icns`, which is a copy of Apple’s Terminal.app icon.
+All the works are available under the MIT license. **Except** for
+‘Terminal.icns’, which is a copy of Apple’s Terminal.app icon and as such is
+copyright of Apple.
 
 Copyright (C) 2012 Eloy Durán <eloy.de.enige@gmail.com>
 
