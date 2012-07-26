@@ -71,6 +71,8 @@
 
 - (void)userActivatedNotification:(NSUserNotification *)userNotification;
 {
+  [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:userNotification];
+
   NSString *groupID = userNotification.userInfo[@"groupID"];
   NSString *bundleID = userNotification.userInfo[@"bundleID"];
 
