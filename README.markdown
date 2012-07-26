@@ -6,6 +6,11 @@ which are available in Mac OS X 10.8.
 It is currently packaged as an application bundle, because `NSUserNotification`
 does not work from a ‘Foundation tool’. [radar://11956694](radar://11956694)
 
+The Notification Center _always_ uses the application’s own icon, there’s
+currently no way to specify a custom icon for a notification. The only way to
+use this tool with your own icon is to include a build of terminal-notifier
+with your icon instead.
+
 This tool will be used by [Kicker](https://github.com/alloy/kicker) to show the
 status of commands which are executed due to filesystem changes. (v3.0.0)
 
@@ -19,7 +24,7 @@ the [downloads section](https://github.com/alloy/terminal-notifier/downloads).
 ## Usage
 
 ```
-$ ./terminal-notifier.app/Contents/MacOS/terminal-notifier group-ID sender-name message [bundle-ID]
+$ ./terminal-notifier.app/Contents/MacOS/terminal-notifier group-ID title message [bundle-ID]
 ```
 
 In order to use terminal-notifier, you have to call the binary _inside_ the app

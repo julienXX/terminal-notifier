@@ -17,7 +17,7 @@
       const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
       printf("%s (%s) is a command-line tool to send OS X User Notifications.\n" \
              "\n" \
-             "Usage: %s group-ID sender-name message [bundle-ID]\n" \
+             "Usage: %s group-ID title message [bundle-ID]\n" \
              "\n" \
              "     group-ID\tA string which identifies the group the notifications belong to.\n" \
              "             \tOld notifications with the same ID will be removed.\n" \
