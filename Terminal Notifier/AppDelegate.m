@@ -55,11 +55,10 @@
     }
 
     NSMutableDictionary *options = [NSMutableDictionary dictionary];
-    options[@"bundleID"] = defaults[@"activate"] ?: @"com.apple.Terminal";
-
-    if (defaults[@"group"])   options[@"groupID"] = defaults[@"group"];
-    if (defaults[@"execute"]) options[@"command"] = defaults[@"execute"];
-    if (defaults[@"open"])    options[@"open"]    = defaults[@"open"];
+    if (defaults[@"activate"]) options[@"bundleID"] = defaults[@"activate"];
+    if (defaults[@"group"])    options[@"groupID"]  = defaults[@"group"];
+    if (defaults[@"execute"])  options[@"command"]  = defaults[@"execute"];
+    if (defaults[@"open"])     options[@"open"]     = defaults[@"open"];
 
     [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
                                message:message
