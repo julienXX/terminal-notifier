@@ -45,8 +45,10 @@
 
     NSMutableDictionary *options = [NSMutableDictionary dictionary];
     options[@"bundleID"] = defaults[@"activate"] ?: @"com.apple.Terminal";
-    if (defaults[@"group"]) options[@"groupID"] = defaults[@"group"];
+
+    if (defaults[@"group"])   options[@"groupID"] = defaults[@"group"];
     if (defaults[@"execute"]) options[@"command"] = defaults[@"execute"];
+    if (defaults[@"open"])    options[@"open"]    = defaults[@"open"];
 
     [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
                                message:message
@@ -90,6 +92,7 @@
   NSString *groupID  = userNotification.userInfo[@"groupID"];
   NSString *bundleID = userNotification.userInfo[@"bundleID"];
   NSString *command  = userNotification.userInfo[@"command"];
+  NSString *open     = userNotification.userInfo[@"open"];
 
   NSLog(@"User activated notification:");
   NSLog(@" group ID: %@", groupID);
@@ -97,10 +100,13 @@
   NSLog(@"  message: %@", userNotification.informativeText);
   NSLog(@"bundle ID: %@", bundleID);
   NSLog(@"  command: %@", command);
+  NSLog(@"     open: %@", open);
 
   BOOL success = YES;
+  // TODO this loses NO if a consecutive call does succeed
   if (bundleID) success = [self activateAppWithBundleID:bundleID];
   if (command)  success = [self executeShellCommand:command];
+  if (open)     success = [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:open]];
 
   exit(success ? 0 : 1);
 }

@@ -63,6 +63,10 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-open &apos;http://google.com&apos;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-execute &apos;say &quot;OMG&quot;&apos;"
             isEnabled = "NO">
          </CommandLineArgument>
