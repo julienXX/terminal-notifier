@@ -104,9 +104,9 @@
 
   BOOL success = YES;
   // TODO this loses NO if a consecutive call does succeed
-  if (bundleID) success = [self activateAppWithBundleID:bundleID];
-  if (command)  success = [self executeShellCommand:command];
-  if (open)     success = [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:open]];
+  if (bundleID) success = [self activateAppWithBundleID:bundleID] && success;
+  if (command)  success = [self executeShellCommand:command] && success;
+  if (open)     success = [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:open]] && success;
 
   exit(success ? 0 : 1);
 }
@@ -126,9 +126,24 @@
 
 - (BOOL)executeShellCommand:(NSString *)command;
 {
-  NSTask *task = [NSTask launchedTaskWithLaunchPath:@"/bin/sh"
-                                          arguments:@[@"-c", command]];
+  NSPipe *pipe = [NSPipe pipe];
+  NSFileHandle *fileHandle = [pipe fileHandleForReading];
+
+  NSTask *task = [NSTask new];
+  task.launchPath = @"/bin/sh";
+  task.arguments = @[@"-c", command];
+  task.standardOutput = pipe;
+  task.standardError = pipe;
+  [task launch];
+
+  NSData *data = nil;
+  NSMutableData *accumulatedData = [NSMutableData data];
+  while ((data = [fileHandle availableData]) && [data length]) {
+    [accumulatedData appendData:data];
+  }
+
   [task waitUntilExit];
+  NSLog(@"command output:\n%@", [[NSString alloc] initWithData:accumulatedData encoding:NSUTF8StringEncoding]);
   return [task terminationStatus] == 0;
 }
 

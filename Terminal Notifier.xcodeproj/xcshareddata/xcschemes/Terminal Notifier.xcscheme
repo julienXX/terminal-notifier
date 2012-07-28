@@ -64,10 +64,14 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-open &apos;http://google.com&apos;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-execute &apos;say &quot;OMG&quot;&apos;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-execute &apos;ls -l&apos;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
