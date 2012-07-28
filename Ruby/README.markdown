@@ -14,6 +14,8 @@ $ gem install terminal-notifier
 
 ## Usage
 
+For full information on all the options, see the tool’s [README][README].
+
 Examples are:
 
 ```ruby
@@ -35,4 +37,5 @@ copyright of Apple.
 See [LICENSE][LICENSE] for details.
 
 [HOMEPAGE]: https://github.com/alloy/terminal-notifier
+[README]: https://github.com/alloy/terminal-notifier/blob/master/README.markdown
 [LICENSE]: https://github.com/alloy/terminal-notifier/blob/master/Ruby/LICENSE
