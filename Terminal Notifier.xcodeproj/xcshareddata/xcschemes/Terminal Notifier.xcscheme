@@ -59,19 +59,23 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "12345"
+            argument = "-group 12345"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "Kicker"
+            argument = "-execute &apos;say &quot;OMG&quot;&apos;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&apos;Execute: rake spec&apos;"
+            argument = "-title Kicker"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "com.apple.Safari"
+            argument = "-message &apos;Execute: rake spec&apos;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-activate com.apple.Safari"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
