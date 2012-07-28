@@ -20,11 +20,9 @@
     [self userActivatedNotification:userNotification];
 
   } else {
-    NSUserDefaults *options = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    NSString *message = options[@"message"];
-    NSLog(@"MESSAGE: %@", message);
-
+    NSString *message = defaults[@"message"];
     if (message == nil) {
       const char *appName = "terminal-notifier"; //[[args[0] lastPathComponent] UTF8String];
       const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
@@ -45,32 +43,28 @@
       exit(1);
     }
 
-    NSString *title    = options[@"title"]    ?: @"Terminal";
-    NSString *bundleID = options[@"activate"] ?: @"com.apple.Terminal";
-    NSString *groupID  = options[@"group"];
-    NSString *command  = options[@"execute"];
+    NSMutableDictionary *options = [NSMutableDictionary dictionary];
+    options[@"bundleID"] = defaults[@"activate"] ?: @"com.apple.Terminal";
+    if (defaults[@"group"]) options[@"groupID"] = defaults[@"group"];
+    if (defaults[@"execute"]) options[@"command"] = defaults[@"execute"];
 
-    [self deliverNotificationForGroupID:groupID
-                                  title:title
-                                message:message
-        activateAppWithBundleIdentifier:bundleID
-                    executeShellCommand:command];
+    [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
+                               message:message
+                               options:options];
   }
 }
 
-- (void)deliverNotificationForGroupID:(NSString *)groupID
-                                title:(NSString *)title
-                              message:(NSString *)message
-      activateAppWithBundleIdentifier:(NSString *)bundleID
-                  executeShellCommand:(NSString *)command;
+- (void)deliverNotificationWithTitle:(NSString *)title
+                             message:(NSString *)message
+                             options:(NSDictionary *)options;
 {
   NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
   NSUserNotification *userNotification = nil;
 
   // First remove earlier notification with the same group ID.
-  if (groupID) {
+  if (options[@"groupID"]) {
     for (userNotification in center.deliveredNotifications) {
-      if ([userNotification.userInfo[@"groupID"] isEqualToString:groupID]) {
+      if ([userNotification.userInfo[@"groupID"] isEqualToString:options[@"groupID"]]) {
         NSString *deliveredAt = [userNotification.actualDeliveryDate description];
         printf("* Removing previous notification, which was delivered on: %s\n", [deliveredAt UTF8String]);
         [center removeDeliveredNotification:userNotification];
@@ -83,11 +77,7 @@
   userNotification = [NSUserNotification new];
   userNotification.title = title;
   userNotification.informativeText = message;
-  NSMutableDictionary *info = [NSMutableDictionary dictionary];
-  if (groupID)  info[@"groupID"]  = groupID;
-  if (bundleID) info[@"bundleID"] = bundleID;
-  if (command)  info[@"command"]  = command;
-  userNotification.userInfo = info;
+  userNotification.userInfo = options;
 
   center.delegate = self;
   [center scheduleNotification:userNotification];
