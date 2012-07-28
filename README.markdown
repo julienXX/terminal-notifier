@@ -24,27 +24,68 @@ the [downloads section](https://github.com/alloy/terminal-notifier/downloads).
 ## Usage
 
 ```
-$ ./terminal-notifier.app/Contents/MacOS/terminal-notifier group-ID title message [bundle-ID]
+$ ./terminal-notifier.app/Contents/MacOS/terminal-notifier -message VALUE [options]
 ```
 
-In order to use terminal-notifier, you have to call the binary _inside_ the app
-bundle.
+In order to use terminal-notifier, you have to call the binary _inside_ the
+application mbundle.
 
-The first argument specifies the ‘group’ a notification belongs to. For
-any ‘group’ only _one_ notification will ever be shown, replacing
-previously posted notifications. Examples are: the sender’s process ID to
-scope the notifications by a unique process, or the current working directory
-to scope notifications by a project.
+#### Options
 
-The second and third arguments describe the notification itself and are its
-‘title’ and ‘message’ respectively. For example, to communicate the sender of
-a notification to the user, you could specify the sender’s name as the title.
+The `-message` option is the only one that is required.
 
-The fourth and last argument is an optional one. It specifies which application
-should be activated when the user clicks the notification. By default this will
-activate Terminal.app, to launch another application instead specify the
-application’s bundle identifier. For example, to launch Safari.app use:
-`com.apple.Safari`.
+-------------------------------------------------------------------------------
+
+`-message VALUE`  **[required]**
+
+The message body of the notification.
+
+-------------------------------------------------------------------------------
+
+`-title VALUE`
+
+The title of the notification. This defaults to ‘Terminal’.
+
+-------------------------------------------------------------------------------
+
+`-group ID`
+
+Specifies the ‘group’ a notification belongs to. For any ‘group’ only _one_
+notification will ever be shown, replacing previously posted notifications.
+
+Examples are:
+
+* The sender’s name to scope the notifications by tool.
+* The sender’s process ID to scope the notifications by a unique process.
+* The current working directory to scope notifications by project.
+
+-------------------------------------------------------------------------------
+
+`-activate ID`
+
+Specifies which application should be activated when the user clicks the
+notification.
+
+You can find the bundle identifier of an application in its `Info.plist` file
+_inside_ the application bundle.
+
+Examples are:
+
+* `com.apple.Terminal` to activate Terminal.app
+* `com.apple.Safari` to activate Safari.app
+
+-------------------------------------------------------------------------------
+
+`-open URL`
+
+Specifies a resource to be opened when the user clicks the notification. This
+can be a web or file URL, or any custom URL scheme.
+
+-------------------------------------------------------------------------------
+
+`-execute COMMAND`
+
+Specifies a shell command to run when the user clicks the notification.
 
 
 ## License
