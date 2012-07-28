@@ -1,0 +1,37 @@
+def version
+  @version ||= begin
+    plist = File.expand_path('../../Terminal Notifier/Terminal Notifier-Info.plist', __FILE__)
+    `/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' '#{plist}'`.strip
+  end
+end
+
+def filename
+  "terminal-notifier_#{version}"
+end
+
+def zipfile
+  "#{filename}.zip"
+end
+
+task :clean do
+  rm zipfile
+  rm_rf "vendor"
+end
+
+task :update_build do
+  unless File.exist?(zipfile)
+    sh "curl -O 'http://cloud.github.com/downloads/alloy/terminal-notifier/terminal-notifier_#{version}.zip'"
+  end
+
+  rm_rf "vendor"
+  mkdir "vendor"
+
+  sh "unzip -o -d vendor #{zipfile}"
+  mv "vendor/#{filename}", "vendor/terminal-notifier"
+end
+
+task :gem => :update_build do
+  sh "gem build terminal-notifier.gemspec"
+end
+
+task :default => :gem
