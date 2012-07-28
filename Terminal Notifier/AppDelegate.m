@@ -13,6 +13,32 @@
 
 @implementation AppDelegate
 
+- (void)printHelpBanner;
+{
+  const char *appName = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"] UTF8String];
+  const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
+  printf("%s (%s) is a command-line tool to send OS X User Notifications.\n" \
+         "\n" \
+         "Usage: %s -message VALUE [options]\n" \
+         "\n" \
+         "   Required:\n" \
+         "\n" \
+         "       -message VALUE     The notification message.\n" \
+         "\n" \
+         "   Optional:\n" \
+         "\n" \
+         "       -title VALUE       The notification title. Defaults to ‘Terminal’.\n" \
+         "       -group ID          A string which identifies the group the notifications belong to.\n" \
+         "                          Old notifications with the same ID will be removed.\n" \
+         "       -activate ID       The bundle identifier of the application to activate when the user clicks the notification.\n" \
+         "       -open URL          The URL of a resource to open when the user clicks the notification.\n" \
+         "       -execute COMMAND   A shell command to perform when the user clicks the notification.\n" \
+         "\n" \
+         "When the user activates a notification, the results are logged to the system logs.\n" \
+         "Use Console.app to view these logs.\n",
+         appName, appVersion, appName);
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
   NSUserNotification *userNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
@@ -24,22 +50,7 @@
 
     NSString *message = defaults[@"message"];
     if (message == nil) {
-      const char *appName = "terminal-notifier"; //[[args[0] lastPathComponent] UTF8String];
-      const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
-      printf("%s (%s) is a command-line tool to send OS X User Notifications.\n" \
-             "\n" \
-             "Usage: %s group-ID title message --activate [bundle-ID] --execute [command]\n" \
-             "\n" \
-             "     group-ID\tA string which identifies the group the notifications belong to.\n" \
-             "             \tOld notifications with the same ID will be removed.\n" \
-             "        title\tThe notification title.\n" \
-             "      message\tThe notification message.\n" \
-             "    bundle-ID\tThe bundle identifier of the application to activate when the user\n" \
-             "             \tactivates (clicks) a notification. Defaults to `com.apple.Terminal'.\n" \
-             "\n" \
-             "When the user activates a notification, the results are logged to the system logs.\n" \
-             "Use Console.app to view these logs.\n",
-             appName, appVersion, appName);
+      [self printHelpBanner];
       exit(1);
     }
 
