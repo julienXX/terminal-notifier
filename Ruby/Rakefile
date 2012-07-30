@@ -30,8 +30,14 @@ task :update_build do
   mv "vendor/#{filename}", "vendor/terminal-notifier"
 end
 
+desc "Build gem"
 task :gem => :update_build do
   sh "gem build terminal-notifier.gemspec"
 end
 
-task :default => :gem
+desc "Run specs"
+task :spec do
+  sh "bundle exec ruby spec/terminal-notifier_spec.rb"
+end
+
+task :default => :spec

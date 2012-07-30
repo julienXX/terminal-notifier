@@ -21,10 +21,11 @@ Examples are:
 ```ruby
 TerminalNotifier.notify('Hello World')
 TerminalNotifier.notify('Hello World', :title => 'Ruby')
-TerminalNotifier.notify('Hello World', :group => Process.pid)
 TerminalNotifier.notify('Hello World', :activate => 'com.apple.Safari')
 TerminalNotifier.notify('Hello World', :open => 'http://twitter.com/alloy')
 TerminalNotifier.notify('Hello World', :execute => 'say "OMG"')
+TerminalNotifier.notify('Hello World', :group => Process.pid)
+TerminalNotifier.remove('previous Process.pid')
 ```
 
 

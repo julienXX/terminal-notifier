@@ -20,15 +20,33 @@ status of commands which are executed due to filesystem changes. (v3.0.0)
 Prebuilt binaries, which are code-signed and ready to use, are available from
 the [downloads section](https://github.com/alloy/terminal-notifier/downloads).
 
+Or if you want to use this from
+[Ruby](https://github.com/alloy/terminal-notifier/tree/master/Ruby), you can
+install it through RubyGems:
+
+```
+$ [sudo] gem install terminal-notifier
+```
+
 
 ## Usage
 
 ```
-$ ./terminal-notifier.app/Contents/MacOS/terminal-notifier -message VALUE [options]
+$ ./terminal-notifier.app/Contents/MacOS/terminal-notifier -[message|group] [VALUE|ID] [options]
 ```
 
 In order to use terminal-notifier, you have to call the binary _inside_ the
-application mbundle.
+application bundle.
+
+The Ruby gem, which wraps this tool, _does_ have a bin wrapper. If installed
+you can simply do:
+
+```
+$ terminal-notifier -[message|group] [VALUE|ID] [options]
+```
+
+This will obviously be a bit slower than using the tool without the wrapper.
+
 
 #### Options
 
