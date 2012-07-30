@@ -17,9 +17,13 @@ module TerminalNotifier
     STDOUT.reopen(stdout)
   end
 
-  def self.execute(options)
-    if TerminalNotifier.available?
-      system(BIN_PATH, *options.map { |k,v| ["-#{k}", v.to_s] }.flatten)
+  def self.execute_with_options(options)
+    execute(options.map { |k,v| ["-#{k}", v.to_s] }.flatten)
+  end
+
+  def self.execute(argv)
+    if available?
+      system(BIN_PATH, *argv)
     else
       raise "terminal-notifier is only supported on Mac OS X 10.8, or higher."
     end
@@ -49,7 +53,7 @@ module TerminalNotifier
 
   # The same as `verbose`, but sends the output from the tool to STDOUT.
   def verbose_notify(message, options = {})
-    TerminalNotifier.execute(options.merge(:message => message))
+    TerminalNotifier.execute_with_options(options.merge(:message => message))
   end
   module_function :verbose_notify
 
@@ -62,7 +66,7 @@ module TerminalNotifier
 
   # The same as `remove`, but sends the output from the tool to STDOUT.
   def verbose_remove(group)
-    TerminalNotifier.execute(:remove => group)
+    TerminalNotifier.execute_with_options(:remove => group)
   end
   module_function :verbose_remove
 end
