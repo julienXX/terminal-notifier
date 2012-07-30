@@ -10,8 +10,13 @@ Gem::Specification.new do |gem|
   gem.email            = ["eloy.de.enige@gmail.com"]
   gem.homepage         = 'https://github.com/alloy/terminal-notifier'
 
-  gem.files            = ['lib/terminal-notifier.rb'] + Dir.glob('vendor/terminal-notifier/**/*')
+  gem.executables      = ['terminal-notifier']
+  gem.files            = ['bin/terminal-notifier', 'lib/terminal-notifier.rb'] + Dir.glob('vendor/terminal-notifier/**/*')
   gem.require_paths    = ['lib']
 
   gem.extra_rdoc_files = ['README.markdown']
+
+  gem.add_development_dependency 'bacon'
+  gem.add_development_dependency 'mocha'
+  gem.add_development_dependency 'mocha-on-bacon'
 end
