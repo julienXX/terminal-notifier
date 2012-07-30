@@ -32,7 +32,8 @@ application mbundle.
 
 #### Options
 
-The `-message` option is the only one that is required.
+At a minimum, you have to specify either the `-message` option or the `-remove`
+option.
 
 -------------------------------------------------------------------------------
 
@@ -53,11 +54,21 @@ The title of the notification. This defaults to ‘Terminal’.
 Specifies the ‘group’ a notification belongs to. For any ‘group’ only _one_
 notification will ever be shown, replacing previously posted notifications.
 
+A notification can be explicitely removed with the `-remove` option, describe
+below.
+
 Examples are:
 
 * The sender’s name to scope the notifications by tool.
 * The sender’s process ID to scope the notifications by a unique process.
 * The current working directory to scope notifications by project.
+
+-------------------------------------------------------------------------------
+
+`-remove ID`  **[required]**
+
+Removes a notification that was previously sent with the specified ‘group’ ID,
+if one exists.
 
 -------------------------------------------------------------------------------
 

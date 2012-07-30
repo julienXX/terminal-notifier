@@ -20,11 +20,12 @@
   const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
   printf("%s (%s) is a command-line tool to send OS X User Notifications.\n" \
          "\n" \
-         "Usage: %s -message VALUE [options]\n" \
+         "Usage: %s -[message|remove] [VALUE|ID] [options]\n" \
          "\n" \
-         "   Required:\n" \
+         "   Either of these is required:\n" \
          "\n" \
          "       -message VALUE     The notification message.\n" \
+         "       -remove ID         Removes a notification with the specified ‘group’ ID.\n" \
          "\n" \
          "   Optional:\n" \
          "\n" \
@@ -50,20 +51,28 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     NSString *message = defaults[@"message"];
-    if (message == nil) {
+    NSString *remove  = defaults[@"remove"];
+    if (message == nil && remove == nil) {
       [self printHelpBanner];
       exit(1);
     }
 
-    NSMutableDictionary *options = [NSMutableDictionary dictionary];
-    if (defaults[@"activate"]) options[@"bundleID"] = defaults[@"activate"];
-    if (defaults[@"group"])    options[@"groupID"]  = defaults[@"group"];
-    if (defaults[@"execute"])  options[@"command"]  = defaults[@"execute"];
-    if (defaults[@"open"])     options[@"open"]     = defaults[@"open"];
+    if (remove) {
+      [self removeNotificationWithGroupID:remove];
+      if (message == nil) exit(0);
+    }
 
-    [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
-                               message:message
-                               options:options];
+    if (message) {
+      NSMutableDictionary *options = [NSMutableDictionary dictionary];
+      if (defaults[@"activate"]) options[@"bundleID"] = defaults[@"activate"];
+      if (defaults[@"group"])    options[@"groupID"]  = defaults[@"group"];
+      if (defaults[@"execute"])  options[@"command"]  = defaults[@"execute"];
+      if (defaults[@"open"])     options[@"open"]     = defaults[@"open"];
+
+      [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
+                                 message:message
+                                 options:options];
+    }
   }
 }
 
@@ -71,29 +80,30 @@
                              message:(NSString *)message
                              options:(NSDictionary *)options;
 {
-  NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
-  NSUserNotification *userNotification = nil;
-
   // First remove earlier notification with the same group ID.
-  if (options[@"groupID"]) {
-    for (userNotification in center.deliveredNotifications) {
-      if ([userNotification.userInfo[@"groupID"] isEqualToString:options[@"groupID"]]) {
-        NSString *deliveredAt = [userNotification.actualDeliveryDate description];
-        printf("* Removing previous notification, which was delivered on: %s\n", [deliveredAt UTF8String]);
-        [center removeDeliveredNotification:userNotification];
-        break;
-      }
-    }
-  }
+  if (options[@"groupID"]) [self removeNotificationWithGroupID:options[@"groupID"]];
 
-  // Now create and deliver the new notification
-  userNotification = [NSUserNotification new];
+  NSUserNotification *userNotification = [NSUserNotification new];
   userNotification.title = title;
   userNotification.informativeText = message;
   userNotification.userInfo = options;
 
+  NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
   center.delegate = self;
   [center scheduleNotification:userNotification];
+}
+
+- (void)removeNotificationWithGroupID:(NSString *)groupID;
+{
+  NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
+  for (NSUserNotification *userNotification in center.deliveredNotifications) {
+    if ([userNotification.userInfo[@"groupID"] isEqualToString:groupID]) {
+      NSString *deliveredAt = [userNotification.actualDeliveryDate description];
+      printf("* Removing previously sent notification, which was sent on: %s\n", [deliveredAt UTF8String]);
+      [center removeDeliveredNotification:userNotification];
+      break;
+    }
+  }
 }
 
 - (void)userActivatedNotification:(NSUserNotification *)userNotification;

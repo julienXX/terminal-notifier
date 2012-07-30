@@ -59,7 +59,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-group 12345"
+            argument = "-group abcde"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-remove abcde"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -68,7 +72,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-execute &apos;say &quot;OMG&quot;&apos;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-execute &apos;ls -l&apos;"
@@ -76,11 +80,11 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-title Kicker"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-message &apos;Execute: rake spec&apos;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-activate com.apple.Safari"
