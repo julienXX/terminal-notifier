@@ -9,14 +9,20 @@ module TerminalNotifier
     @available
   end
 
-  # Executes the `terminal-notifier` tool through Kernel::system while
-  # redirecting output to `/dev/null`.
-  def self.silent_execute(options)
+  def self.silence_stdout
     stdout = STDOUT.clone
     STDOUT.reopen(File.new('/dev/null', 'w'))
-    system(BIN_PATH, *options)
+    yield
   ensure
     STDOUT.reopen(stdout)
+  end
+
+  def self.execute(options)
+    if TerminalNotifier.available?
+      system(BIN_PATH, *options.map { |k,v| ["-#{k}", v.to_s] }.flatten)
+    else
+      raise "terminal-notifier is only supported on Mac OS X 10.8, or higher."
+    end
   end
 
   # Sends a User Notification and returns wether or not it was a success.
@@ -37,11 +43,26 @@ module TerminalNotifier
   #
   # Raises if not supported on the current platform.
   def notify(message, options = {})
-    if TerminalNotifier.available?
-      TerminalNotifier.silent_execute(options.merge(:message => message).map { |k,v| ["-#{k}", v.to_s] }.flatten)
-    else
-      raise "terminal-notifier is only supported on Mac OS X 10.8, or higher."
-    end
+    TerminalNotifier.silence_stdout { TerminalNotifier.verbose_notify(message, options) }
   end
   module_function :notify
+
+  # The same as `verbose`, but sends the output from the tool to STDOUT.
+  def verbose_notify(message, options = {})
+    TerminalNotifier.execute(options.merge(:message => message))
+  end
+  module_function :verbose_notify
+
+  # Removes a notification that was previously sent with the specified
+  # ‘group’ ID, if one exists.
+  def remove(group)
+    TerminalNotifier.silence_stdout { TerminalNotifier.verbose_remove(group) }
+  end
+  module_function :remove
+
+  # The same as `remove`, but sends the output from the tool to STDOUT.
+  def verbose_remove(group)
+    TerminalNotifier.execute(:remove => group)
+  end
+  module_function :verbose_remove
 end
