@@ -67,6 +67,14 @@ The title of the notification. This defaults to ‘Terminal’.
 
 -------------------------------------------------------------------------------
 
+-------------------------------------------------------------------------------
+
+`-subtitle VALUE`
+
+The subtitle of the notification.
+
+-------------------------------------------------------------------------------
+
 `-group ID`
 
 Specifies the ‘group’ a notification belongs to. For any ‘group’ only _one_
