@@ -30,6 +30,7 @@
          "   Optional:\n" \
          "\n" \
          "       -title VALUE       The notification title. Defaults to ‘Terminal’.\n" \
+         "       -subtitle VALUE    The notification subtitle.\n" \
          "       -group ID          A string which identifies the group the notifications belong to.\n" \
          "                          Old notifications with the same ID will be removed.\n" \
          "       -activate ID       The bundle identifier of the application to activate when the user clicks the notification.\n" \
@@ -50,6 +51,7 @@
   } else {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
+    NSString *subtitle = defaults[@"subtitle"];
     NSString *message = defaults[@"message"];
     NSString *remove  = defaults[@"remove"];
     if (message == nil && remove == nil) {
@@ -70,6 +72,7 @@
       if (defaults[@"open"])     options[@"open"]     = defaults[@"open"];
 
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
+                                 subtitle:subtitle
                                  message:message
                                  options:options];
     }
@@ -77,6 +80,7 @@
 }
 
 - (void)deliverNotificationWithTitle:(NSString *)title
+                             subtitle:(NSString *)subtitle
                              message:(NSString *)message
                              options:(NSDictionary *)options;
 {
@@ -85,6 +89,7 @@
 
   NSUserNotification *userNotification = [NSUserNotification new];
   userNotification.title = title;
+  userNotification.subtitle = subtitle;
   userNotification.informativeText = message;
   userNotification.userInfo = options;
 
@@ -118,6 +123,7 @@
   NSLog(@"User activated notification:");
   NSLog(@" group ID: %@", groupID);
   NSLog(@"    title: %@", userNotification.title);
+  NSLog(@" subtitle: %@", userNotification.subtitle);
   NSLog(@"  message: %@", userNotification.informativeText);
   NSLog(@"bundle ID: %@", bundleID);
   NSLog(@"  command: %@", command);
