@@ -26,6 +26,7 @@
          "\n" \
          "       -message VALUE     The notification message.\n" \
          "       -remove ID         Removes a notification with the specified ‘group’ ID.\n" \
+	     "       -list ID           If the specified ‘group’ ID exists: show when it was delivered.\n" \
          "\n" \
          "   Optional:\n" \
          "\n" \
@@ -52,9 +53,10 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     NSString *subtitle = defaults[@"subtitle"];
-    NSString *message = defaults[@"message"];
-    NSString *remove  = defaults[@"remove"];
-    if (message == nil && remove == nil) {
+    NSString *message  = defaults[@"message"];
+    NSString *remove   = defaults[@"remove"];
+    NSString *list     = defaults[@"list"];
+    if (message == nil && remove == nil && list == nil) {
       [self printHelpBanner];
       exit(1);
     }
@@ -75,6 +77,12 @@
                                  subtitle:subtitle
                                  message:message
                                  options:options];
+    }
+
+    if (list) {
+      //NSMutableDictionary *options = [NSMutableDictionary dictionary];
+      [self listNotificationWithGroupID:list];
+      exit(0);
     }
   }
 }
@@ -102,14 +110,71 @@
 {
   NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
   for (NSUserNotification *userNotification in center.deliveredNotifications) {
-    if ([userNotification.userInfo[@"groupID"] isEqualToString:groupID]) {
+    if ( ([userNotification.userInfo[@"groupID"] isEqualToString:groupID]) ||
+        ([@"ALL" isEqualToString:groupID])) {
       NSString *deliveredAt = [userNotification.actualDeliveryDate description];
       printf("* Removing previously sent notification, which was sent on: %s\n", [deliveredAt UTF8String]);
       [center removeDeliveredNotification:userNotification];
-      break;
     }
   }
 }
+
+- (void)listNotificationWithGroupID:(NSString *)groupID;
+{
+  NSUInteger len = 1;
+  NSUInteger longestLen = 0;
+  NSUInteger i=0;
+  NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
+  if ([@"ALL" isEqualToString:groupID]) {
+    printf("* Currently active groups:\n");
+    for (NSUserNotification *userNotification in center.deliveredNotifications) {
+      NSString *deliveredGroupID = userNotification.userInfo[@"groupID"];
+      len = [deliveredGroupID length];
+      if (len > longestLen) {
+        longestLen = len;
+      }
+    }
+    if (longestLen > 0) {
+      printf("* Group ID");
+      for (i = 8; i < longestLen; i++) {
+        printf(" ");
+      }
+      printf("   ");
+      printf("Delivered on\n");
+    }
+    for (NSUserNotification *userNotification in center.deliveredNotifications) {
+      NSString *deliveredGroupID = userNotification.userInfo[@"groupID"];
+      NSString *deliveredAt = [userNotification.actualDeliveryDate description];
+      printf("* %s", [deliveredGroupID UTF8String]);
+      len = [deliveredGroupID length];
+      for (i = len; i < longestLen; i++) {
+        printf(" ");
+      }
+      for (i = longestLen; i < 8; i++) {
+        printf(" ");
+      }
+      printf("   ");
+      printf("%s\n", [deliveredAt UTF8String]);
+    }
+  } else {
+    for (NSUserNotification *userNotification in center.deliveredNotifications) {
+      if ([userNotification.userInfo[@"groupID"] isEqualToString:groupID]) {
+        longestLen = 1;
+        NSString *deliveredAt = [userNotification.actualDeliveryDate description];
+        printf("* The last message for group %s was delivered on: %s\n", [groupID UTF8String], [deliveredAt UTF8String]);
+        break;
+      }
+    }
+  }
+  if (longestLen == 0) {
+    if ([@"ALL" isEqualToString:groupID]) {
+      printf("* None\n");
+    } else { 
+      printf("* No message for the group %s could be found\n", [groupID UTF8String]);
+    }
+  }
+}
+
 
 - (void)userActivatedNotification:(NSUserNotification *)userNotification;
 {
