@@ -20,13 +20,13 @@
   const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
   printf("%s (%s) is a command-line tool to send OS X User Notifications.\n" \
          "\n" \
-         "Usage: %s -[message|remove] [VALUE|ID] [options]\n" \
+         "Usage: %s -[message|list|remove] [VALUE|ID] [options]\n" \
          "\n" \
          "   Either of these is required:\n" \
          "\n" \
          "       -message VALUE     The notification message.\n" \
          "       -remove ID         Removes a notification with the specified ‘group’ ID.\n" \
-	     "       -list ID           If the specified ‘group’ ID exists: show when it was delivered.\n" \
+         "       -list ID           If the specified ‘group’ ID exists, show when it was delivered. Or use ‘all’ as ID to see all notifications.\n" \
          "\n" \
          "   Optional:\n" \
          "\n" \
