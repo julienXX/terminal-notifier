@@ -50,8 +50,8 @@ This will obviously be a bit slower than using the tool without the wrapper.
 
 #### Options
 
-At a minimum, you have to specify either the `-message` option or the `-remove`
-option.
+At a minimum, you have to specify either the `-message` , the `-remove`
+option or the `-list` option.
 
 -------------------------------------------------------------------------------
 
@@ -94,7 +94,15 @@ Examples are:
 `-remove ID`  **[required]**
 
 Removes a notification that was previously sent with the specified ‘group’ ID,
-if one exists.
+if one exists. If used with the special group "ALL", all message are removed.
+
+-------------------------------------------------------------------------------
+
+`-list ID` **[required]**
+
+Lists details about the specified ‘group’ ID.
+If used with the special group "ALL", details about all currently active 
+messages are displayed.
 
 -------------------------------------------------------------------------------
 
