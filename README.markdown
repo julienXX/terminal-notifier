@@ -124,6 +124,14 @@ can be a web or file URL, or any custom URL scheme.
 
 Specifies a shell command to run when the user clicks the notification.
 
+-------------------------------------------------------------------------------
+
+Unfortunately, there is no way to change the icon the notification displays. 
+Please see issue #1: https://github.com/alloy/terminal-notifier/issues/1
+
+
+
+
 
 ## License
 
