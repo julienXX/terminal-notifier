@@ -20,7 +20,7 @@ Examples are:
 
 ```ruby
 TerminalNotifier.notify('Hello World')
-TerminalNotifier.notify('Hello World', :title => 'Ruby')
+TerminalNotifier.notify('Hello World', :title => 'Ruby', :subtitle => 'Programming Language')
 TerminalNotifier.notify('Hello World', :activate => 'com.apple.Safari')
 TerminalNotifier.notify('Hello World', :open => 'http://twitter.com/alloy')
 TerminalNotifier.notify('Hello World', :execute => 'say "OMG"')
