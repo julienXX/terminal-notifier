@@ -20,7 +20,7 @@
   const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
   printf("%s (%s) is a command-line tool to send OS X User Notifications.\n" \
          "\n" \
-         "Usage: %s -[message|list|remove] [VALUE|ID] [options]\n" \
+         "Usage: %s -[message|list|remove] [VALUE|ID|ID] [options]\n" \
          "\n" \
          "   Either of these is required:\n" \
          "\n" \
