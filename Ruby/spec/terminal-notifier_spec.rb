@@ -1,4 +1,3 @@
-require 'time'
 require 'rubygems'
 require 'bacon'
 require 'mocha'
@@ -10,33 +9,38 @@ $:.unshift File.expand_path('../../lib', __FILE__)
 require 'terminal-notifier'
 
 describe "TerminalNotifier" do
-  it "converts options to args" do
-    TerminalNotifier.expects(:execute).with(['-message', 'ZOMG'])
-    TerminalNotifier.execute_with_options(:message => 'ZOMG')
-  end
-
-  it "executes the tool with the given arguments" do
-    TerminalNotifier.expects(:system).with(TerminalNotifier::BIN_PATH, '-message', 'ZOMG')
-    TerminalNotifier.execute(['-message', 'ZOMG'])
+  it "executes the tool with the given options" do
+    command = [TerminalNotifier::BIN_PATH, '-message', 'ZOMG']
+    if RUBY_VERSION < '1.9'
+      require 'shellwords'
+      command = Shellwords.shelljoin(command)
+    end
+    IO.expects(:popen).with(*command).yields(StringIO.new('output'))
+    TerminalNotifier.execute(false, :message => 'ZOMG')
   end
 
   it "sends a notification" do
-    TerminalNotifier.expects(:execute_with_options).with(:message => 'ZOMG', :group => 'important stuff')
+    TerminalNotifier.expects(:execute).with(false, :message => 'ZOMG', :group => 'important stuff')
     TerminalNotifier.notify('ZOMG', :group => 'important stuff')
   end
 
   it "removes a notification" do
-    TerminalNotifier.expects(:execute_with_options).with(:remove => 'important stuff')
+    TerminalNotifier.expects(:execute).with(false, :remove => 'important stuff')
     TerminalNotifier.remove('important stuff')
   end
 
+  it "by default removes all the notifications" do
+    TerminalNotifier.expects(:execute).with(false, :remove => 'ALL')
+    TerminalNotifier.remove
+  end
+
   it "returns `nil` if no notification was found to list info for" do
-    TerminalNotifier.expects(:execute_with_options).with(:list => 'important stuff').returns('')
+    TerminalNotifier.expects(:execute).with(false, :list => 'important stuff').returns('')
     TerminalNotifier.list('important stuff').should == nil
   end
 
   it "returns info about a notification posted in a specific group" do
-    TerminalNotifier.expects(:execute_with_options).with(:list => 'important stuff').
+    TerminalNotifier.expects(:execute).with(false, :list => 'important stuff').
       returns("GroupID\tTitle\tSubtitle\tMessage\tDelivered At\n" \
               "important stuff\tTerminal\t(null)\tExecute: rake spec\t2012-08-06 19:45:30 +0000")
     TerminalNotifier.list('important stuff').should == {
@@ -47,7 +51,7 @@ describe "TerminalNotifier" do
   end
 
   it "by default returns a list of all notification" do
-    TerminalNotifier.expects(:execute_with_options).with(:list => 'ALL').
+    TerminalNotifier.expects(:execute).with(false, :list => 'ALL').
       returns("GroupID\tTitle\tSubtitle\tMessage\tDelivered At\n" \
               "important stuff\tTerminal\t(null)\tExecute: rake spec\t2012-08-06 19:45:30 +0000\n" \
               "(null)\t(null)\tSubtle\tBe subtle!\t2012-08-07 19:45:30 +0000")

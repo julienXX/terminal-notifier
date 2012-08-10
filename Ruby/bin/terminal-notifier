@@ -6,4 +6,4 @@ end
 
 require 'terminal-notifier'
 
-TerminalNotifier.execute(ARGV)
+exec TerminalNotifier::BIN_PATH, *ARGV

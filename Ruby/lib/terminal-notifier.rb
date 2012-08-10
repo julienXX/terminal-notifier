@@ -9,21 +9,20 @@ module TerminalNotifier
     @available
   end
 
-  def self.silence_stdout
-    stdout = STDOUT.clone
-    STDOUT.reopen(File.new('/dev/null', 'w'))
-    yield
-  ensure
-    STDOUT.reopen(stdout)
-  end
-
-  def self.execute_with_options(options)
-    execute(options.map { |k,v| ["-#{k}", v.to_s] }.flatten)
-  end
-
-  def self.execute(argv)
+  def self.execute(verbose, options)
     if available?
-      system(BIN_PATH, *argv)
+      command = [BIN_PATH, *options.map { |k,v| ["-#{k}", v.to_s] }.flatten]
+      if RUBY_VERSION < '1.9'
+        require 'shellwords'
+        command = Shellwords.shelljoin(command)
+      end
+      result = ''
+      IO.popen(*command) do |stdout|
+        output = stdout.read
+        STDOUT.print output if verbose
+        result << output
+      end
+      result
     else
       raise "terminal-notifier is only supported on Mac OS X 10.8, or higher."
     end
@@ -46,29 +45,23 @@ module TerminalNotifier
   #   TerminalNotifier.notify('Hello World', :execute => 'say "OMG"')
   #
   # Raises if not supported on the current platform.
-  def notify(message, options = {})
-    TerminalNotifier.silence_stdout { TerminalNotifier.verbose_notify(message, options) }
+  def notify(message, options = {}, verbose = false)
+    TerminalNotifier.execute(verbose, options.merge(:message => message))
+    $?.success?
   end
   module_function :notify
 
-  # The same as `verbose`, but sends the output from the tool to STDOUT.
-  def verbose_notify(message, options = {})
-    TerminalNotifier.execute_with_options(options.merge(:message => message))
-  end
-  module_function :verbose_notify
-
   # Removes a notification that was previously sent with the specified
   # ‘group’ ID, if one exists.
-  def remove(group)
-    TerminalNotifier.silence_stdout { TerminalNotifier.verbose_remove(group) }
+  #
+  # If no ‘group’ ID is given, all notifications are removed.
+  def remove(group = 'ALL', verbose = false)
+    TerminalNotifier.execute(verbose, :remove => group)
+    $?.success?
   end
   module_function :remove
 
-  # The same as `remove`, but sends the output from the tool to STDOUT.
-  def verbose_remove(group)
-    TerminalNotifier.execute_with_options(:remove => group)
-  end
-  module_function :verbose_remove
+  LIST_FIELDS = [:group, :title, :subtitle, :message, :delivered_at].freeze
 
   # If a ‘group’ ID is given, and a notification for that group exists,
   # returns a hash with details about the notification.
@@ -77,18 +70,11 @@ module TerminalNotifier
   # notifications.
   #
   # If no information is available this will return `nil`.
-  def list(group = :all)
-    TerminalNotifier.silence_stdout { TerminalNotifier.verbose_list(group) }
-  end
-  module_function :list
-
-  LIST_FIELDS = [:group, :title, :subtitle, :message, :delivered_at].freeze
-
-  # The same as `list`, but sends the output from the tool to STDOUT.
-  def verbose_list(group = :all)
-    output = TerminalNotifier.execute_with_options(:list => (group == :all ? 'ALL' : group))
+  def list(group = 'ALL', verbose = false)
+    output = TerminalNotifier.execute(verbose, :list => group)
     return if output.strip.empty?
 
+    require 'time'
     notifications = output.split("\n")[1..-1].map do |line|
       LIST_FIELDS.zip(line.split("\t")).inject({}) do |hash, (key, value)|
         hash[key] = key == :delivered_at ? Time.parse(value) : (value unless value == '(null)')
@@ -96,7 +82,7 @@ module TerminalNotifier
       end
     end
 
-    group == :all ? notifications : notifications.first
+    group == 'ALL' ? notifications : notifications.first
   end
-  module_function :verbose_list
+  module_function :list
 end
