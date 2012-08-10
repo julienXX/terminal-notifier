@@ -69,4 +69,34 @@ module TerminalNotifier
     TerminalNotifier.execute_with_options(:remove => group)
   end
   module_function :verbose_remove
+
+  # If a ‘group’ ID is given, and a notification for that group exists,
+  # returns a hash with details about the notification.
+  #
+  # If no ‘group’ ID is given, an array of hashes describing all
+  # notifications.
+  #
+  # If no information is available this will return `nil`.
+  def list(group = :all)
+    TerminalNotifier.silence_stdout { TerminalNotifier.verbose_list(group) }
+  end
+  module_function :list
+
+  LIST_FIELDS = [:group, :title, :subtitle, :message, :delivered_at].freeze
+
+  # The same as `list`, but sends the output from the tool to STDOUT.
+  def verbose_list(group = :all)
+    output = TerminalNotifier.execute_with_options(:list => (group == :all ? 'ALL' : group))
+    return if output.strip.empty?
+
+    notifications = output.split("\n")[1..-1].map do |line|
+      LIST_FIELDS.zip(line.split("\t")).inject({}) do |hash, (key, value)|
+        hash[key] = key == :delivered_at ? Time.parse(value) : (value unless value == '(null)')
+        hash
+      end
+    end
+
+    group == :all ? notifications : notifications.first
+  end
+  module_function :verbose_list
 end
