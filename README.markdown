@@ -67,8 +67,6 @@ The title of the notification. This defaults to ‘Terminal’.
 
 -------------------------------------------------------------------------------
 
--------------------------------------------------------------------------------
-
 `-subtitle VALUE`
 
 The subtitle of the notification.
@@ -100,9 +98,10 @@ if one exists. If used with the special group "ALL", all message are removed.
 
 `-list ID` **[required]**
 
-Lists details about the specified ‘group’ ID.
-If used with the special group "ALL", details about all currently active 
-messages are displayed.
+Lists details about the specified ‘group’ ID. If used with the special group
+"ALL", details about all currently active  messages are displayed.
+
+The output of this command is tab-separated, which makes it easy to parse.
 
 -------------------------------------------------------------------------------
 
