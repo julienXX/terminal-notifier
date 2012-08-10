@@ -15,8 +15,12 @@ describe "TerminalNotifier" do
       require 'shellwords'
       command = Shellwords.shelljoin(command)
     end
-    IO.expects(:popen).with(*command).yields(StringIO.new('output'))
+    IO.expects(:popen).with(command).yields(StringIO.new('output'))
     TerminalNotifier.execute(false, :message => 'ZOMG')
+  end
+
+  it "returns the result output of the command" do
+    TerminalNotifier.execute(false, 'help' => '').should == `'#{TerminalNotifier::BIN_PATH}' -help`
   end
 
   it "sends a notification" do

@@ -17,7 +17,7 @@ module TerminalNotifier
         command = Shellwords.shelljoin(command)
       end
       result = ''
-      IO.popen(*command) do |stdout|
+      IO.popen(command) do |stdout|
         output = stdout.read
         STDOUT.print output if verbose
         result << output
