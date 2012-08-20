@@ -113,6 +113,13 @@ InstallFakeBundleIdentifierHook()
     NSString *list     = defaults[@"list"];
     NSString *sound    = defaults[@"sound"];
 
+    // if data is piped to application, override the message with it
+    if (!isatty(STDIN_FILENO)) {
+      NSFileHandle *input = [NSFileHandle fileHandleWithStandardInput];
+      NSData *inputData = [NSData dataWithData:[input readDataToEndOfFile]];
+      message = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
+    }
+    
     if (message == nil && remove == nil && list == nil) {
       [self printHelpBanner];
       exit(1);
