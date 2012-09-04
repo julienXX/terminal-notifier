@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    terminal-notifier (1.4.1)
+    terminal-notifier (1.4.2)
 
 GEM
   remote: http://rubygems.org/
