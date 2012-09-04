@@ -1,6 +1,8 @@
 # -*- encoding: utf-8 -*-
 plist = File.expand_path('../../Terminal Notifier/Terminal Notifier-Info.plist', __FILE__)
-version = `/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' '#{plist}'`.strip
+#version = `/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' '#{plist}'`.strip
+#at least allow rake spec to run and fail on Linux
+version = '1.4.2'
 
 Gem::Specification.new do |gem|
   gem.name             = "terminal-notifier"
