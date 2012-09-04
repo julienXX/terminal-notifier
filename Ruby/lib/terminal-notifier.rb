@@ -24,7 +24,7 @@ module TerminalNotifier
       end
       result
     else
-      raise "terminal-notifier is only supported on Mac OS X 10.8, or higher."
+      STDERR.puts "Warning: terminal-notifier is only supported on Mac OS X 10.8, or higher."
     end
   end
 
