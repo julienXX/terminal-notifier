@@ -6,4 +6,8 @@ end
 
 require 'terminal-notifier'
 
+unless ARGV.include?("-message")
+  ARGV.push(*["-message", STDIN.read.chomp])
+end
+
 exec TerminalNotifier::BIN_PATH, *ARGV
