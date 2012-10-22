@@ -10,7 +10,7 @@ require 'terminal-notifier'
 
 describe "TerminalNotifier" do
   it "executes the tool with the given options" do
-    command = [TerminalNotifier::BIN_PATH, '-message', 'ZOMG']
+    command = [TerminalNotifier::BIN_PATH, '-message', '"ZOMG"']
     if RUBY_VERSION < '1.9'
       require 'shellwords'
       command = Shellwords.shelljoin(command)
