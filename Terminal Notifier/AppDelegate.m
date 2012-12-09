@@ -218,7 +218,6 @@
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
         didDeliverNotification:(NSUserNotification *)userNotification;
 {
-  printf("* Notification delivered.\n");
   exit(0);
 }
 
