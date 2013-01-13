@@ -25,7 +25,7 @@ module TerminalNotifier
       end
       result
     else
-      raise UnsupportedPlatformError, "Warning: terminal-notifier is only supported on Mac OS X 10.8, or higher."
+      raise UnsupportedPlatformError, "terminal-notifier is only supported on Mac OS X 10.8, or higher."
     end
   end
 
