@@ -1,6 +1,7 @@
 module TerminalNotifier
   BIN_PATH = File.expand_path('../../vendor/terminal-notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', __FILE__)
 
+  class UnsupportedPlatformError < StandardError; end
   # Returns wether or not the current platform is Mac OS X 10.8, or higher.
   def self.available?
     if @available.nil?
@@ -24,7 +25,7 @@ module TerminalNotifier
       end
       result
     else
-      STDERR.puts "Warning: terminal-notifier is only supported on Mac OS X 10.8, or higher."
+      raise UnsupportedPlatformError, "Warning: terminal-notifier is only supported on Mac OS X 10.8, or higher."
     end
   end
 
