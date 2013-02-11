@@ -1,5 +1,37 @@
 #import "AppDelegate.h"
 #import <ScriptingBridge/ScriptingBridge.h>
+#import <objc/runtime.h>
+
+#pragma mark - Swizzle NSBundle
+
+NSString *fakeBundleIdentifier = nil;
+
+@implementation NSBundle(swizle)
+
+// Overriding bundleIdentifier works, but overriding NSUserNotificationAlertStyle does not work.
+
+- (NSString *)__bundleIdentifier
+{
+    if (self == [NSBundle mainBundle]) {
+        return fakeBundleIdentifier ? fakeBundleIdentifier : @"nl.superalloy.oss.terminal-notifier";
+    } else {
+        return [self __bundleIdentifier];
+    }
+}
+
+@end
+
+BOOL installNSBundleHook()
+{
+    Class class = objc_getClass("NSBundle");
+    if (class) {
+        method_exchangeImplementations(class_getInstanceMethod(class, @selector(bundleIdentifier)),
+                                       class_getInstanceMethod(class, @selector(__bundleIdentifier)));
+        return YES;
+    }
+	return NO;
+}
+
 
 @interface NSUserDefaults (Subscript)
 @end
@@ -75,7 +107,14 @@
 
     if (message) {
       NSMutableDictionary *options = [NSMutableDictionary dictionary];
-      if (defaults[@"activate"]) options[@"bundleID"] = defaults[@"activate"];
+      if (defaults[@"activate"]) {
+	options[@"bundleID"] = defaults[@"activate"];
+	@autoreleasepool {
+	  if (installNSBundleHook()) {
+	    fakeBundleIdentifier = options[@"bundleID"];
+	  }
+	}
+      }
       if (defaults[@"group"])    options[@"groupID"]  = defaults[@"group"];
       if (defaults[@"execute"])  options[@"command"]  = defaults[@"execute"];
       if (defaults[@"open"])     options[@"open"]     = defaults[@"open"];
