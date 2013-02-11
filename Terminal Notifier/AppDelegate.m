@@ -100,6 +100,15 @@ BOOL installNSBundleHook()
       exit(0);
     }
 
+    // We also need to fake our ID to remove a message.
+    if (defaults[@"activate"]) {
+      @autoreleasepool {
+	if (installNSBundleHook()) {
+	  fakeBundleIdentifier = defaults[@"activate"];
+	}
+      }
+    }
+
     if (remove) {
       [self removeNotificationWithGroupID:remove];
       if (message == nil) exit(0);
@@ -107,14 +116,7 @@ BOOL installNSBundleHook()
 
     if (message) {
       NSMutableDictionary *options = [NSMutableDictionary dictionary];
-      if (defaults[@"activate"]) {
-	options[@"bundleID"] = defaults[@"activate"];
-	@autoreleasepool {
-	  if (installNSBundleHook()) {
-	    fakeBundleIdentifier = options[@"bundleID"];
-	  }
-	}
-      }
+      if (defaults[@"activate"]) options[@"bundleID"] = defaults[@"activate"];
       if (defaults[@"group"])    options[@"groupID"]  = defaults[@"group"];
       if (defaults[@"execute"])  options[@"command"]  = defaults[@"execute"];
       if (defaults[@"open"])     options[@"open"]     = defaults[@"open"];
