@@ -34,6 +34,8 @@
          "\n" \
          "       -title VALUE       The notification title. Defaults to ‘Terminal’.\n" \
          "       -subtitle VALUE    The notification subtitle.\n" \
+         "       -sound NAME        The name of a sound to play when the notification appears. The names are listed\n" \
+         "                          in Sound Preferences. Use 'default' for the default notification sound.\n" \
          "       -group ID          A string which identifies the group the notifications belong to.\n" \
          "                          Old notifications with the same ID will be removed.\n" \
          "       -activate ID       The bundle identifier of the application to activate when the user clicks the notification.\n" \
@@ -58,6 +60,8 @@
     NSString *message  = defaults[@"message"];
     NSString *remove   = defaults[@"remove"];
     NSString *list     = defaults[@"list"];
+    NSString *sound    = defaults[@"sound"];
+    
     if (message == nil && remove == nil && list == nil) {
       [self printHelpBanner];
       exit(1);
@@ -83,7 +87,8 @@
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
                                  subtitle:subtitle
                                  message:message
-                                 options:options];
+                                 options:options
+                                   sound:sound];
     }
   }
 }
@@ -91,7 +96,8 @@
 - (void)deliverNotificationWithTitle:(NSString *)title
                              subtitle:(NSString *)subtitle
                              message:(NSString *)message
-                             options:(NSDictionary *)options;
+                             options:(NSDictionary *)options
+                               sound:(NSString *)sound;
 {
   // First remove earlier notification with the same group ID.
   if (options[@"groupID"]) [self removeNotificationWithGroupID:options[@"groupID"]];
@@ -101,6 +107,10 @@
   userNotification.subtitle = subtitle;
   userNotification.informativeText = message;
   userNotification.userInfo = options;
+  
+  if (sound != nil) {
+    userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound ;
+  }
 
   NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
   center.delegate = self;
