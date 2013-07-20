@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# Fire up terminal-notifier.app without needing a Ruby wrapper
+# Stolen from the `mvim` script distributed with MacVim.
+# 
+# Credits for the MacVim version are:
+# Based on a script by Wout Mertens and suggestions from Laurent Bihanic.  This
+# version is the fault of Benji Fisher, 16 May 2005 (with modifications by Nico
+# Weber and Bjorn Winckler, Aug 13 2007).
+#
+# Adapted for terminal-notifier by Michael Maclean.
+
+if [ -z "$TERM_NOTIFY_APP_DIR" ]
+then
+	myDir="`dirname "$0"`"
+	myAppDir="$myDir/../Applications"
+	for i in ~/Applications ~/Applications/terminal-notifier $myDir $myDir/terminal-notifier $myAppDir $myAppDir/terminal-notifier /Applications /Applications/terminal-notifier /Applications/Utilities /Applications/Utilities/terminal-notifier; do
+		if [ -x "$i/terminal-notifier.app" ]; then
+			TERM_NOTIFY_APP_DIR="$i"
+			break
+		fi
+	done
+fi
+if [ -z "$TERM_NOTIFY_APP_DIR" ]
+then
+	echo "Sorry, cannot find terminal-notifier.app.  Try setting the TERM_NOTIFY_APP_DIR environment variable to the directory containing terminal-notifier.app."
+	exit 1
+fi
+binary="$TERM_NOTIFY_APP_DIR/terminal-notifier.app/Contents/MacOS/terminal-notifier"
+
+message=()
+
+if [ -t 0 ]; then
+	exec "$binary" ${1:+"$@"}
+else
+	while read data; do
+	  message=( "${message[@]}" "$data" )
+	done
+
+	if [ "$message" != "" ]; then
+		exec "$binary" -message "$message" ${1:+"$@"}
+	else
+		exec "$binary" ${1:+"$@"}
+	fi
+fi
