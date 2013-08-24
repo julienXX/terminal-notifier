@@ -68,7 +68,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-sound default"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-list ALL"
@@ -83,8 +83,8 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-open &apos;http://google.com&apos;"
-            isEnabled = "NO">
+            argument = "-open &apos;http://google.com/search?q=http status codes&apos;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-execute &apos;say &quot;OMG&quot;&apos;"
@@ -108,11 +108,11 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-activate com.apple.Safari"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-sender com.apple.Safari"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>

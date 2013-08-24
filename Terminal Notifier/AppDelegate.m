@@ -135,7 +135,7 @@ InstallFakeBundleIdentifierHook()
       if (defaults[@"activate"]) options[@"bundleID"] = defaults[@"activate"];
       if (defaults[@"group"])    options[@"groupID"]  = defaults[@"group"];
       if (defaults[@"execute"])  options[@"command"]  = defaults[@"execute"];
-      if (defaults[@"open"])     options[@"open"]     = defaults[@"open"];
+      if (defaults[@"open"])     options[@"open"]     = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
                                 subtitle:subtitle
