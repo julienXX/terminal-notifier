@@ -99,12 +99,16 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-message &apos;\\[Execute] rake spec&apos;"
+            argument = "-message &apos;&#55357;&#57003; Tests failed.&apos;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-message &apos;&#9989; Tests passed.&apos;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-message &apos;Execute: rake spec&apos;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-activate com.apple.Safari"
