@@ -173,10 +173,9 @@
   NSLog(@"     open: %@", open);
 
   BOOL success = YES;
-  // TODO this loses NO if a consecutive call does succeed
-  if (bundleID) success = [self activateAppWithBundleID:bundleID] && success;
-  if (command)  success = [self executeShellCommand:command] && success;
-  if (open)     success = [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:open]] && success;
+  if (bundleID) success &= [self activateAppWithBundleID:bundleID];
+  if (command)  success &= [self executeShellCommand:command];
+  if (open)     success &= [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:open]];
 
   exit(success ? 0 : 1);
 }
@@ -217,7 +216,6 @@
   return [task terminationStatus] == 0;
 }
 
-// TODO is this really needed?
 - (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center
      shouldPresentNotification:(NSUserNotification *)userNotification;
 {
