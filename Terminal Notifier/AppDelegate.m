@@ -71,6 +71,7 @@ InstallFakeBundleIdentifierHook()
          "       -group ID          A string which identifies the group the notifications belong to.\n" \
          "                          Old notifications with the same ID will be removed.\n" \
          "       -activate ID       The bundle identifier of the application to activate when the user clicks the notification.\n" \
+         "       -sender ID         The bundle identifier of the application that should be shown as the sender, including its icon.\n" \
          "       -open URL          The URL of a resource to open when the user clicks the notification.\n" \
          "       -execute COMMAND   A shell command to perform when the user clicks the notification.\n" \
          "\n" \
@@ -104,11 +105,12 @@ InstallFakeBundleIdentifierHook()
       exit(0);
     }
 
-    // We also need to fake our ID to remove a message.
-    if (defaults[@"activate"]) {
+    // Install the fake bundle ID hook so we can fake the sender. This also
+    // needs to be done to be able to remove a message.
+    if (defaults[@"sender"]) {
       @autoreleasepool {
         if (InstallFakeBundleIdentifierHook()) {
-          _fakeBundleIdentifier = defaults[@"activate"];
+          _fakeBundleIdentifier = defaults[@"sender"];
         }
       }
     }
