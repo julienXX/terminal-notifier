@@ -57,6 +57,7 @@ InstallFakeBundleIdentifierHook()
          "\n" \
          "   Either of these is required:\n" \
          "\n" \
+         "       -help              Display this help banner.\n" \
          "       -message VALUE     The notification message.\n" \
          "       -remove ID         Removes a notification with the specified ‘group’ ID.\n" \
          "       -list ID           If the specified ‘group’ ID exists show when it was delivered,\n" \
@@ -91,6 +92,11 @@ InstallFakeBundleIdentifierHook()
     [self userActivatedNotification:userNotification];
 
   } else {
+    if ([[[NSProcessInfo processInfo] arguments] indexOfObject:@"-help"] != NSNotFound) {
+      [self printHelpBanner];
+      exit(0);
+    }
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     NSString *subtitle = defaults[@"subtitle"];
@@ -98,7 +104,7 @@ InstallFakeBundleIdentifierHook()
     NSString *remove   = defaults[@"remove"];
     NSString *list     = defaults[@"list"];
     NSString *sound    = defaults[@"sound"];
-    
+
     if (message == nil && remove == nil && list == nil) {
       [self printHelpBanner];
       exit(1);

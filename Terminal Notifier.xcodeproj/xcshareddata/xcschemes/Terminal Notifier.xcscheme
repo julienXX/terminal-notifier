@@ -63,6 +63,14 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-help"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-sound default"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-list ALL"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -96,7 +104,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-message &apos;Execute: rake spec&apos;"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-activate com.apple.Safari"
