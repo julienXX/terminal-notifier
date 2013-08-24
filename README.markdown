@@ -47,6 +47,14 @@ $ terminal-notifier -[message|group|list] [VALUE|ID|ID] [options]
 
 This will obviously be a bit slower than using the tool without the wrapper.
 
+Some examples are:
+
+```
+$ echo 'Piped Message Data!' | terminal-notifier -sound default
+$ terminal-notifier -title '💰' -message 'Check your Apple stock!' -open 'http://finance.yahoo.com/q?s=AAPL'
+$ terminal-notifier -group 'address-book-sync' -title 'Address Book Sync' -subtitle 'Finished' -message 'Imported 42 contacts.' -activate 'com.apple.AddressBook'
+```
+
 
 #### Options
 
