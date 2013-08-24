@@ -9,14 +9,11 @@ $:.unshift File.expand_path('../../lib', __FILE__)
 require 'terminal-notifier'
 
 describe "TerminalNotifier" do
-  it "executes the tool with the given options" do
-    command = [TerminalNotifier::BIN_PATH, '-message', '"ZOMG"']
-    if RUBY_VERSION < '1.9'
-      require 'shellwords'
-      command = Shellwords.shelljoin(command)
-    end
+  it "executes the tool with the given options and properly escapes the message" do
+    command = [TerminalNotifier::BIN_PATH, '-message', '\[ZOMG] "OH YEAH"']
+    command = Shellwords.join(command) if RUBY_VERSION < '1.9'
     IO.expects(:popen).with(command).yields(StringIO.new('output'))
-    TerminalNotifier.execute(false, :message => 'ZOMG')
+    TerminalNotifier.execute(false, :message => '[ZOMG] "OH YEAH"')
   end
 
   it "returns the result output of the command" do

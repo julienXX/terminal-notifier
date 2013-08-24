@@ -33,13 +33,14 @@ InstallFakeBundleIdentifierHook()
 }
 
 
-@interface NSUserDefaults (Subscript)
-@end
-
-@implementation NSUserDefaults (Subscript)
+@implementation NSUserDefaults (SubscriptAndUnescape)
 - (id)objectForKeyedSubscript:(id)key;
 {
-  return [self objectForKey:key];
+  id obj = [self objectForKey:key];
+  if ([obj isKindOfClass:[NSString class]] && [(NSString *)obj hasPrefix:@"\\"]) {
+    obj = [(NSString *)obj substringFromIndex:1];
+  }
+  return obj;
 }
 @end
 
@@ -76,7 +77,10 @@ InstallFakeBundleIdentifierHook()
          "       -execute COMMAND   A shell command to perform when the user clicks the notification.\n" \
          "\n" \
          "When the user activates a notification, the results are logged to the system logs.\n" \
-         "Use Console.app to view these logs.\n",
+         "Use Console.app to view these logs.\n" \
+         "\n" \
+         "Note that in some circumstances the first character of a message has to be escaped in order to be recognized.\n" \
+         "An example of this is when using an open bracket, which has to be escaped like so: ‘\\[’.\n",
          appName, appVersion, appName);
 }
 

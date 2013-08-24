@@ -1,3 +1,5 @@
+require 'shellwords'
+
 module TerminalNotifier
   BIN_PATH = File.expand_path('../../vendor/terminal-notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', __FILE__)
 
@@ -9,11 +11,8 @@ module TerminalNotifier
 
   def self.execute(verbose, options)
     if available?
-      command = [BIN_PATH, *options.map { |k,v| ["-#{k}", "\"#{v.to_s}\""] }.flatten]
-      if RUBY_VERSION < '1.9'
-        require 'shellwords'
-        command = Shellwords.shelljoin(command)
-      end
+      command = [BIN_PATH, *options.map { |k,v| v = v.to_s; ["-#{k}", "#{Shellwords.escape(v[0,1])}#{v[1..-1]}"] }.flatten]
+      command = Shellwords.join(command) if RUBY_VERSION < '1.9'
       result = ''
       IO.popen(command) do |stdout|
         output = stdout.read

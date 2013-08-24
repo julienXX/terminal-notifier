@@ -4,7 +4,7 @@ PATH
     terminal-notifier (1.4.2)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     bacon (1.1.0)
     metaclass (0.0.1)
