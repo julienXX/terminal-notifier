@@ -2,34 +2,34 @@
 #import <ScriptingBridge/ScriptingBridge.h>
 #import <objc/runtime.h>
 
-#pragma mark - Swizzle NSBundle
 
 NSString *fakeBundleIdentifier = nil;
 
-@implementation NSBundle(swizle)
+@implementation NSBundle (FakeBundleIdentifier)
 
 // Overriding bundleIdentifier works, but overriding NSUserNotificationAlertStyle does not work.
 
-- (NSString *)__bundleIdentifier
+- (NSString *)__bundleIdentifier;
 {
-    if (self == [NSBundle mainBundle]) {
-        return fakeBundleIdentifier ? fakeBundleIdentifier : @"nl.superalloy.oss.terminal-notifier";
-    } else {
-        return [self __bundleIdentifier];
-    }
+  if (self == [NSBundle mainBundle]) {
+    return fakeBundleIdentifier ? fakeBundleIdentifier : @"nl.superalloy.oss.terminal-notifier";
+  } else {
+    return [self __bundleIdentifier];
+  }
 }
 
 @end
 
-BOOL installNSBundleHook()
+static BOOL
+installNSBundleHook();
 {
-    Class class = objc_getClass("NSBundle");
-    if (class) {
-        method_exchangeImplementations(class_getInstanceMethod(class, @selector(bundleIdentifier)),
-                                       class_getInstanceMethod(class, @selector(__bundleIdentifier)));
-        return YES;
-    }
-	return NO;
+  Class class = objc_getClass("NSBundle");
+  if (class) {
+    method_exchangeImplementations(class_getInstanceMethod(class, @selector(bundleIdentifier)),
+                                   class_getInstanceMethod(class, @selector(__bundleIdentifier)));
+    return YES;
+  }
+  return NO;
 }
 
 
@@ -107,9 +107,9 @@ BOOL installNSBundleHook()
     // We also need to fake our ID to remove a message.
     if (defaults[@"activate"]) {
       @autoreleasepool {
-	if (installNSBundleHook()) {
-	  fakeBundleIdentifier = defaults[@"activate"];
-	}
+        if (installNSBundleHook()) {
+          fakeBundleIdentifier = defaults[@"activate"];
+        }
       }
     }
 
@@ -126,7 +126,7 @@ BOOL installNSBundleHook()
       if (defaults[@"open"])     options[@"open"]     = defaults[@"open"];
 
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
-                                 subtitle:subtitle
+                                subtitle:subtitle
                                  message:message
                                  options:options
                                    sound:sound];
