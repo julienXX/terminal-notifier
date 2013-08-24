@@ -57,7 +57,7 @@ InstallFakeBundleIdentifierHook()
          "\n" \
          "Usage: %s -[message|list|remove] [VALUE|ID|ID] [options]\n" \
          "\n" \
-         "   Either of these is required:\n" \
+         "   Either of these is required (unless message data is piped to the tool):\n" \
          "\n" \
          "       -help              Display this help banner.\n" \
          "       -message VALUE     The notification message.\n" \
@@ -113,13 +113,13 @@ InstallFakeBundleIdentifierHook()
     NSString *list     = defaults[@"list"];
     NSString *sound    = defaults[@"sound"];
 
-    // if data is piped to application, override the message with it
-    if (!isatty(STDIN_FILENO)) {
-      NSFileHandle *input = [NSFileHandle fileHandleWithStandardInput];
-      NSData *inputData = [NSData dataWithData:[input readDataToEndOfFile]];
+    // If there is no message and data is piped to the application, use that
+    // instead.
+    if (message == nil && !isatty(STDIN_FILENO)) {
+      NSData *inputData = [NSData dataWithData:[[NSFileHandle fileHandleWithStandardInput] readDataToEndOfFile]];
       message = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
     }
-    
+
     if (message == nil && remove == nil && list == nil) {
       [self printHelpBanner];
       exit(1);
