@@ -9,7 +9,7 @@ module TerminalNotifier
 
   def self.execute(verbose, options)
     if available?
-      command = [BIN_PATH, *options.map { |k,v| ["-#{k}", v.to_s] }.flatten]
+      command = [BIN_PATH, *options.map { |k,v| ["-#{k}", "\"#{v.to_s}\""] }.flatten]
       if RUBY_VERSION < '1.9'
         require 'shellwords'
         command = Shellwords.shelljoin(command)
