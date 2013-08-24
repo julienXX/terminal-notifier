@@ -27,7 +27,10 @@ install it through RubyGems:
 ```
 $ [sudo] gem install terminal-notifier
 ```
-
+There is also [Python](https://github.com/SeTeM/pync) version:
+```
+$ pip install pync
+```
 
 ## Usage
 
