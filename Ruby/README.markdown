@@ -25,6 +25,8 @@ TerminalNotifier.notify('Hello World', :activate => 'com.apple.Safari')
 TerminalNotifier.notify('Hello World', :open => 'http://twitter.com/alloy')
 TerminalNotifier.notify('Hello World', :execute => 'say "OMG"')
 TerminalNotifier.notify('Hello World', :group => Process.pid)
+TerminalNotifier.notify('Hello World', :sender => 'com.apple.Safari')
+TerminalNotifier.notify('Hello World', :sound => 'default')
 
 TerminalNotifier.remove(Process.pid)
 
