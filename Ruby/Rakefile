@@ -6,7 +6,7 @@ def version
 end
 
 def filename
-  "terminal-notifier_#{version}"
+  "terminal-notifier-#{version}"
 end
 
 def zipfile
@@ -18,9 +18,10 @@ task :clean do
   rm_rf "vendor"
 end
 
+desc "Fetch latest build from the GitHub releases"
 task :update_build do
   unless File.exist?(zipfile)
-    sh "curl -O 'http://cloud.github.com/downloads/alloy/terminal-notifier/terminal-notifier_#{version}.zip'"
+    sh "curl -L -O 'https://github.com/alloy/terminal-notifier/releases/download/#{version}/terminal-notifier-#{version}.zip'"
   end
 
   rm_rf "vendor"

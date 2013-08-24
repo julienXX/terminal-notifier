@@ -1,13 +1,14 @@
 # -*- encoding: utf-8 -*-
 plist = File.expand_path('../../Terminal Notifier/Terminal Notifier-Info.plist', __FILE__)
-#version = `/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' '#{plist}'`.strip
-#at least allow rake spec to run and fail on Linux
-version = '1.4.2'
+# Also run on non-OSX machines, otherwise bundle installs directly from the repo will fail.
+# version = `/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' '#{plist}'`.strip
+version = File.read(plist).match(%r{<string>(\d+\.\d+\.\d+)</string>})[1]
+
 
 Gem::Specification.new do |gem|
   gem.name             = "terminal-notifier"
   gem.version          = version
-  gem.summary          = 'Send User Notifications on Mac OS X 10.8.'
+  gem.summary          = 'Send User Notifications on Mac OS X 10.8 or higher.'
   gem.authors          = ["Eloy Duran"]
   gem.email            = ["eloy.de.enige@gmail.com"]
   gem.homepage         = 'https://github.com/alloy/terminal-notifier'
