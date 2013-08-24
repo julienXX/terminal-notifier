@@ -2,6 +2,8 @@
 #import <ScriptingBridge/ScriptingBridge.h>
 #import <objc/runtime.h>
 
+NSString * const TerminalNotifierBundleID = @"nl.superalloy.oss.terminal-notifier";
+NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui";
 
 NSString *_fakeBundleIdentifier = nil;
 
@@ -12,7 +14,7 @@ NSString *_fakeBundleIdentifier = nil;
 - (NSString *)__bundleIdentifier;
 {
   if (self == [NSBundle mainBundle]) {
-    return _fakeBundleIdentifier ? _fakeBundleIdentifier : @"nl.superalloy.oss.terminal-notifier";
+    return _fakeBundleIdentifier ? _fakeBundleIdentifier : TerminalNotifierBundleID;
   } else {
     return [self __bundleIdentifier];
   }
@@ -95,6 +97,12 @@ InstallFakeBundleIdentifierHook()
     if ([[[NSProcessInfo processInfo] arguments] indexOfObject:@"-help"] != NSNotFound) {
       [self printHelpBanner];
       exit(0);
+    }
+
+    NSArray *runningProcesses = [[[NSWorkspace sharedWorkspace] runningApplications] valueForKey:@"bundleIdentifier"];
+    if ([runningProcesses indexOfObject:NotificationCenterUIBundleID] == NSNotFound) {
+      NSLog(@"[!] Unable to post a notification for the current user (%@), as it has no running NotificationCenter instance.", NSUserName());
+      exit(1);
     }
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
