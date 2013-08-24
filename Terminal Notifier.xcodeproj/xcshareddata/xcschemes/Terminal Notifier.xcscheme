@@ -88,7 +88,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-title Kicker"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-message &apos;Execute: rake spec&apos;"
@@ -96,7 +96,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-activate com.apple.Safari"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>

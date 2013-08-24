@@ -3,7 +3,7 @@
 #import <objc/runtime.h>
 
 
-NSString *fakeBundleIdentifier = nil;
+NSString *_fakeBundleIdentifier = nil;
 
 @implementation NSBundle (FakeBundleIdentifier)
 
@@ -12,7 +12,7 @@ NSString *fakeBundleIdentifier = nil;
 - (NSString *)__bundleIdentifier;
 {
   if (self == [NSBundle mainBundle]) {
-    return fakeBundleIdentifier ? fakeBundleIdentifier : @"nl.superalloy.oss.terminal-notifier";
+    return _fakeBundleIdentifier ? _fakeBundleIdentifier : @"nl.superalloy.oss.terminal-notifier";
   } else {
     return [self __bundleIdentifier];
   }
@@ -21,7 +21,7 @@ NSString *fakeBundleIdentifier = nil;
 @end
 
 static BOOL
-installNSBundleHook();
+InstallFakeBundleIdentifierHook()
 {
   Class class = objc_getClass("NSBundle");
   if (class) {
@@ -107,8 +107,8 @@ installNSBundleHook();
     // We also need to fake our ID to remove a message.
     if (defaults[@"activate"]) {
       @autoreleasepool {
-        if (installNSBundleHook()) {
-          fakeBundleIdentifier = defaults[@"activate"];
+        if (InstallFakeBundleIdentifierHook()) {
+          _fakeBundleIdentifier = defaults[@"activate"];
         }
       }
     }
