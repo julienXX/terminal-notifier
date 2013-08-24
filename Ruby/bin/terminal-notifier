@@ -6,7 +6,7 @@ end
 
 require 'terminal-notifier'
 
-unless ARGV.include?("-message")
+if !ARGV.include?("-message") && !STDIN.tty?
   ARGV.push(*["-message", STDIN.read.chomp])
 end
 
