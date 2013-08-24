@@ -4,10 +4,7 @@ module TerminalNotifier
   class UnsupportedPlatformError < StandardError; end
   # Returns wether or not the current platform is Mac OS X 10.8, or higher.
   def self.available?
-    if @available.nil?
-      @available = `uname`.strip == 'Darwin' && `sw_vers -productVersion`.strip >= '10.8'
-    end
-    @available
+    @available ||= `uname`.strip == 'Darwin' && `sw_vers -productVersion`.strip >= '10.8'
   end
 
   def self.execute(verbose, options)
