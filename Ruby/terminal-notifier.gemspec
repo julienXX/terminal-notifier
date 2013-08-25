@@ -12,6 +12,7 @@ Gem::Specification.new do |gem|
   gem.authors          = ["Eloy Duran"]
   gem.email            = ["eloy.de.enige@gmail.com"]
   gem.homepage         = 'https://github.com/alloy/terminal-notifier'
+  gem.license          = 'MIT'
 
   gem.executables      = ['terminal-notifier']
   gem.files            = ['bin/terminal-notifier', 'lib/terminal-notifier.rb'] + Dir.glob('vendor/terminal-notifier/**/*')
