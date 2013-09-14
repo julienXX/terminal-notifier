@@ -86,6 +86,13 @@ The subtitle of the notification.
 
 -------------------------------------------------------------------------------
 
+`-sound NAME`
+
+The name of a sound to play when the notification appears. The names are listed
+in Sound Preferences. Use 'default' for the default notification sound.
+
+-------------------------------------------------------------------------------
+
 `-group ID`
 
 Specifies the ‘group’ a notification belongs to. For any ‘group’ only _one_
