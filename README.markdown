@@ -30,6 +30,10 @@ install it through RubyGems:
 $ [sudo] gem install terminal-notifier
 ```
 
+You can also install it via [Homebrew](https://github.com/mxcl/homebrew):
+```
+$ brew install terminal-notifier
+```
 
 ## Usage
 
