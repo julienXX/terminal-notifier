@@ -132,6 +132,11 @@ InstallFakeBundleIdentifierHook()
       exit(0);
     }
 
+    // If the `-sender` is not set, default it to com.apple.Terminal
+    if (! defaults[@"sender"]) {
+      [defaults setObject:@"com.apple.Terminal" forKey:@"sender"];
+    }
+
     // Install the fake bundle ID hook so we can fake the sender. This also
     // needs to be done to be able to remove a message.
     if (defaults[@"sender"]) {
