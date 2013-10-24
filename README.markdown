@@ -9,7 +9,9 @@ which are available in Mac OS X 10.8 and higher.
 * The Notification Center _always_ uses the application’s own icon, there’s
   currently no way to specify a custom icon for a notification. The only way to
   use this tool with your own icon is to use the `-sender` option or include a
-  build of terminal-notifier with your icon and bundle identifier instead.
+  build of terminal-notifier with your icon and **a different bundle identifier**
+  instead. (If you do not change the bundle identifier, launch services will use
+  a cached version of the icon.)
 
   However, you _can_ use unicode symbols and emojis. See the examples.
 
