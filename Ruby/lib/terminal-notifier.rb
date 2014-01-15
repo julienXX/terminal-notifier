@@ -25,7 +25,7 @@ module TerminalNotifier
     end
   end
 
-  # Sends a User Notification and returns wether or not it was a success.
+  # Sends a User Notification and returns whether or not it was a success.
   #
   # The available options are `:title`, `:group`, `:activate`, `:open`,
   # `:execute`, `:sender`, and `:sound`. For a description of each option see:
