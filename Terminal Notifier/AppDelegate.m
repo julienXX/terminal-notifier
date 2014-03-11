@@ -41,14 +41,13 @@ InstallFakeBundleIdentifierHook()
 static BOOL
 isMavericks()
 {
-    if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_8)
-    {
-        /* On a 10.8 - 10.8.x system */
-        return NO;
-    } else {
-        /* 10.9 or later system */
-        return YES;
-    }
+  if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_8) {
+    /* On a 10.8 - 10.8.x system */
+    return NO;
+  } else {
+    /* 10.9 or later system */
+    return YES;
+  }
 }
 
 @implementation NSUserDefaults (SubscriptAndUnescape)
@@ -68,10 +67,10 @@ isMavericks()
 +(void)initializeUserDefaults
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
+
     // initialize the dictionary with default values depending on OS level
     NSDictionary *appDefaults;
-    
+
     if (isMavericks())
     {
         //10.9
@@ -82,7 +81,7 @@ isMavericks()
         //10.8
         appDefaults = @{@"": @"message"};
     }
-    
+
     // and set them appropriately
     [defaults registerDefaults:appDefaults];
 }
@@ -215,7 +214,7 @@ isMavericks()
   userNotification.subtitle = subtitle;
   userNotification.informativeText = message;
   userNotification.userInfo = options;
-  
+
   if (sound != nil) {
     userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound ;
   }
