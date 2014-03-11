@@ -5,6 +5,10 @@
 NSString * const TerminalNotifierBundleID = @"nl.superalloy.oss.terminal-notifier";
 NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui";
 
+// Set OS Params
+#define NSAppKitVersionNumber10_8 1187
+#define NSAppKitVersionNumber10_9 1265
+
 NSString *_fakeBundleIdentifier = nil;
 
 @implementation NSBundle (FakeBundleIdentifier)
@@ -34,6 +38,18 @@ InstallFakeBundleIdentifierHook()
   return NO;
 }
 
+static BOOL
+isMavericks()
+{
+    if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_8)
+    {
+        /* On a 10.8 - 10.8.x system */
+        return NO;
+    } else {
+        /* 10.9 or later system */
+        return YES;
+    }
+}
 
 @implementation NSUserDefaults (SubscriptAndUnescape)
 - (id)objectForKeyedSubscript:(id)key;
@@ -48,6 +64,28 @@ InstallFakeBundleIdentifierHook()
 
 
 @implementation AppDelegate
+
++(void)initializeUserDefaults
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    // initialize the dictionary with default values depending on OS level
+    NSDictionary *appDefaults;
+    
+    if (isMavericks())
+    {
+        //10.9
+        appDefaults = @{@"sender": @"com.apple.Terminal"};
+    }
+    else
+    {
+        //10.8
+        appDefaults = @{@"": @"message"};
+    }
+    
+    // and set them appropriately
+    [defaults registerDefaults:appDefaults];
+}
 
 - (void)printHelpBanner;
 {
