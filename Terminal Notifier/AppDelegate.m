@@ -66,24 +66,21 @@ isMavericks()
 
 +(void)initializeUserDefaults
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    // initialize the dictionary with default values depending on OS level
-    NSDictionary *appDefaults;
+  // initialize the dictionary with default values depending on OS level
+  NSDictionary *appDefaults;
 
-    if (isMavericks())
-    {
-        //10.9
-        appDefaults = @{@"sender": @"com.apple.Terminal"};
-    }
-    else
-    {
-        //10.8
-        appDefaults = @{@"": @"message"};
-    }
+  if (isMavericks()) {
+    //10.9
+    appDefaults = @{@"sender": @"com.apple.Terminal"};
+  } else {
+    //10.8
+    appDefaults = @{@"": @"message"};
+  }
 
-    // and set them appropriately
-    [defaults registerDefaults:appDefaults];
+  // and set them appropriately
+  [defaults registerDefaults:appDefaults];
 }
 
 - (void)printHelpBanner;
