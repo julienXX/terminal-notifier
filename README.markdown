@@ -67,7 +67,7 @@ $ terminal-notifier -group 'address-book-sync' -title 'Address Book Sync' -subti
 #### Options
 
 At a minimum, you have to specify either the `-message` , the `-remove`
-option or the `-list` option.
+or the `-list` option.
 
 -------------------------------------------------------------------------------
 
