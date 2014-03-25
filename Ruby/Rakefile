@@ -28,7 +28,11 @@ task :update_build do
   mkdir "vendor"
 
   sh "unzip -o -d vendor #{zipfile}"
-  mv "vendor/#{filename}", "vendor/terminal-notifier"
+  mv "vendor/#{filename}", 'vendor/terminal-notifier'
+
+  %x(xcodebuild -project '../Terminal\ Notifier.xcodeproj' -target terminal-notifier SYMROOT=build -verbose)
+  mv '../build/Release/terminal-notifier.app', 'vendor/terminal-notifier/'
+  chmod 0755, 'vendor/terminal-notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier'
 end
 
 desc "Build gem"
