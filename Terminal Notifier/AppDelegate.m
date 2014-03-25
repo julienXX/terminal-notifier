@@ -187,11 +187,11 @@ isMavericks()
 
     if (message) {
       NSMutableDictionary *options = [NSMutableDictionary dictionary];
-      if (defaults[@"activate"]) options[@"bundleID"] = defaults[@"activate"];
-      if (defaults[@"group"])    options[@"groupID"]  = defaults[@"group"];
-      if (defaults[@"execute"])  options[@"command"]  = defaults[@"execute"];
-      if (defaults[@"open"])     options[@"open"]     = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-      if (defaults[@"appIcon"])  options[@"icon"]     = defaults[@"appIcon"];
+      if (defaults[@"activate"]) options[@"bundleID"]         = defaults[@"activate"];
+      if (defaults[@"group"])    options[@"groupID"]          = defaults[@"group"];
+      if (defaults[@"execute"])  options[@"command"]          = defaults[@"execute"];
+      if (defaults[@"open"])     options[@"open"]             = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+      if (defaults[@"appIcon"])  options[@"appIcon"]          = defaults[@"appIcon"];
       if (defaults[@"contentImage"]) options[@"contentImage"] = defaults[@"contentImage"];
 
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
@@ -226,7 +226,7 @@ isMavericks()
   userNotification.subtitle = subtitle;
   userNotification.informativeText = message;
   userNotification.userInfo = options;
-  
+
   if(isMavericks()){
     // Mavericks options
     if(options[@"appIcon"]){
