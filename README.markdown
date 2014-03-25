@@ -6,17 +6,22 @@ which are available in Mac OS X 10.8 and higher.
 
 ## Caveats
 
-* The Notification Center _always_ uses the application’s own icon, there’s
-  currently no way to specify a custom icon for a notification. The only way to
-  use this tool with your own icon is to use the `-sender` option or include a
+* Under OS X 10.8, the Notification Center _always_ uses the application’s own
+  icon, there’s currently no way to specify a custom icon for a notification. The only
+  way to use this tool with your own icon is to use the `-sender` option or include a
   build of terminal-notifier with your icon and **a different bundle identifier**
   instead. (If you do not change the bundle identifier, launch services will use
   a cached version of the icon.)
-
-  However, you _can_ use unicode symbols and emojis. See the examples.
+  <br/>Consequently the `-appIcon` & `-contentImage` options aren't doing anything
+  under 10.8.
+  <br/>However, you _can_ use unicode symbols and emojis. See the examples.
 
 * It is currently packaged as an application bundle, because `NSUserNotification`
   does not work from a ‘Foundation tool’. [radar://11956694](radar://11956694)
+
+* If you intend to package terminal-notifier with your app to distribute it on the
+  MAS, please use 1.5.2 since 1.6.0+ uses a private method override which is not
+  allowed in the AppStore guidelines.
 
 
 ## Download
@@ -158,6 +163,22 @@ it is important to note that you cannot combine this with options like
 ‘terminal-notifier’ to perform its work.
 
 For information on the `ID` see the `-activate` option.
+
+-------------------------------------------------------------------------------
+
+`-appIcon URL` **[10.9+ only]**
+
+Specifies The URL of an image to display instead of the application icon.
+
+**WARNING: This option is subject to change since it relies on a private method.**
+
+-------------------------------------------------------------------------------
+
+`-contentImage URL` **[10.9+ only]**
+
+Specifies The URL of an image to display attached inside the notification.
+
+**WARNING: This option is subject to change since it relies on a private method.**
 
 -------------------------------------------------------------------------------
 
