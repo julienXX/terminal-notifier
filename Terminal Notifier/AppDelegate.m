@@ -9,6 +9,8 @@ NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui
 #define NSAppKitVersionNumber10_8 1187
 #define NSAppKitVersionNumber10_9 1265
 
+#define contains(str1, str2) ([str1 rangeOfString: str2 ].location != NSNotFound)
+
 NSString *_fakeBundleIdentifier = nil;
 
 @implementation NSBundle (FakeBundleIdentifier)
@@ -110,6 +112,8 @@ isMavericks()
          "                          Old notifications with the same ID will be removed.\n" \
          "       -activate ID       The bundle identifier of the application to activate when the user clicks the notification.\n" \
          "       -sender ID         The bundle identifier of the application that should be shown as the sender, including its icon.\n" \
+         "       -appIcon URL       The URL of a image to display instead of the application icon (Mavericks+ only)\n" \
+         "       -contentImage URL  The URL of a image to display attached to the notification (Mavericks+ only)\n" \
          "       -open URL          The URL of a resource to open when the user clicks the notification.\n" \
          "       -execute COMMAND   A shell command to perform when the user clicks the notification.\n" \
          "\n" \
@@ -187,6 +191,8 @@ isMavericks()
       if (defaults[@"group"])    options[@"groupID"]  = defaults[@"group"];
       if (defaults[@"execute"])  options[@"command"]  = defaults[@"execute"];
       if (defaults[@"open"])     options[@"open"]     = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+      if (defaults[@"appIcon"])  options[@"icon"]     = defaults[@"appIcon"];
+      if (defaults[@"contentImage"]) options[@"contentImage"] = defaults[@"contentImage"];
 
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
                                 subtitle:subtitle
@@ -195,6 +201,15 @@ isMavericks()
                                    sound:sound];
     }
   }
+}
+
+- (NSImage*)getImageFromURL:(NSString *) url;
+{
+  if(!contains(url, @"file://")){ // Prefix file:// if not present
+    url = [NSString stringWithFormat:@"%@%@", @"file://", url];
+  }
+  NSURL *imageURL = [NSURL URLWithString:url];
+  return [[NSImage alloc] initWithContentsOfURL:imageURL];
 }
 
 - (void)deliverNotificationWithTitle:(NSString *)title
@@ -211,6 +226,19 @@ isMavericks()
   userNotification.subtitle = subtitle;
   userNotification.informativeText = message;
   userNotification.userInfo = options;
+  
+  if(isMavericks()){
+    // Mavericks options
+    if(options[@"appIcon"]){
+      // replacement app icon
+      [userNotification setValue:[self getImageFromURL:options[@"appIcon"]] forKey:@"_identityImage"];
+      [userNotification setValue:@(true) forKey:@"_identityImageHasBorder"];
+    }
+    if(options[@"contentImage"]){
+      // content image
+      userNotification.contentImage = [self getImageFromURL:options[@"contentImage"]];
+    }
+  }
 
   if (sound != nil) {
     userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound ;
