@@ -206,7 +206,8 @@ isMavericks()
 - (NSImage*)getImageFromURL:(NSString *) url;
 {
   NSURL *imageURL = [NSURL URLWithString:url];
-  if([[imageURL scheme] length] == 0){ // Prefix file:// if no scheme
+  if([[imageURL scheme] length] == 0){
+    // Prefix 'file://' if no scheme
     url = [NSString stringWithFormat:@"%@%@", @"file://", url];
     imageURL = [NSURL URLWithString:url];
   }
