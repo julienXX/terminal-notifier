@@ -166,17 +166,17 @@ For information on the `ID` see the `-activate` option.
 
 -------------------------------------------------------------------------------
 
-`-appIcon URL` **[10.9+ only]**
+`-appIcon PATH` **[10.9+ only]**
 
-Specifies The URL of an image to display instead of the application icon.
+Specifies The PATH of an image to display instead of the application icon.
 
 **WARNING: This option is subject to change since it relies on a private method.**
 
 -------------------------------------------------------------------------------
 
-`-contentImage URL` **[10.9+ only]**
+`-contentImage PATH` **[10.9+ only]**
 
-Specifies The URL of an image to display attached inside the notification.
+Specifies The PATH of an image to display attached inside the notification.
 
 **WARNING: This option is subject to change since it relies on a private method.**
 
