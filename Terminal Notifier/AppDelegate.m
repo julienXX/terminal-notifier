@@ -190,9 +190,22 @@ isMavericks()
       if (defaults[@"activate"]) options[@"bundleID"]         = defaults[@"activate"];
       if (defaults[@"group"])    options[@"groupID"]          = defaults[@"group"];
       if (defaults[@"execute"])  options[@"command"]          = defaults[@"execute"];
-      if (defaults[@"open"])     options[@"open"]             = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
       if (defaults[@"appIcon"])  options[@"appIcon"]          = defaults[@"appIcon"];
       if (defaults[@"contentImage"]) options[@"contentImage"] = defaults[@"contentImage"];
+      if (defaults[@"open"]) {
+          /*
+           * it may be better to use stringByAddingPercentEncodingWithAllowedCharacters instead of stringByAddingPercentEscapesUsingEncoding,
+           * but stringByAddingPercentEncodingWithAllowedCharacters is only available on OS X 10.9 or higher.
+           */
+          NSString *encodedURL = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+          NSURL *url = [NSURL URLWithString:defaults[@"open"]];
+          NSString *fragment = [url fragment];
+          if (fragment) {
+              options[@"open"] = [self decodeFragmentInURL:encodedURL fragment:fragment];
+          } else {
+              options[@"open"] = encodedURL;
+          }
+      }
 
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
                                 subtitle:subtitle
@@ -212,6 +225,20 @@ isMavericks()
     imageURL = [NSURL URLWithString:url];
   }
   return [[NSImage alloc] initWithContentsOfURL:imageURL];
+}
+
+/**
+ * Decode fragment identifier
+ *
+ * @see http://tools.ietf.org/html/rfc3986#section-2.1
+ * @see http://en.wikipedia.org/wiki/URI_scheme
+ */
+- (NSString*)decodeFragmentInURL:(NSString *) encodedURL fragment:(NSString *) framgent
+{
+    NSString *beforeStr = [@"%23" stringByAppendingString:framgent];
+    NSString *afterStr = [@"#" stringByAppendingString:framgent];
+    NSString *decodedURL = [encodedURL stringByReplacingOccurrencesOfString:beforeStr withString:afterStr];
+    return decodedURL;
 }
 
 - (void)deliverNotificationWithTitle:(NSString *)title
