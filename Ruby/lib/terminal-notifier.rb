@@ -6,11 +6,20 @@ module TerminalNotifier
   class UnsupportedPlatformError < StandardError; end
   # Returns wether or not the current platform is Mac OS X 10.8, or higher.
   def self.available?
-    @available ||= Gem::Version.new(version) > Gem::Version.new('10.8')
+    return @available if defined?(@available)
+    @available = is_mac_os_x? && is_mac_os_x_version_compatible?
   end
 
-  def self.version
-    @version ||= `uname`.strip == 'Darwin' && `sw_vers -productVersion`.strip
+  def self.is_mac_os_x?
+    `uname`.strip == 'Darwin'
+  end
+
+  def self.is_mac_os_x_version_compatible?
+    Gem::Version.new(os_version) > Gem::Version.new('10.8')
+  end
+
+  def self.os_version
+    `sw_vers -productVersion`.strip
   end
 
   def self.execute(verbose, options)
