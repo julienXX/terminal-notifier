@@ -5,6 +5,8 @@
 NSString * const TerminalNotifierBundleID = @"nl.superalloy.oss.terminal-notifier";
 NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui";
 
+int const TimeoutTimeInSeconds = 6;
+
 // Set OS Params
 #define NSAppKitVersionNumber10_8 1187
 #define NSAppKitVersionNumber10_9 1265
@@ -115,6 +117,7 @@ isMavericks()
          "       -appIcon URL       The URL of a image to display instead of the application icon (Mavericks+ only)\n" \
          "       -contentImage URL  The URL of a image to display attached to the notification (Mavericks+ only)\n" \
          "       -open URL          The URL of a resource to open when the user clicks the notification.\n" \
+         "       -wait YES          Wait for activation or timeout before exit.\n" \
          "       -execute COMMAND   A shell command to perform when the user clicks the notification.\n" \
          "\n" \
          "When the user activates a notification, the results are logged to the system logs.\n" \
@@ -191,6 +194,7 @@ isMavericks()
       if (defaults[@"group"])    options[@"groupID"]          = defaults[@"group"];
       if (defaults[@"execute"])  options[@"command"]          = defaults[@"execute"];
       if (defaults[@"appIcon"])  options[@"appIcon"]          = defaults[@"appIcon"];
+      if (defaults[@"wait"])     options[@"wait"]             = @"active";
       if (defaults[@"contentImage"]) options[@"contentImage"] = defaults[@"contentImage"];
       if (defaults[@"open"]) {
           /*
@@ -275,6 +279,14 @@ isMavericks()
   NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
   center.delegate = self;
   [center scheduleNotification:userNotification];
+
+  if (options[@"wait"]) {
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * TimeoutTimeInSeconds);
+    dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+      printf("Timeout\n");
+      exit(0);
+    });
+  }
 }
 
 - (void)removeNotificationWithGroupID:(NSString *)groupID;
@@ -386,6 +398,17 @@ isMavericks()
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
         didDeliverNotification:(NSUserNotification *)userNotification;
 {
+  if(!userNotification.userInfo[@"wait"]) {
+    exit(0);
+  }
+}
+
+
+// If waiting this wil happen after delivered delegate.
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center
+        didActivateNotification:(NSUserNotification *)userNotification;
+{
+  printf("Activate\n");
   exit(0);
 }
 
