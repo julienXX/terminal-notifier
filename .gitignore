@@ -5,3 +5,4 @@ xcuserdata
 Ruby/*.zip
 Ruby/*.gem
 Ruby/vendor
+build
