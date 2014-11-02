@@ -15,34 +15,34 @@ end
 
 task :clean do
   rm zipfile
-  rm_rf "vendor"
+  rm_rf 'vendor'
 end
 
-desc "Fetch latest build from the GitHub releases"
+desc 'Fetch latest build from the GitHub releases'
 task :update_build do
   unless File.exist?(zipfile)
     sh "curl -L -O 'https://github.com/alloy/terminal-notifier/archive/#{zipfile}'"
   end
 
-  rm_rf "vendor"
-  mkdir "vendor"
+  rm_rf 'vendor'
+  mkdir 'vendor'
 
   sh "unzip -o -d vendor #{zipfile}"
   mv "vendor/#{filename}", 'vendor/terminal-notifier'
 
-  %x(xcodebuild -project '../Terminal\ Notifier.xcodeproj' -target terminal-notifier SYMROOT=build -verbose)
+  sh 'cd .. && xcodebuild -target terminal-notifier SYMROOT=build -verbose && cd -'
   mv '../build/Release/terminal-notifier.app', 'vendor/terminal-notifier/'
   chmod 0755, 'vendor/terminal-notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier'
 end
 
-desc "Build gem"
+desc 'Build gem'
 task :gem => :update_build do
-  sh "gem build terminal-notifier.gemspec"
+  sh 'gem build terminal-notifier.gemspec'
 end
 
-desc "Run specs"
+desc 'Run specs'
 task :spec do
-  sh "bundle exec ruby spec/terminal-notifier_spec.rb"
+  sh 'bundle exec ruby spec/terminal-notifier_spec.rb'
 end
 
 task :default => :spec
