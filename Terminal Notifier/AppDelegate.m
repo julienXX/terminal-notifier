@@ -260,7 +260,7 @@ isMavericks()
     if(options[@"appIcon"]){
       // replacement app icon
       [userNotification setValue:[self getImageFromURL:options[@"appIcon"]] forKey:@"_identityImage"];
-      [userNotification setValue:@(true) forKey:@"_identityImageHasBorder"];
+      [userNotification setValue:@(false) forKey:@"_identityImageHasBorder"];
     }
     if(options[@"contentImage"]){
       // content image
