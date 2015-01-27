@@ -9,8 +9,8 @@ Gem::Specification.new do |gem|
   gem.name             = "terminal-notifier"
   gem.version          = version
   gem.summary          = 'Send User Notifications on Mac OS X 10.8 or higher.'
-  gem.authors          = ["Eloy Duran"]
-  gem.email            = ["eloy.de.enige@gmail.com"]
+  gem.authors          = ["Eloy Duran", "Julien Blanchard"]
+  gem.email            = ["eloy.de.enige@gmail.com", "julien@sideburns.eu"]
   gem.homepage         = 'https://github.com/alloy/terminal-notifier'
   gem.license          = 'MIT'
 

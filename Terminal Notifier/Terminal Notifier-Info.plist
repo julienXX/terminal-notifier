@@ -27,7 +27,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2012 Eloy Durán. All rights reserved.</string>
+	<string>Copyright © 2012-2015 Eloy Durán, Julien Blanchard. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
