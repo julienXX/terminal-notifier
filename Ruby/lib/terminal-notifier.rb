@@ -1,4 +1,5 @@
 require 'shellwords'
+require 'rbconfig'
 
 module TerminalNotifier
   BIN_PATH = File.expand_path('../../vendor/terminal-notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', __FILE__)
@@ -6,7 +7,7 @@ module TerminalNotifier
   class UnsupportedPlatformError < StandardError; end
   # Returns wether or not the current platform is Mac OS X 10.8, or higher.
   def self.available?
-    @available ||= (/darwin/ =~ RUBY_PLATFORM) && Gem::Version.new(version) > Gem::Version.new('10.8')
+    @available ||= (/darwin|mac os/ =~ RbConfig::CONFIG['host_os']) && Gem::Version.new(version) > Gem::Version.new('10.8')
   end
 
   def self.version
