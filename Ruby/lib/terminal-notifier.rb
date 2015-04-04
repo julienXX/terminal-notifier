@@ -51,7 +51,7 @@ module TerminalNotifier
   # Raises if not supported on the current platform.
   def notify(message, options = {}, verbose = false)
     TerminalNotifier.execute(verbose, options.merge(:message => message))
-    $?.success?
+    $? && $?.success?
   end
   module_function :notify
 
@@ -61,7 +61,7 @@ module TerminalNotifier
   # If no ‘group’ ID is given, all notifications are removed.
   def remove(group = 'ALL', verbose = false)
     TerminalNotifier.execute(verbose, :remove => group)
-    $?.success?
+    $? && $?.success?
   end
   module_function :remove
 
