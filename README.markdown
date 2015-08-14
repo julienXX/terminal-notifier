@@ -159,8 +159,8 @@ application instead, including using its icon.
 Using this option fakes the sender application, so that the notification system
 will launch that application when the notification is clicked. Because of this
 it is important to note that you cannot combine this with options like
-`-execute` and `-activate` which depend on the sender of the notification to be
-‘terminal-notifier’ to perform its work.
+`-execute`, `-open`, and `activate` which depend on the sender of the 
+notification to be ‘terminal-notifier’ to perform its work.
 
 For information on the `ID` see the `-activate` option.
 
