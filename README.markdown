@@ -27,7 +27,7 @@ which are available in Mac OS X 10.8 and higher.
 ## Download
 
 Prebuilt binaries are available from the
-[releases section](https://github.com/alloy/terminal-notifier/releases).
+[releases section](https://github.com/julienXX/terminal-notifier/releases).
 
 Or if you want to use this from
 [Ruby](https://github.com/alloy/terminal-notifier/tree/master/Ruby), you can
@@ -37,7 +37,7 @@ install it through RubyGems:
 $ [sudo] gem install terminal-notifier
 ```
 
-You can also install it via [Homebrew](https://github.com/mxcl/homebrew):
+You can also install it via [Homebrew](https://github.com/Homebrew/homebrew):
 ```
 $ brew install terminal-notifier
 ```
