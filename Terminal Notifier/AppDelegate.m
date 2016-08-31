@@ -110,6 +110,8 @@ isMavericks()
          "                          in Sound Preferences. Use 'default' for the default notification sound.\n" \
          "       -group ID          A string which identifies the group the notifications belong to.\n" \
          "                          Old notifications with the same ID will be removed.\n" \
+         "       -reply VALUE       Adds a reply button to the notification with the placeholder response set to this value.\n" \
+         "       -timeout NUMBER    Closes the notification after this number of seconds.\n" \
          "       -activate ID       The bundle identifier of the application to activate when the user clicks the notification.\n" \
          "       -sender ID         The bundle identifier of the application that should be shown as the sender, including its icon.\n" \
          "       -appIcon URL       The URL of a image to display instead of the application icon (Mavericks+ only)\n" \
@@ -187,11 +189,13 @@ isMavericks()
 
     if (message) {
       NSMutableDictionary *options = [NSMutableDictionary dictionary];
-      if (defaults[@"activate"]) options[@"bundleID"]         = defaults[@"activate"];
-      if (defaults[@"group"])    options[@"groupID"]          = defaults[@"group"];
-      if (defaults[@"execute"])  options[@"command"]          = defaults[@"execute"];
-      if (defaults[@"appIcon"])  options[@"appIcon"]          = defaults[@"appIcon"];
-      if (defaults[@"contentImage"]) options[@"contentImage"] = defaults[@"contentImage"];
+      if (defaults[@"activate"])      options[@"bundleID"]      = defaults[@"activate"];
+      if (defaults[@"group"])         options[@"groupID"]       = defaults[@"group"];
+      if (defaults[@"execute"])       options[@"command"]       = defaults[@"execute"];
+      if (defaults[@"appIcon"])       options[@"appIcon"]       = defaults[@"appIcon"];
+      if (defaults[@"contentImage"])  options[@"contentImage"]  = defaults[@"contentImage"];
+      if (defaults[@"reply"])         options[@"reply"]         = defaults[@"reply"];
+      
       if (defaults[@"open"]) {
           /*
            * it may be better to use stringByAddingPercentEncodingWithAllowedCharacters instead of stringByAddingPercentEscapesUsingEncoding,
@@ -206,6 +210,10 @@ isMavericks()
               options[@"open"] = encodedURL;
           }
       }
+      
+      options[@"uuid"] = [NSString stringWithFormat:@"%ld", self.hash];
+      options[@"timeout"] = defaults[@"timeout"] ? defaults[@"timeout"] : @"0";
+      if (defaults[@"reply"] || defaults[@"timeout"]) options[@"waitForResponse"] = @YES;
 
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
                                 subtitle:subtitle
@@ -267,6 +275,11 @@ isMavericks()
       userNotification.contentImage = [self getImageFromURL:options[@"contentImage"]];
     }
   }
+  
+  if (options[@"reply"]) {
+    userNotification.hasReplyButton = YES;
+    userNotification.responsePlaceholder = options[@"reply"];
+  }
 
   if (sound != nil) {
     userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound ;
@@ -312,7 +325,6 @@ isMavericks()
     }
   }
 }
-
 
 - (void)userActivatedNotification:(NSUserNotification *)userNotification;
 {
@@ -382,11 +394,82 @@ isMavericks()
   return YES;
 }
 
-// Once the notification is delivered we can exit.
+// If this notification supports replies or timeout, wait for one of those
+// things to happen before exiting. Otherwise, exit immediately.
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
-        didDeliverNotification:(NSUserNotification *)userNotification;
+        didDeliverNotification:(NSUserNotification *)notification;
 {
+  if (!notification.userInfo[@"waitForResponse"]) exit(0);
+  
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    __block BOOL notificationStillPresent;
+    do {
+      notificationStillPresent = NO;
+      NSArray* deliveredNotifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];
+      
+      for (NSUserNotification *notification in deliveredNotifications) {
+        if ([notification.userInfo[@"uuid"] isEqualToString:[NSString stringWithFormat:@"%ld", self.hash] ]) {
+          notificationStillPresent = YES;
+        }
+      }
+      
+      if (notificationStillPresent) [NSThread sleepForTimeInterval:0.20f];
+    } while (notificationStillPresent);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self printActivation:@{@"activationType": @"closed"}];
+      exit(0);
+    });
+  });
+  
+  if ([notification.userInfo[@"timeout"] integerValue] > 0) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      [NSThread sleepForTimeInterval:[notification.userInfo[@"timeout"] integerValue]];
+      [center removeDeliveredNotification:notification];
+      [self printActivation:@{@"activationType": @"timeout"}];
+      exit(0);
+    });
+  }
+}
+
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center
+       didActivateNotification:(NSUserNotification *)notification;
+{
+  if ([notification.userInfo[@"uuid"] isNotEqualTo:[NSString stringWithFormat:@"%ld", self.hash]]) {
+    return;
+  };
+  
+  switch (notification.activationType) {
+    case NSUserNotificationActivationTypeContentsClicked:
+      [self printActivation:@{@"activationType": @"clicked"}];
+      break;
+    case NSUserNotificationActivationTypeReplied:
+      [self printActivation:@{
+        @"activationType": @"replied",
+        @"activationValue": notification.response.string
+      }];
+      break;
+    case NSUserNotificationActivationTypeNone:
+    default:
+      [self printActivation:@{@"activationType": @"none"}];
+      break;
+  }
+  
+  [center removeDeliveredNotification:notification];
   exit(0);
+}
+
+- (void)printActivation:(NSDictionary *)arguments;
+{
+  if ([arguments[@"activationType"] isEqualToString:@"closed"]) {
+    printf("%s", "@CLOSED");
+  } else if ([arguments[@"activationType"] isEqualToString:@"clicked"]) {
+    printf("%s", "@CLICKED");
+  } else if ([arguments[@"activationType"] isEqualToString:@"timeout"]) {
+    printf("%s", "@TIMEOUT");
+  } else if ([arguments[@"activationType"] isEqualToString:@"replied"]) {
+    printf("%s|%s", "@REPLIED", [arguments[@"activationValue"] UTF8String]);
+  }
 }
 
 @end
