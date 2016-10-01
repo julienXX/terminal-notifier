@@ -62,9 +62,28 @@ This will obviously be a bit slower than using the tool without the wrapper.
 
 Some examples are:
 
+Display piped data with a sound
 ```
 $ echo 'Piped Message Data!' | terminal-notifier -sound default
+```
+
+Multiple actions and custom dropdown list
+```
+$ terminal-notifier -message "Deploy now on UAT ?" -actions Now,"Later today","Tomorrow" -dropdownLabel "When ?"
+```
+
+Yes or No ?
+```
+$ terminal-notifier -title ProjectX -subtitle "new tag detected" -message "Deploy now on UAT ?" -closeLabel No -actions Yes -appIcon http://vjeantet.fr/images/logo.png
+```
+
+Open an URL when the notification is clicked
+```
 $ terminal-notifier -title '💰' -message 'Check your Apple stock!' -open 'http://finance.yahoo.com/q?s=AAPL'
+```
+
+Open an app when the notification is clicked
+```
 $ terminal-notifier -group 'address-book-sync' -title 'Address Book Sync' -subtitle 'Finished' -message 'Imported 42 contacts.' -activate 'com.apple.AddressBook'
 ```
 
@@ -101,6 +120,46 @@ The subtitle of the notification.
 
 The name of a sound to play when the notification appears. The names are listed
 in Sound Preferences. Use 'default' for the default notification sound.
+
+-------------------------------------------------------------------------------
+
+`-reply`
+
+The notification will be displayed as a reply type alert.
+
+-------------------------------------------------------------------------------
+
+`-actions VALUE1,VALUE2,"VALUE 3"`
+
+The notification actions avalaible.
+When you provide more than one value, a dropdown will be displayed.
+You can customize this dropdown label with the next option
+Does not work when -reply is used
+
+-------------------------------------------------------------------------------
+
+`-dropdownLabel VALUE`
+
+The notification actions dropdown title (only when multiples -actions values are provided).
+Does not work when -reply is used
+
+-------------------------------------------------------------------------------
+
+`-closeLabel VALUE`
+
+The notification "Close" button label.
+
+-------------------------------------------------------------------------------
+
+`-timeout NUMBER`
+
+Auto close the alert notification after NUMBER seconds.
+
+-------------------------------------------------------------------------------
+
+`-json`
+
+Outputs the event as JSON.
 
 -------------------------------------------------------------------------------
 
