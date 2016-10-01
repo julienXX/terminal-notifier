@@ -12,6 +12,7 @@ NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui
 #define contains(str1, str2) ([str1 rangeOfString: str2 ].location != NSNotFound)
 
 NSString *_fakeBundleIdentifier = nil;
+NSUserNotification *currentNotification = nil;
 
 @implementation NSBundle (FakeBundleIdentifier)
 
@@ -102,10 +103,25 @@ isMavericks()
          "                          or use ‘ALL’ as ID to see all notifications.\n" \
          "                          The output is a tab-separated list.\n"
          "\n" \
+         "   Reply type notification:\n" \
+         "\n" \
+         "       -reply VALUE       The notification will be displayed as a reply type alert, VALUE used as placeholder.\n" \
+         "\n" \
+         "   Actions type notification:\n" \
+         "\n" \
+         "       -actions VALUE1,VALUE2.\n" \
+         "                          The notification actions avalaible.\n" \
+         "                          When you provide more than one value, a dropdown will be displayed.\n" \
+         "                          You can customize this dropdown label with the next option.\n" \
+         "       -dropdownLabel VALUE\n" \
+         "                          The notification actions dropdown title (only when multiples actions are provided).\n" \
+         "                          Notification style must be set to Alert.\n" \
+         "\n" \
          "   Optional:\n" \
          "\n" \
          "       -title VALUE       The notification title. Defaults to ‘Terminal’.\n" \
          "       -subtitle VALUE    The notification subtitle.\n" \
+         "       -closeLabel VALUE  The notification close button label.\n" \
          "       -sound NAME        The name of a sound to play when the notification appears. The names are listed\n" \
          "                          in Sound Preferences. Use 'default' for the default notification sound.\n" \
          "       -group ID          A string which identifies the group the notifications belong to.\n" \
@@ -116,6 +132,8 @@ isMavericks()
          "       -contentImage URL  The URL of a image to display attached to the notification (Mavericks+ only)\n" \
          "       -open URL          The URL of a resource to open when the user clicks the notification.\n" \
          "       -execute COMMAND   A shell command to perform when the user clicks the notification.\n" \
+         "       -timeout NUMBER    Close the notification after NUMBER seconds.\n" \
+         "       -json              Output event or value to stdout as JSON \n" \
          "\n" \
          "When the user activates a notification, the results are logged to the system logs.\n" \
          "Use Console.app to view these logs.\n" \
@@ -123,7 +141,7 @@ isMavericks()
          "Note that in some circumstances the first character of a message has to be escaped in order to be recognized.\n" \
          "An example of this is when using an open bracket, which has to be escaped like so: ‘\\[’.\n" \
          "\n" \
-         "For more information see https://github.com/alloy/terminal-notifier.\n",
+         "For more information see https://github.com/julienXX/terminal-notifier.\n",
          appName, appVersion, appName);
 }
 
@@ -187,25 +205,44 @@ isMavericks()
 
     if (message) {
       NSMutableDictionary *options = [NSMutableDictionary dictionary];
-      if (defaults[@"activate"]) options[@"bundleID"]         = defaults[@"activate"];
-      if (defaults[@"group"])    options[@"groupID"]          = defaults[@"group"];
-      if (defaults[@"execute"])  options[@"command"]          = defaults[@"execute"];
-      if (defaults[@"appIcon"])  options[@"appIcon"]          = defaults[@"appIcon"];
-      if (defaults[@"contentImage"]) options[@"contentImage"] = defaults[@"contentImage"];
-      if (defaults[@"open"]) {
-          /*
-           * it may be better to use stringByAddingPercentEncodingWithAllowedCharacters instead of stringByAddingPercentEscapesUsingEncoding,
-           * but stringByAddingPercentEncodingWithAllowedCharacters is only available on OS X 10.9 or higher.
-           */
-          NSString *encodedURL = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-          NSURL *url = [NSURL URLWithString:defaults[@"open"]];
-          NSString *fragment = [url fragment];
-          if (fragment) {
-              options[@"open"] = [self decodeFragmentInURL:encodedURL fragment:fragment];
-          } else {
-              options[@"open"] = encodedURL;
-          }
+      if (defaults[@"activate"])      options[@"bundleID"]      = defaults[@"activate"];
+      if (defaults[@"group"])         options[@"groupID"]       = defaults[@"group"];
+      if (defaults[@"execute"])       options[@"command"]       = defaults[@"execute"];
+      if (defaults[@"appIcon"])       options[@"appIcon"]       = defaults[@"appIcon"];
+      if (defaults[@"contentImage"])  options[@"contentImage"]  = defaults[@"contentImage"];
+      if (defaults[@"closeLabel"])    options[@"closeLabel"]    = defaults[@"closeLabel"];
+      if (defaults[@"dropdownLabel"]) options[@"dropdownLabel"] = defaults[@"dropdownLabel"];
+      if (defaults[@"actions"])       options[@"actions"]       = defaults[@"actions"];
+
+      if([[[NSProcessInfo processInfo] arguments] containsObject:@"-reply"] == true) {
+        options[@"reply"] = @"Reply";
+        if (defaults[@"reply"]) options[@"reply"] = defaults[@"reply"];
       }
+
+      options[@"output"] = @"outputEvent";
+      if([[[NSProcessInfo processInfo] arguments] containsObject:@"-json"] == true) {
+        options[@"output"] = @"json";
+      }
+
+      options[@"timeout"] = @"0";
+      if (defaults[@"timeout"]) options[@"timeout"] = defaults[@"timeout"];
+
+      if (defaults[@"open"]) {
+        /*
+         * it may be better to use stringByAddingPercentEncodingWithAllowedCharacters instead of stringByAddingPercentEscapesUsingEncoding,
+         * but stringByAddingPercentEncodingWithAllowedCharacters is only available on OS X 10.9 or higher.
+         */
+        NSString *encodedURL = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSURL *url = [NSURL URLWithString:defaults[@"open"]];
+        NSString *fragment = [url fragment];
+        if (fragment) {
+          options[@"open"] = [self decodeFragmentInURL:encodedURL fragment:fragment];
+        } else {
+          options[@"open"] = encodedURL;
+        }
+      }
+
+      options[@"uuid"] = [NSString stringWithFormat:@"%ld", self.hash];
 
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
                                 subtitle:subtitle
@@ -234,14 +271,14 @@ isMavericks()
  */
 - (NSString*)decodeFragmentInURL:(NSString *) encodedURL fragment:(NSString *) framgent
 {
-    NSString *beforeStr = [@"%23" stringByAppendingString:framgent];
-    NSString *afterStr = [@"#" stringByAppendingString:framgent];
-    NSString *decodedURL = [encodedURL stringByReplacingOccurrencesOfString:beforeStr withString:afterStr];
-    return decodedURL;
+  NSString *beforeStr = [@"%23" stringByAppendingString:framgent];
+  NSString *afterStr = [@"#" stringByAppendingString:framgent];
+  NSString *decodedURL = [encodedURL stringByReplacingOccurrencesOfString:beforeStr withString:afterStr];
+  return decodedURL;
 }
 
 - (void)deliverNotificationWithTitle:(NSString *)title
-                             subtitle:(NSString *)subtitle
+                            subtitle:(NSString *)subtitle
                              message:(NSString *)message
                              options:(NSDictionary *)options
                                sound:(NSString *)sound;
@@ -269,12 +306,43 @@ isMavericks()
   }
 
   if (sound != nil) {
-    userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound ;
+    userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound;
+  }
+
+  // Actions
+  if (options[@"actions"]){
+    [userNotification setValue:@YES forKey:@"_showsButtons"];
+    NSArray *myActions = [options[@"actions"] componentsSeparatedByString:@","];
+    if (myActions.count > 1) {
+      [userNotification setValue:@YES forKey:@"_alwaysShowAlternateActionMenu"];
+      [userNotification setValue:myActions forKey:@"_alternateActionButtonTitles"];
+
+      //Main Actions Title
+      if(options[@"dropdownLabel"]){
+        userNotification.actionButtonTitle = options[@"dropdownLabel"];
+        userNotification.hasActionButton = true;
+      }
+    }else{
+      userNotification.actionButtonTitle = options[@"actions"];
+    }
+  }else if (options[@"reply"]) {
+    [userNotification setValue:@YES forKey:@"_showsButtons"];
+    userNotification.hasReplyButton = 1;
+    userNotification.responsePlaceholder = options[@"reply"];
+  }
+
+  // Close button
+  if(options[@"closeLabel"]){
+    userNotification.otherButtonTitle = options[@"closeLabel"];
+  }
+
+  if (sound != nil) {
+    userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound;
   }
 
   NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
   center.delegate = self;
-  [center scheduleNotification:userNotification];
+  [center deliverNotification:userNotification];
 }
 
 - (void)removeNotificationWithGroupID:(NSString *)groupID;
@@ -282,37 +350,10 @@ isMavericks()
   NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
   for (NSUserNotification *userNotification in center.deliveredNotifications) {
     if ([@"ALL" isEqualToString:groupID] || [userNotification.userInfo[@"groupID"] isEqualToString:groupID]) {
-      NSString *deliveredAt = [userNotification.actualDeliveryDate description];
-      printf("* Removing previously sent notification, which was sent on: %s\n", [deliveredAt UTF8String]);
       [center removeDeliveredNotification:userNotification];
     }
   }
 }
-
-- (void)listNotificationWithGroupID:(NSString *)listGroupID;
-{
-  NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
-
-  NSMutableArray *lines = [NSMutableArray array];
-  for (NSUserNotification *userNotification in center.deliveredNotifications) {
-    NSString *deliveredgroupID = userNotification.userInfo[@"groupID"];
-    NSString *title            = userNotification.title;
-    NSString *subtitle         = userNotification.subtitle;
-    NSString *message          = userNotification.informativeText;
-    NSString *deliveredAt      = [userNotification.actualDeliveryDate description];
-    if ([@"ALL" isEqualToString:listGroupID] || [deliveredgroupID isEqualToString:listGroupID]) {
-      [lines addObject:[NSString stringWithFormat:@"%@\t%@\t%@\t%@\t%@", deliveredgroupID, title, subtitle, message, deliveredAt]];
-    }
-  }
-
-  if (lines.count > 0) {
-    printf("GroupID\tTitle\tSubtitle\tMessage\tDelivered At\n");
-    for (NSString *line in lines) {
-      printf("%s\n", [line UTF8String]);
-    }
-  }
-}
-
 
 - (void)userActivatedNotification:(NSUserNotification *)userNotification;
 {
@@ -323,21 +364,9 @@ isMavericks()
   NSString *command  = userNotification.userInfo[@"command"];
   NSString *open     = userNotification.userInfo[@"open"];
 
-  NSLog(@"User activated notification:");
-  NSLog(@" group ID: %@", groupID);
-  NSLog(@"    title: %@", userNotification.title);
-  NSLog(@" subtitle: %@", userNotification.subtitle);
-  NSLog(@"  message: %@", userNotification.informativeText);
-  NSLog(@"bundle ID: %@", bundleID);
-  NSLog(@"  command: %@", command);
-  NSLog(@"     open: %@", open);
-
-  BOOL success = YES;
-  if (bundleID) success &= [self activateAppWithBundleID:bundleID];
-  if (command)  success &= [self executeShellCommand:command];
-  if (open)     success &= [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:open]];
-
-  exit(success ? 0 : 1);
+  if (bundleID) [self activateAppWithBundleID:bundleID];
+  if (command)  [self executeShellCommand:command];
+  if (open)     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:open]];
 }
 
 - (BOOL)activateAppWithBundleID:(NSString *)bundleID;
@@ -377,16 +406,199 @@ isMavericks()
 }
 
 - (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center
-     shouldPresentNotification:(NSUserNotification *)userNotification;
+     shouldPresentNotification:(NSUserNotification *)notification;
 {
   return YES;
 }
 
-// Once the notification is delivered we can exit.
+// Once the notification is delivered we can exit. (Only if no actions or reply)
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
         didDeliverNotification:(NSUserNotification *)userNotification;
 {
+  currentNotification = userNotification;
+
+  dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                 ^{
+                   __block BOOL notificationStillPresent;
+                   do {
+                     notificationStillPresent = NO;
+                     for (NSUserNotification *nox in [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications]) {
+                       if ([nox.userInfo[@"uuid"]  isEqualToString:[NSString stringWithFormat:@"%ld", self.hash] ]) notificationStillPresent = YES;
+                     }
+                     if (notificationStillPresent) [NSThread sleepForTimeInterval:0.20f];
+                   } while (notificationStillPresent);
+                   dispatch_async(dispatch_get_main_queue(), ^{
+                       NSDictionary *udict = @{@"activationType" : @"closed", @"activationValue" : userNotification.otherButtonTitle};
+                       [self Quit:udict notification:userNotification];
+                       exit(0);
+                     });
+                 });
+
+  if ([userNotification.userInfo[@"timeout"] integerValue] > 0){
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                   ^{
+                     [NSThread sleepForTimeInterval:[userNotification.userInfo[@"timeout"] integerValue]];
+                     [center removeDeliveredNotification:currentNotification];
+                     [center removeDeliveredNotification:userNotification];
+                     NSDictionary *udict = @{@"activationType" : @"timeout"};
+                     [self Quit:udict notification:userNotification];
+                     exit(0);
+
+                   });
+  }
+}
+
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center
+       didActivateNotification:(NSUserNotification *)notification {
+
+  if ([notification.userInfo[@"uuid"]  isNotEqualTo:[NSString stringWithFormat:@"%ld", self.hash] ]) {
+    return;
+  };
+
+  unsigned long long additionalActionIndex = ULLONG_MAX;
+
+  NSString* ActionsClicked = @"";
+  switch (notification.activationType) {
+
+  case NSUserNotificationActivationTypeAdditionalActionClicked:
+  case NSUserNotificationActivationTypeActionButtonClicked:
+    if ([[(NSObject*)notification valueForKey:@"_alternateActionButtonTitles"] count] > 1 ){
+      NSNumber *alternateActionIndex = [(NSObject*)notification valueForKey:@"_alternateActionIndex"];
+      additionalActionIndex = [alternateActionIndex unsignedLongLongValue];
+      ActionsClicked = [(NSObject*)notification valueForKey:@"_alternateActionButtonTitles"][additionalActionIndex];
+
+      NSDictionary *udict = @{@"activationType" : @"actionClicked", @"activationValue" : ActionsClicked, @"activationValueIndex" :[NSString stringWithFormat:@"%llu", additionalActionIndex]};
+      [self Quit:udict notification:notification];
+    }else{
+      NSDictionary *udict = @{@"activationType" : @"actionClicked", @"activationValue" : notification.actionButtonTitle};
+      [self Quit:udict notification:notification];
+    }
+    break;
+
+  case NSUserNotificationActivationTypeContentsClicked:
+    [self userActivatedNotification:notification];
+    [self Quit:@{@"activationType" : @"contentsClicked"} notification:notification];
+    break;
+
+  case NSUserNotificationActivationTypeReplied:
+    [self Quit:@{@"activationType" : @"replied",@"activationValue":notification.response.string} notification:notification];
+    break;
+  case NSUserNotificationActivationTypeNone:
+  default:
+    [self Quit:@{@"activationType" : @"none"} notification:notification];
+    break;
+  }
+
+  [center removeDeliveredNotification:notification];
+  [center removeDeliveredNotification:currentNotification];
   exit(0);
+}
+
+- (BOOL)Quit:(NSDictionary *)udict notification:(NSUserNotification *)notification;
+{
+  if ([notification.userInfo[@"output"] isEqualToString:@"outputEvent"]) {
+    if ([udict[@"activationType"] isEqualToString:@"closed"]) {
+      if ([udict[@"activationValue"] isEqualToString:@""]) {
+        printf("%s", "@CLOSED" );
+      }else{
+        printf("%s", [udict[@"activationValue"] UTF8String] );
+      }
+    } else  if ([udict[@"activationType"] isEqualToString:@"timeout"]) {
+      printf("%s", "@TIMEOUT" );
+    } else  if ([udict[@"activationType"] isEqualToString:@"contentsClicked"]) {
+      printf("%s", "@CONTENTCLICKED" );
+    } else{
+      if ([udict[@"activationValue"] isEqualToString:@""]) {
+        printf("%s", "@ACTIONCLICKED" );
+      }else{
+        printf("%s", [udict[@"activationValue"] UTF8String] );
+      }
+    }
+
+    return 1;
+  }
+
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss Z";
+
+  // Dictionary with several key/value pairs and the above array of arrays
+  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+  [dict addEntriesFromDictionary:udict];
+  [dict setValue:[dateFormatter stringFromDate:notification.actualDeliveryDate] forKey:@"deliveredAt"];
+  [dict setValue:[dateFormatter stringFromDate:[NSDate new]] forKey:@"activationAt"];
+
+  NSError *error = nil;
+  NSData *json;
+
+  // Dictionary convertable to JSON ?
+  if ([NSJSONSerialization isValidJSONObject:dict])
+    {
+      // Serialize the dictionary
+      json = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+
+      // If no errors, let's view the JSON
+      if (json != nil && error == nil)
+        {
+          NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
+          printf("%s", [jsonString cStringUsingEncoding:NSUTF8StringEncoding]);
+        }
+    }
+
+  return 1;
+}
+
+- (void)listNotificationWithGroupID:(NSString *)listGroupID;
+{
+  NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
+
+  NSMutableArray *lines = [NSMutableArray array];
+  for (NSUserNotification *userNotification in center.deliveredNotifications) {
+    NSString *deliveredgroupID = userNotification.userInfo[@"groupID"];
+    NSString *title            = userNotification.title;
+    NSString *subtitle         = userNotification.subtitle;
+    NSString *message          = userNotification.informativeText;
+    NSString *deliveredAt      = [userNotification.actualDeliveryDate description];
+
+    if ([@"ALL" isEqualToString:listGroupID] || [deliveredgroupID isEqualToString:listGroupID]) {
+      NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+      [dict setValue:deliveredgroupID forKey:@"GroupID"];
+      [dict setValue:title forKey:@"Title"];
+      [dict setValue:subtitle forKey:@"subtitle"];
+      [dict setValue:message forKey:@"message"];
+      [dict setValue:deliveredAt forKey:@"deliveredAt"];
+      [lines addObject:dict];
+    }
+  }
+
+  if (lines.count > 0) {
+    NSData *json;
+    NSError *error = nil;
+    // Dictionary convertable to JSON ?
+    if ([NSJSONSerialization isValidJSONObject:lines])
+      {
+        // Serialize the dictionary
+        json = [NSJSONSerialization dataWithJSONObject:lines options:NSJSONWritingPrettyPrinted error:&error];
+
+        // If no errors, let's view the JSON
+        if (json != nil && error == nil)
+          {
+            NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
+            printf("%s", [jsonString cStringUsingEncoding:NSUTF8StringEncoding]);
+          }
+      }
+
+  }
+}
+
+- (void) bye; {
+  //Look for the notification sent, remove it when found
+  NSString *UUID = currentNotification.userInfo[@"uuid"];
+  for (NSUserNotification *nox in [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications]) {
+    if ([nox.userInfo[@"uuid"] isEqualToString:UUID ]){
+      [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:nox];
+      [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:nox];
+    }
+  }
 }
 
 @end
