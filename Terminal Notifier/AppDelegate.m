@@ -224,8 +224,10 @@ isMavericks()
         options[@"output"] = @"json";
       }
 
-      options[@"timeout"] = @"0";
-      if (defaults[@"timeout"]) options[@"timeout"] = defaults[@"timeout"];
+      options[@"uuid"] = [NSString stringWithFormat:@"%ld", self.hash];
+      options[@"timeout"] = defaults[@"timeout"] ? defaults[@"timeout"] : @"0";
+
+      if (options[@"reply"] || defaults[@"timeout"] || defaults[@"actions"]) options[@"waitForResponse"] = @YES;
 
       if (defaults[@"open"]) {
         /*
@@ -415,6 +417,8 @@ isMavericks()
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
         didDeliverNotification:(NSUserNotification *)userNotification;
 {
+  if (!userNotification.userInfo[@"waitForResponse"]) exit(0);
+
   currentNotification = userNotification;
 
   dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
@@ -443,7 +447,6 @@ isMavericks()
                      NSDictionary *udict = @{@"activationType" : @"timeout"};
                      [self Quit:udict notification:userNotification];
                      exit(0);
-
                    });
   }
 }
