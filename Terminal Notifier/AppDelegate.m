@@ -305,37 +305,32 @@ isMavericks()
       // content image
       userNotification.contentImage = [self getImageFromURL:options[@"contentImage"]];
     }
-  }
+    // Actions
+    if (options[@"actions"]){
+      [userNotification setValue:@YES forKey:@"_showsButtons"];
+      NSArray *myActions = [options[@"actions"] componentsSeparatedByString:@","];
+      if (myActions.count > 1) {
+        [userNotification setValue:@YES forKey:@"_alwaysShowAlternateActionMenu"];
+        [userNotification setValue:myActions forKey:@"_alternateActionButtonTitles"];
 
-  if (sound != nil) {
-    userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound;
-  }
-
-  // Actions
-  if (options[@"actions"]){
-    [userNotification setValue:@YES forKey:@"_showsButtons"];
-    NSArray *myActions = [options[@"actions"] componentsSeparatedByString:@","];
-    if (myActions.count > 1) {
-      [userNotification setValue:@YES forKey:@"_alwaysShowAlternateActionMenu"];
-      [userNotification setValue:myActions forKey:@"_alternateActionButtonTitles"];
-
-      //Main Actions Title
-      if(options[@"dropdownLabel"]){
-        userNotification.actionButtonTitle = options[@"dropdownLabel"];
-        userNotification.hasActionButton = true;
+        //Main Actions Title
+        if(options[@"dropdownLabel"]){
+          userNotification.actionButtonTitle = options[@"dropdownLabel"];
+          userNotification.hasActionButton = true;
+        }
+      }else{
+        userNotification.actionButtonTitle = options[@"actions"];
       }
-    }else{
-      userNotification.actionButtonTitle = options[@"actions"];
+    }else if (options[@"reply"]) {
+      [userNotification setValue:@YES forKey:@"_showsButtons"];
+      userNotification.hasReplyButton = 1;
+      userNotification.responsePlaceholder = options[@"reply"];
     }
-  }else if (options[@"reply"]) {
-    [userNotification setValue:@YES forKey:@"_showsButtons"];
-    userNotification.hasReplyButton = 1;
-    userNotification.responsePlaceholder = options[@"reply"];
-  }
 
-  // Close button
-  if(options[@"closeLabel"]){
-    userNotification.otherButtonTitle = options[@"closeLabel"];
+    // Close button
+    if(options[@"closeLabel"]){
+      userNotification.otherButtonTitle = options[@"closeLabel"];
+    }
   }
 
   if (sound != nil) {
@@ -431,6 +426,7 @@ isMavericks()
                      }
                      if (notificationStillPresent) [NSThread sleepForTimeInterval:0.20f];
                    } while (notificationStillPresent);
+
                    dispatch_async(dispatch_get_main_queue(), ^{
                        NSDictionary *udict = @{@"activationType" : @"closed", @"activationValue" : userNotification.otherButtonTitle};
                        [self Quit:udict notification:userNotification];
@@ -590,17 +586,6 @@ isMavericks()
           }
       }
 
-  }
-}
-
-- (void) bye; {
-  //Look for the notification sent, remove it when found
-  NSString *UUID = currentNotification.userInfo[@"uuid"];
-  for (NSUserNotification *nox in [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications]) {
-    if ([nox.userInfo[@"uuid"] isEqualToString:UUID ]){
-      [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:nox];
-      [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:nox];
-    }
   }
 }
 
