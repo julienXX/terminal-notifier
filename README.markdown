@@ -123,13 +123,13 @@ in Sound Preferences. Use 'default' for the default notification sound.
 
 -------------------------------------------------------------------------------
 
-`-reply`
+`-reply` **[10.9+ only]**
 
 The notification will be displayed as a reply type alert.
 
 -------------------------------------------------------------------------------
 
-`-actions VALUE1,VALUE2,"VALUE 3"`
+`-actions VALUE1,VALUE2,"VALUE 3"` **[10.9+ only]**
 
 The notification actions avalaible.
 When you provide more than one value, a dropdown will be displayed.
@@ -138,14 +138,14 @@ Does not work when -reply is used
 
 -------------------------------------------------------------------------------
 
-`-dropdownLabel VALUE`
+`-dropdownLabel VALUE` **[10.9+ only]**
 
 The notification actions dropdown title (only when multiples -actions values are provided).
 Does not work when -reply is used
 
 -------------------------------------------------------------------------------
 
-`-closeLabel VALUE`
+`-closeLabel VALUE` **[10.9+ only]**
 
 The notification "Close" button label.
 
