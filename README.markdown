@@ -1,27 +1,25 @@
 # terminal-notifier
 
-terminal-notifier is a command-line tool to send Mac OS X User Notifications,
-which are available in Mac OS X 10.8 and higher.
+terminal-notifier is a command-line tool to send macOS User Notifications,
+which are available on macOS 10.8 and higher.
 
 
 ## Caveats
 
-* Under OS X 10.8, the Notification Center _always_ uses the application’s own
-  icon, there’s currently no way to specify a custom icon for a notification. The only
-  way to use this tool with your own icon is to use the `-sender` option or include a
-  build of terminal-notifier with your icon and **a different bundle identifier**
-  instead. (If you do not change the bundle identifier, launch services will use
-  a cached version of the icon.)
-  <br/>Consequently the `-appIcon` & `-contentImage` options aren't doing anything
-  under 10.8.
-  <br/>However, you _can_ use unicode symbols and emojis. See the examples.
+* On macOS 10.8, the `-appIcon` and `-contentImage` options do nothing.
+  This is because Notification Center on 10.8 _always_ uses the application’s own icon. 
+  
+  You can do one of the following to work around this limitation on 10.8:
+    - Use the `-sender` option to  “fake it” (see below)
+    - Include a build of terminal-notifier with your icon **and a different bundle identifier**. 
+    (If you don’t change the bundle identifier, launch services uses a cached version of the icon.)
+  
+  However, you _can_ use unicode symbols and emojis! See the examples.
 
 * It is currently packaged as an application bundle, because `NSUserNotification`
   does not work from a ‘Foundation tool’. [radar://11956694](radar://11956694)
 
-* If you intend to package terminal-notifier with your app to distribute it on the
-  MAS, please use 1.5.2 since 1.6.0+ uses a private method override which is not
-  allowed in the AppStore guidelines.
+* If you intend to package terminal-notifier with your app to distribute it on the Mac App Store, please use 1.5.2; version 1.6.0+ uses a private method override, which is not allowed in the App Store Guidelines.
 
 
 ## Download
@@ -60,38 +58,39 @@ $ terminal-notifier -[message|group|list] [VALUE|ID|ID] [options]
 
 This will obviously be a bit slower than using the tool without the wrapper.
 
-Some examples are:
 
-Display piped data with a sound
+### Example Uses
+
+Display piped data with a sound:
 ```
 $ echo 'Piped Message Data!' | terminal-notifier -sound default
 ```
 
-Multiple actions and custom dropdown list
+Multiple actions and custom dropdown list:
 ```
 $ terminal-notifier -message "Deploy now on UAT ?" -actions Now,"Later today","Tomorrow" -dropdownLabel "When ?"
 ```
 
-Yes or No ?
+“Yes or No ?”:
 ```
 $ terminal-notifier -title ProjectX -subtitle "new tag detected" -message "Deploy now on UAT ?" -closeLabel No -actions Yes -appIcon http://vjeantet.fr/images/logo.png
 ```
 
-Open an URL when the notification is clicked
+Open an URL when the notification is clicked:
 ```
 $ terminal-notifier -title '💰' -message 'Check your Apple stock!' -open 'http://finance.yahoo.com/q?s=AAPL'
 ```
 
-Open an app when the notification is clicked
+Open an app when the notification is clicked:
 ```
 $ terminal-notifier -group 'address-book-sync' -title 'Address Book Sync' -subtitle 'Finished' -message 'Imported 42 contacts.' -activate 'com.apple.AddressBook'
 ```
 
 
-#### Options
+### Options
 
-At a minimum, you have to specify either the `-message` , the `-remove`
-or the `-list` option.
+At a minimum, you must specify either the `-message` , the `-remove`, or the 
+`-list` option.
 
 -------------------------------------------------------------------------------
 
@@ -99,8 +98,8 @@ or the `-list` option.
 
 The message body of the notification.
 
-Note that if this option is omitted and data is piped to the application, that
-data will be used instead.
+If you pipe data into terminal-notifier, you can omit this option,
+and the piped data will become the message body instead.
 
 -------------------------------------------------------------------------------
 
@@ -118,78 +117,86 @@ The subtitle of the notification.
 
 `-sound NAME`
 
-The name of a sound to play when the notification appears. The names are listed
-in Sound Preferences. Use 'default' for the default notification sound.
+Play the `NAME` sound when the notification appears. 
+Sound names are listed in Sound Preferences. 
+
+Use the special `NAME` “default” for the default notification sound.
 
 -------------------------------------------------------------------------------
 
 `-reply` **[10.9+ only]**
 
-The notification will be displayed as a reply type alert.
+Display the notification as a reply type alert.
 
 -------------------------------------------------------------------------------
 
 `-actions VALUE1,VALUE2,"VALUE 3"` **[10.9+ only]**
 
-The notification actions avalaible.
+Use `VALUE*` as actions for the notification.
 When you provide more than one value, a dropdown will be displayed.
-You can customize this dropdown label with the next option
-Does not work when -reply is used
+
+You can customize this dropdown label with the `-dropdownLabel` option.
+
+Does not work when `-reply` is used.
 
 -------------------------------------------------------------------------------
 
 `-dropdownLabel VALUE` **[10.9+ only]**
 
-The notification actions dropdown title (only when multiples -actions values are provided).
-Does not work when -reply is used
+Use the `VALUE` label for the notification’s dropdown menu actions 
+(only when multiple `-action` values are provided).
+
+Does not work when `-reply` is used.
 
 -------------------------------------------------------------------------------
 
 `-closeLabel VALUE` **[10.9+ only]**
 
-The notification "Close" button label.
+Use the `VALUE` label for the notification’s “Close” button.
 
 -------------------------------------------------------------------------------
 
 `-timeout NUMBER`
 
-Auto close the alert notification after NUMBER seconds.
+Automatically close the alert notification after `NUMBER` seconds.
 
 -------------------------------------------------------------------------------
 
 `-json`
 
-Outputs the event as JSON.
+Output the event as JSON.
 
 -------------------------------------------------------------------------------
 
 `-group ID`
 
-Specifies the ‘group’ a notification belongs to. For any ‘group’ only _one_
+Specifies the notification’s ‘group’. For any ‘group’, only _one_
 notification will ever be shown, replacing previously posted notifications.
 
-A notification can be explicitely removed with the `-remove` option, describe
-below.
+A notification can be explicitly removed with the `-remove` option (see
+below).
 
-Examples are:
+Example group IDs:
 
-* The sender’s name to scope the notifications by tool.
-* The sender’s process ID to scope the notifications by a unique process.
-* The current working directory to scope notifications by project.
+* The sender’s name (to scope the notifications by tool).
+* The sender’s process ID (to scope the notifications by a unique process).
+* The current working directory (to scope notifications by project).
 
 -------------------------------------------------------------------------------
 
 `-remove ID`  **[required]**
 
-Removes a notification that was previously sent with the specified ‘group’ ID,
-if one exists. If used with the special group "ALL", all message are removed.
+Remove a previous notification from the `ID` ‘group’, if one exists. 
+
+Use the special `ID` “ALL” to remove all messages.
 
 -------------------------------------------------------------------------------
 
 `-list ID` **[required]**
 
-Lists details about the specified ‘group’ ID. If used with the special group
-"ALL", details about all currently active  messages are displayed.
+Lists details about the specified ‘group’ `ID`. 
+
+Use the special `ID` “ALL” to list details about all currently active messages.
 
 The output of this command is tab-separated, which makes it easy to parse.
 
@@ -197,13 +204,13 @@ The output of this command is tab-separated, which makes it easy to parse.
 
 `-activate ID`
 
-Specifies which application should be activated when the user clicks the
+Activate the application specified by `ID` when the user clicks the
 notification.
 
 You can find the bundle identifier of an application in its `Info.plist` file
 _inside_ the application bundle.
 
-Examples are:
+Examples application IDs are:
 
 * `com.apple.Terminal` to activate Terminal.app
 * `com.apple.Safari` to activate Safari.app
@@ -212,30 +219,28 @@ Examples are:
 
 `-sender ID`
 
-Specifying this will make it appear as if the notification was send by that
-application instead, including using its icon.
+Fakes the sender application of the notification. This uses the specified 
+application’s icon, and will launch it when the notification is clicked. 
 
-Using this option fakes the sender application, so that the notification system
-will launch that application when the notification is clicked. Because of this
-it is important to note that you cannot combine this with options like
-`-execute`, `-open`, and `-activate` which depend on the sender of the
-notification to be ‘terminal-notifier’ to perform its work.
+Because this option fakes the notification sender, it cannot be used with options 
+like `-execute`, `-open`, and `-activate`, because they depend on the sender being 
+‘terminal-notifier’ to work.
 
-For information on the `ID` see the `-activate` option.
+For information on the `ID`, see the `-activate` option.
 
 -------------------------------------------------------------------------------
 
 `-appIcon PATH` **[10.9+ only]**
 
-Specifies The PATH of an image to display instead of the application icon.
+Specify an image `PATH` to display instead of the application icon.
 
-**WARNING: This option is subject to change since it relies on a private method.**
+**WARNING: This option is subject to change, since it relies on a private method.**
 
 -------------------------------------------------------------------------------
 
 `-contentImage PATH` **[10.9+ only]**
 
-Specifies The PATH of an image to display attached inside the notification.
+Specify an image `PATH` to attach inside of the notification.
 
 **WARNING: This option is subject to change since it relies on a private method.**
 
@@ -243,14 +248,14 @@ Specifies The PATH of an image to display attached inside the notification.
 
 `-open URL`
 
-Specifies a resource to be opened when the user clicks the notification. This
-can be a web or file URL, or any custom URL scheme.
+Open `URL` when the user clicks the notification. This can be a web or file URL, 
+or any custom URL scheme.
 
 -------------------------------------------------------------------------------
 
 `-execute COMMAND`
 
-Specifies a shell command to run when the user clicks the notification.
+Run the shell command `COMMAND` when the user clicks the notification.
 
 
 ## License
@@ -279,3 +284,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
