@@ -1,12 +1,12 @@
 # terminal-notifier
 
-terminal-notifier is a command-line tool to send OS X User Notifications,
-which are available on OS X 10.8 and higher.
+terminal-notifier is a command-line tool to send macOS User Notifications,
+which are available on macOS 10.8 and higher.
 
 
 ## Caveats
 
-* On OS X 10.8, the `-appIcon` and `-contentImage` options do nothing.
+* On macOS 10.8, the `-appIcon` and `-contentImage` options do nothing.
   This is because Notification Center on 10.8 _always_ uses the application’s own icon. 
   
   You can do one of the following to work around this limitation on 10.8:
@@ -19,9 +19,7 @@ which are available on OS X 10.8 and higher.
 * It is currently packaged as an application bundle, because `NSUserNotification`
   does not work from a ‘Foundation tool’. [radar://11956694](radar://11956694)
 
-* If you intend to package terminal-notifier with your app to distribute it on the
-  MAS, please use 1.5.2; version 1.6.0+ uses a private method override, which is not
-  allowed in the App Store Guidelines.
+* If you intend to package terminal-notifier with your app to distribute it on the Mac App Store, please use 1.5.2; version 1.6.0+ uses a private method override, which is not allowed in the App Store Guidelines.
 
 
 ## Download
@@ -128,13 +126,13 @@ Use the special `NAME` “default” for the default notification sound.
 
 `-reply` **[10.9+ only]**
 
-Displayed the notification as a reply type alert.
+Display the notification as a reply type alert.
 
 -------------------------------------------------------------------------------
 
 `-actions VALUE1,VALUE2,"VALUE 3"` **[10.9+ only]**
 
-Use notification actions avalaible.
+Use `VALUE*` as actions for the notification.
 When you provide more than one value, a dropdown will be displayed.
 
 You can customize this dropdown label with the `-dropdownLabel` option.
@@ -221,7 +219,7 @@ Examples application IDs are:
 
 `-sender ID`
 
-Fakes the sender application of the notification.  This uses the specified 
+Fakes the sender application of the notification. This uses the specified 
 application’s icon, and will launch it when the notification is clicked. 
 
 Because this option fakes the notification sender, it cannot be used with options 
@@ -286,3 +284,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
