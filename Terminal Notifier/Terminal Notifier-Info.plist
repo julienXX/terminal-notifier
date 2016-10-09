@@ -32,7 +32,12 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-  <key>NSUserNotificationAlertStyle</key>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSUserNotificationAlertStyle</key>
 	<string>alert</string>
 </dict>
 </plist>
