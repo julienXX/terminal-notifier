@@ -30,6 +30,33 @@ module TerminalNotifier
     end
   end
 
+  # Cleans up the result of a notification, making it easier to work it
+  # 
+  # The result of a notification is downcased, then groups of 1 or more
+  # non-word characters are replaced with an underscore, before being
+  # symbolised. 
+  #
+  # If the reply option was given, then instead of going through the 
+  # above process, the result is returned with no changes as a string.
+  # 
+  # Examples are:
+  #
+  # notify_result('Test', {}) #=> :test
+  # notify_result('No, sir', {}) #=> :no_sir
+  # notify_result('@timeout', {}) #=> :_timeout
+  # notify_result('@closeaction', {}) #=> :_closeaction
+  # notify_result('I like pie', {reply: true}) #=> 'I like pie'
+  # notify_result('I do not like pie', {'reply' => true}) #=> 'I do not like pie'
+  # notify_result('@timeout', {'reply' => true}) #=> '@timeout'
+  # notify_result('I may like pie', {}) #=> :i_may_like_pie
+  def notify_result(result, options)
+    if options[:reply] || options['reply']
+      result
+    else
+      result.length == 0 || result.downcase.gsub(/\W+/,'_').to_sym
+    end
+  end
+  
   # Sends a User Notification and returns whether or not it was a success.
   #
   # The available options are `:title`, `:group`, `:activate`, `:open`,
@@ -51,7 +78,7 @@ module TerminalNotifier
   # Raises if not supported on the current platform.
   def notify(message, options = {}, verbose = false)
     result = TerminalNotifier.execute(verbose, options.merge(:message => message))
-    $? && $?.success? && (result.length == 0 || result.downcase.gsub(/\W+/,'_').to_sym)
+    $? && $?.success? && notify_result(result, options)
   end
   module_function :notify
 
