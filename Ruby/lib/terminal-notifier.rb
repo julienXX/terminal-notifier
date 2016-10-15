@@ -50,8 +50,8 @@ module TerminalNotifier
   #
   # Raises if not supported on the current platform.
   def notify(message, options = {}, verbose = false)
-    TerminalNotifier.execute(verbose, options.merge(:message => message))
-    $? && $?.success?
+    result = TerminalNotifier.execute(verbose, options.merge(:message => message))
+    $? && $?.success? && (result.length > 0 ? result.downcase.gsub(/[@\s]/,'_').to_sym : true)
   end
   module_function :notify
 
