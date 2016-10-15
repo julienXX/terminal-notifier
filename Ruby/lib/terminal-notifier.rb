@@ -56,6 +56,7 @@ module TerminalNotifier
       result.length == 0 || result.downcase.gsub(/\W+/,'_').to_sym
     end
   end
+  module_function :notify_result
   
   # Sends a User Notification and returns whether or not it was a success.
   #
