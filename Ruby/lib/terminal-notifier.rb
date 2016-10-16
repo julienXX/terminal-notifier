@@ -39,6 +39,9 @@ module TerminalNotifier
   # If the reply option was given, then instead of going through the 
   # above process, the result is returned with no changes as a string.
   # 
+  # If the always_string param is set to true, a the result is returned
+  # with no changes as a string, like above.
+  #
   # Examples are:
   #
   # notify_result('Test', {}) #=> :test
@@ -49,8 +52,8 @@ module TerminalNotifier
   # notify_result('I do not like pie', {'reply' => true}) #=> 'I do not like pie'
   # notify_result('@timeout', {'reply' => true}) #=> '@timeout'
   # notify_result('I may like pie', {}) #=> :i_may_like_pie
-  def notify_result(result, options)
-    if options[:reply] || options['reply']
+  def notify_result(result, options, always_string = false)
+    if options[:reply] || options['reply'] || always_string
       result
     else
       result.length == 0 || result.downcase.gsub(/\W+/,'_').to_sym
@@ -77,9 +80,9 @@ module TerminalNotifier
   #   TerminalNotifier.notify('Hello World', :sound => 'default')
   #
   # Raises if not supported on the current platform.
-  def notify(message, options = {}, verbose = false)
+  def notify(message, options = {}, verbose = false, always_string = false)
     result = TerminalNotifier.execute(verbose, options.merge(:message => message))
-    $? && $?.success? && notify_result(result, options)
+    $? && $?.success? && notify_result(result, options, always_string)
   end
   module_function :notify
 
