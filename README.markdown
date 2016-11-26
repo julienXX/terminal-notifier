@@ -71,10 +71,14 @@ Open an URL when the notification is clicked:
 $ terminal-notifier -title '💰' -message 'Check your Apple stock!' -open 'http://finance.yahoo.com/q?s=AAPL'
 ```
 
+![Example 4](assets/Example_4.png)
+
 Open an app when the notification is clicked:
 ```
 $ terminal-notifier -group 'address-book-sync' -title 'Address Book Sync' -subtitle 'Finished' -message 'Imported 42 contacts.' -activate 'com.apple.AddressBook'
 ```
+
+![Example 5](assets/Example_5.png)
 
 
 ### Options
