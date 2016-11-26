@@ -66,25 +66,35 @@ Display piped data with a sound:
 $ echo 'Piped Message Data!' | terminal-notifier -sound default
 ```
 
+![Example 1](assets/Example_1.png)
+
 Multiple actions and custom dropdown list:
 ```
 $ terminal-notifier -message "Deploy now on UAT ?" -actions Now,"Later today","Tomorrow" -dropdownLabel "When ?"
 ```
+
+![Example 2](assets/Example_2.png)
 
 “Yes or No ?”:
 ```
 $ terminal-notifier -title ProjectX -subtitle "new tag detected" -message "Deploy now on UAT ?" -closeLabel No -actions Yes -appIcon http://vjeantet.fr/images/logo.png
 ```
 
+![Example 3](assets/Example_3.png)
+
 Open an URL when the notification is clicked:
 ```
 $ terminal-notifier -title '💰' -message 'Check your Apple stock!' -open 'http://finance.yahoo.com/q?s=AAPL'
 ```
 
+![Example 4](assets/Example_4.png)
+
 Open an app when the notification is clicked:
 ```
 $ terminal-notifier -group 'address-book-sync' -title 'Address Book Sync' -subtitle 'Finished' -message 'Imported 42 contacts.' -activate 'com.apple.AddressBook'
 ```
+
+![Example 5](assets/Example_5.png)
 
 
 ### Options
