@@ -16,7 +16,7 @@ module TerminalNotifier
 
   def self.execute(verbose, options)
     if available?
-      command = [BIN_PATH, *options.map { |k,v| v = v.to_s; ["-#{k}", "#{Shellwords.escape(v[0,1])}#{v[1..-1]}"] }.flatten]
+      command = [BIN_PATH, *options.map { |k,v| v = v.to_s; ["-#{k}", "#{v[0] == "-" ? " " : ""}#{Shellwords.escape(v[0,1])}#{v[1..-1]}"] }.flatten]
       command = Shellwords.join(command) if RUBY_VERSION < '1.9'
       result = ''
       IO.popen(command) do |stdout|
