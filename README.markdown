@@ -157,7 +157,7 @@ The output of this command is tab-separated, which makes it easy to parse.
 Activate the application specified by `ID` when the user clicks the
 notification.
 
-You can find the bundle identifier of an application in its `Info.plist` file
+You can find the bundle identifier (`CFBundleIdentifier`) of an application in its `Info.plist` file
 _inside_ the application bundle.
 
 Examples application IDs are:
