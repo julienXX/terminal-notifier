@@ -154,7 +154,7 @@ Does not work when `-reply` is used.
 `-dropdownLabel VALUE` **[10.9+ only]**
 
 Use the `VALUE` label for the notification’s dropdown menu actions 
-(only when multiple `-action` values are provided).
+(only when multiple `-actions` values are provided).
 
 Does not work when `-reply` is used.
 
