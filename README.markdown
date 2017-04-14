@@ -7,19 +7,23 @@ which are available on macOS 10.8 and higher.
 ## Caveats
 
 * On macOS 10.8, the `-appIcon` and `-contentImage` options do nothing.
-  This is because Notification Center on 10.8 _always_ uses the application’s own icon. 
-  
+  This is because Notification Center on 10.8 _always_ uses the application’s own icon.
+
   You can do one of the following to work around this limitation on 10.8:
     - Use the `-sender` option to  “fake it” (see below)
-    - Include a build of terminal-notifier with your icon **and a different bundle identifier**. 
+    - Include a build of terminal-notifier with your icon **and a different bundle identifier**.
     (If you don’t change the bundle identifier, launch services uses a cached version of the icon.)
-  
+
   However, you _can_ use unicode symbols and emojis! See the examples.
 
 * It is currently packaged as an application bundle, because `NSUserNotification`
   does not work from a ‘Foundation tool’. [radar://11956694](radar://11956694)
 
 * If you intend to package terminal-notifier with your app to distribute it on the Mac App Store, please use 1.5.2; version 1.6.0+ uses a private method override, which is not allowed in the App Store Guidelines.
+
+* To enable actions on the notification (the buttons that allow the user to select an option),
+  open System Preferences > Notifications, select terminal-notifer in the sidebar, and select the "Alerts" alert style.
+  ![Enable alerts in System Preferences](assets/System_prefs.png)
 
 
 ## Download
@@ -99,7 +103,7 @@ $ terminal-notifier -group 'address-book-sync' -title 'Address Book Sync' -subti
 
 ### Options
 
-At a minimum, you must specify either the `-message` , the `-remove`, or the 
+At a minimum, you must specify either the `-message` , the `-remove`, or the
 `-list` option.
 
 -------------------------------------------------------------------------------
@@ -127,8 +131,8 @@ The subtitle of the notification.
 
 `-sound NAME`
 
-Play the `NAME` sound when the notification appears. 
-Sound names are listed in Sound Preferences. 
+Play the `NAME` sound when the notification appears.
+Sound names are listed in Sound Preferences.
 
 Use the special `NAME` “default” for the default notification sound.
 
@@ -153,7 +157,7 @@ Does not work when `-reply` is used.
 
 `-dropdownLabel VALUE` **[10.9+ only]**
 
-Use the `VALUE` label for the notification’s dropdown menu actions 
+Use the `VALUE` label for the notification’s dropdown menu actions
 (only when multiple `-actions` values are provided).
 
 Does not work when `-reply` is used.
@@ -196,7 +200,7 @@ Example group IDs:
 
 `-remove ID`  **[required]**
 
-Remove a previous notification from the `ID` ‘group’, if one exists. 
+Remove a previous notification from the `ID` ‘group’, if one exists.
 
 Use the special `ID` “ALL” to remove all messages.
 
@@ -204,7 +208,7 @@ Use the special `ID` “ALL” to remove all messages.
 
 `-list ID` **[required]**
 
-Lists details about the specified ‘group’ `ID`. 
+Lists details about the specified ‘group’ `ID`.
 
 Use the special `ID` “ALL” to list details about all currently active messages.
 
@@ -229,11 +233,11 @@ Examples application IDs are:
 
 `-sender ID`
 
-Fakes the sender application of the notification. This uses the specified 
-application’s icon, and will launch it when the notification is clicked. 
+Fakes the sender application of the notification. This uses the specified
+application’s icon, and will launch it when the notification is clicked.
 
-Because this option fakes the notification sender, it cannot be used with options 
-like `-execute`, `-open`, and `-activate`, because they depend on the sender being 
+Because this option fakes the notification sender, it cannot be used with options
+like `-execute`, `-open`, and `-activate`, because they depend on the sender being
 ‘terminal-notifier’ to work.
 
 For information on the `ID`, see the `-activate` option.
@@ -258,7 +262,7 @@ Specify an image `PATH` to attach inside of the notification.
 
 `-open URL`
 
-Open `URL` when the user clicks the notification. This can be a web or file URL, 
+Open `URL` when the user clicks the notification. This can be a web or file URL,
 or any custom URL scheme.
 
 -------------------------------------------------------------------------------
