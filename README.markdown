@@ -21,6 +21,10 @@ which are available on macOS 10.8 and higher.
 
 * If you intend to package terminal-notifier with your app to distribute it on the Mac App Store, please use 1.5.2; version 1.6.0+ uses a private method override, which is not allowed in the App Store Guidelines.
 
+* To enable actions on the notification (the buttons that allow the user to select an option),
+  open System Preferences > Notifications, select terminal-notifer in the sidebar, and select the "Alerts" alert style.
+  ![Enable alerts in System Preferences](assets/System_prefs.png)
+
 
 ## Download
 
