@@ -420,11 +420,13 @@ isMavericks()
                  ^{
                    __block BOOL notificationStillPresent;
                    do {
-                     notificationStillPresent = NO;
-                     for (NSUserNotification *nox in [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications]) {
-                       if ([nox.userInfo[@"uuid"]  isEqualToString:[NSString stringWithFormat:@"%ld", self.hash] ]) notificationStillPresent = YES;
+                     @autoreleasepool {
+                       notificationStillPresent = NO;
+                       for (NSUserNotification *nox in [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications]) {
+                         if ([nox.userInfo[@"uuid"]  isEqualToString:[NSString stringWithFormat:@"%ld", self.hash] ]) notificationStillPresent = YES;
+                       }
+                       if (notificationStillPresent) [NSThread sleepForTimeInterval:0.20f];
                      }
-                     if (notificationStillPresent) [NSThread sleepForTimeInterval:0.20f];
                    } while (notificationStillPresent);
 
                    dispatch_async(dispatch_get_main_queue(), ^{
