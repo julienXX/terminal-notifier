@@ -196,7 +196,9 @@ isMavericks()
 
     if (remove) {
       [self removeNotificationWithGroupID:remove];
-      if (message == nil) exit(0);
+      if (message == nil || ([message length] == 0)) {
+          exit(0);
+      }
     }
 
     if (message) {
