@@ -6,6 +6,10 @@ which are available on macOS 10.10 and higher.
 
 ## Caveats
 
+* If you're using macOS 10.8 you should use terminal-notifier 1.6.3.
+
+* For macOS 10.9 users the last compatible version is 1.7.2.
+
 * If you intend to package terminal-notifier with your app to distribute it on the Mac App Store, please use 1.5.2; version 1.6.0+ uses a private method override, which is not allowed in the App Store Guidelines.
 
 * To enable actions on the notification (the buttons that allow the user to select an option),
@@ -265,7 +269,7 @@ All the works are available under the MIT license. **Except** for
 ‘Terminal.icns’, which is a copy of Apple’s Terminal.app icon and as such is
 copyright of Apple.
 
-Copyright (C) 2012-2017 Eloy Durán <eloy.de.enige@gmail.com>, Julien Blanchard
+Copyright (C) 2012-2017 Eloy Durán <eloy.de.enige@gmail.com>, Valère Jeantet <valere.jeantet@gmail.com> and Julien Blanchard
 <julien@sideburns.eu>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
