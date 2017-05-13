@@ -2,12 +2,8 @@
 #import <ScriptingBridge/ScriptingBridge.h>
 #import <objc/runtime.h>
 
-NSString * const TerminalNotifierBundleID = @"nl.superalloy.oss.terminal-notifier";
+NSString * const TerminalNotifierBundleID = @"fr.julienxx.terminal-notifier";
 NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui";
-
-// Set OS Params
-#define NSAppKitVersionNumber10_8 1187
-#define NSAppKitVersionNumber10_9 1265
 
 #define contains(str1, str2) ([str1 rangeOfString: str2 ].location != NSNotFound)
 
@@ -41,18 +37,6 @@ InstallFakeBundleIdentifierHook()
   return NO;
 }
 
-static BOOL
-isMavericks()
-{
-  if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_8) {
-    /* On a 10.8 - 10.8.x system */
-    return NO;
-  } else {
-    /* 10.9 or later system */
-    return YES;
-  }
-}
-
 @implementation NSUserDefaults (SubscriptAndUnescape)
 - (id)objectForKeyedSubscript:(id)key;
 {
@@ -70,19 +54,8 @@ isMavericks()
 +(void)initializeUserDefaults
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-  // initialize the dictionary with default values depending on OS level
   NSDictionary *appDefaults;
-
-  if (isMavericks()) {
-    //10.9
-    appDefaults = @{@"sender": @"com.apple.Terminal"};
-  } else {
-    //10.8
-    appDefaults = @{@"": @"message"};
-  }
-
-  // and set them appropriately
+  appDefaults = @{@"sender": @"com.apple.Terminal"};
   [defaults registerDefaults:appDefaults];
 }
 
@@ -128,12 +101,12 @@ isMavericks()
          "                          Old notifications with the same ID will be removed.\n" \
          "       -activate ID       The bundle identifier of the application to activate when the user clicks the notification.\n" \
          "       -sender ID         The bundle identifier of the application that should be shown as the sender, including its icon.\n" \
-         "       -appIcon URL       The URL of a image to display instead of the application icon (Mavericks+ only)\n" \
-         "       -contentImage URL  The URL of a image to display attached to the notification (Mavericks+ only)\n" \
+         "       -appIcon URL       The URL of a image to display instead of the application icon.\n" \
+         "       -contentImage URL  The URL of a image to display attached to the notification.\n" \
          "       -open URL          The URL of a resource to open when the user clicks the notification.\n" \
          "       -execute COMMAND   A shell command to perform when the user clicks the notification.\n" \
          "       -timeout NUMBER    Close the notification after NUMBER seconds.\n" \
-         "       -json              Output event or value to stdout as JSON \n" \
+         "       -json              Output event or value to stdout as JSON.\n" \
          "\n" \
          "When the user activates a notification, the results are logged to the system logs.\n" \
          "Use Console.app to view these logs.\n" \
@@ -229,7 +202,7 @@ isMavericks()
       options[@"uuid"] = [NSString stringWithFormat:@"%ld", self.hash];
       options[@"timeout"] = defaults[@"timeout"] ? defaults[@"timeout"] : @"0";
 
-      if (options[@"reply"] || defaults[@"timeout"] || defaults[@"actions"]) options[@"waitForResponse"] = @YES;
+      if (options[@"reply"] || defaults[@"timeout"] || defaults[@"actions"] || defaults[@"execute"] || defaults[@"open"] || options[@"bundleID"]) options[@"waitForResponse"] = @YES;
 
       if (defaults[@"open"]) {
         /*
@@ -296,43 +269,40 @@ isMavericks()
   userNotification.informativeText = message;
   userNotification.userInfo = options;
 
-  if(isMavericks()){
-    // Mavericks options
-    if(options[@"appIcon"]){
-      // replacement app icon
-      [userNotification setValue:[self getImageFromURL:options[@"appIcon"]] forKey:@"_identityImage"];
-      [userNotification setValue:@(false) forKey:@"_identityImageHasBorder"];
-    }
-    if(options[@"contentImage"]){
-      // content image
-      userNotification.contentImage = [self getImageFromURL:options[@"contentImage"]];
-    }
-    // Actions
-    if (options[@"actions"]){
-      [userNotification setValue:@YES forKey:@"_showsButtons"];
-      NSArray *myActions = [options[@"actions"] componentsSeparatedByString:@","];
-      if (myActions.count > 1) {
-        [userNotification setValue:@YES forKey:@"_alwaysShowAlternateActionMenu"];
-        [userNotification setValue:myActions forKey:@"_alternateActionButtonTitles"];
+  if(options[@"appIcon"]){
+    // replacement app icon
+    [userNotification setValue:[self getImageFromURL:options[@"appIcon"]] forKey:@"_identityImage"];
+    [userNotification setValue:@(false) forKey:@"_identityImageHasBorder"];
+  }
+  if(options[@"contentImage"]){
+    // content image
+    userNotification.contentImage = [self getImageFromURL:options[@"contentImage"]];
+  }
+  // Actions
+  if (options[@"actions"]){
+    [userNotification setValue:@YES forKey:@"_showsButtons"];
+    NSArray *myActions = [options[@"actions"] componentsSeparatedByString:@","];
+    if (myActions.count > 1) {
+      [userNotification setValue:@YES forKey:@"_alwaysShowAlternateActionMenu"];
+      [userNotification setValue:myActions forKey:@"_alternateActionButtonTitles"];
 
-        //Main Actions Title
-        if(options[@"dropdownLabel"]){
-          userNotification.actionButtonTitle = options[@"dropdownLabel"];
-          userNotification.hasActionButton = true;
-        }
-      }else{
-        userNotification.actionButtonTitle = options[@"actions"];
+      //Main Actions Title
+      if(options[@"dropdownLabel"]){
+        userNotification.actionButtonTitle = options[@"dropdownLabel"];
+        userNotification.hasActionButton = true;
       }
-    }else if (options[@"reply"]) {
-      [userNotification setValue:@YES forKey:@"_showsButtons"];
-      userNotification.hasReplyButton = 1;
-      userNotification.responsePlaceholder = options[@"reply"];
+    }else{
+      userNotification.actionButtonTitle = options[@"actions"];
     }
+  }else if (options[@"reply"]) {
+    [userNotification setValue:@YES forKey:@"_showsButtons"];
+    userNotification.hasReplyButton = 1;
+    userNotification.responsePlaceholder = options[@"reply"];
+  }
 
-    // Close button
-    if(options[@"closeLabel"]){
-      userNotification.otherButtonTitle = options[@"closeLabel"];
-    }
+  // Close button
+  if(options[@"closeLabel"]){
+    userNotification.otherButtonTitle = options[@"closeLabel"];
   }
 
   if (sound != nil) {
@@ -460,12 +430,11 @@ isMavericks()
 
   unsigned long long additionalActionIndex = ULLONG_MAX;
 
-  NSString* ActionsClicked = @"";
+  NSString *ActionsClicked = @"";
   switch (notification.activationType) {
-
   case NSUserNotificationActivationTypeAdditionalActionClicked:
   case NSUserNotificationActivationTypeActionButtonClicked:
-    if ([[(NSObject*)notification valueForKey:@"_alternateActionButtonTitles"] count] > 1 ){
+    if ([[(NSObject*)notification valueForKey:@"_alternateActionButtonTitles"] count] > 1){
       NSNumber *alternateActionIndex = [(NSObject*)notification valueForKey:@"_alternateActionIndex"];
       additionalActionIndex = [alternateActionIndex unsignedLongLongValue];
       ActionsClicked = [(NSObject*)notification valueForKey:@"_alternateActionButtonTitles"][additionalActionIndex];
@@ -502,19 +471,19 @@ isMavericks()
   if ([notification.userInfo[@"output"] isEqualToString:@"outputEvent"]) {
     if ([udict[@"activationType"] isEqualToString:@"closed"]) {
       if ([udict[@"activationValue"] isEqualToString:@""]) {
-        printf("%s", "@CLOSED" );
+        printf("%s", "@CLOSED");
       }else{
-        printf("%s", [udict[@"activationValue"] UTF8String] );
+        printf("%s", [udict[@"activationValue"] UTF8String]);
       }
     } else  if ([udict[@"activationType"] isEqualToString:@"timeout"]) {
-      printf("%s", "@TIMEOUT" );
+      printf("%s", "@TIMEOUT");
     } else  if ([udict[@"activationType"] isEqualToString:@"contentsClicked"]) {
-      printf("%s", "@CONTENTCLICKED" );
+      printf("%s", "@CONTENTCLICKED");
     } else{
       if ([udict[@"activationValue"] isEqualToString:@""]) {
-        printf("%s", "@ACTIONCLICKED" );
+        printf("%s", "@ACTIONCLICKED");
       }else{
-        printf("%s", [udict[@"activationValue"] UTF8String] );
+        printf("%s", [udict[@"activationValue"] UTF8String]);
       }
     }
 

@@ -5,9 +5,9 @@ module TerminalNotifier
   BIN_PATH = File.expand_path('../../vendor/terminal-notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', __FILE__)
 
   class UnsupportedPlatformError < StandardError; end
-  # Returns wether or not the current platform is Mac OS X 10.8, or higher.
+  # Returns wether or not the current platform is Mac OS X 10.10, or higher.
   def self.available?
-    @available ||= (/darwin|mac os/ =~ RbConfig::CONFIG['host_os']) && Gem::Version.new(version) > Gem::Version.new('10.8')
+    @available ||= (/darwin|mac os/ =~ RbConfig::CONFIG['host_os']) && Gem::Version.new(version) > Gem::Version.new('10.10')
   end
 
   def self.version
@@ -26,7 +26,7 @@ module TerminalNotifier
       end
       result
     else
-      STDERR.print "terminal-notifier is only supported on Mac OS X 10.8, or higher."
+      STDERR.print "terminal-notifier is only supported on Mac OS X 10.10, or higher."
     end
   end
 

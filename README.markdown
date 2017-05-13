@@ -1,23 +1,10 @@
 # terminal-notifier
 
 terminal-notifier is a command-line tool to send macOS User Notifications,
-which are available on macOS 10.8 and higher.
+which are available on macOS 10.10 and higher.
 
 
 ## Caveats
-
-* On macOS 10.8, the `-appIcon` and `-contentImage` options do nothing.
-  This is because Notification Center on 10.8 _always_ uses the application’s own icon.
-
-  You can do one of the following to work around this limitation on 10.8:
-    - Use the `-sender` option to  “fake it” (see below)
-    - Include a build of terminal-notifier with your icon **and a different bundle identifier**.
-    (If you don’t change the bundle identifier, launch services uses a cached version of the icon.)
-
-  However, you _can_ use unicode symbols and emojis! See the examples.
-
-* It is currently packaged as an application bundle, because `NSUserNotification`
-  does not work from a ‘Foundation tool’. [radar://11956694](radar://11956694)
 
 * If you intend to package terminal-notifier with your app to distribute it on the Mac App Store, please use 1.5.2; version 1.6.0+ uses a private method override, which is not allowed in the App Store Guidelines.
 
@@ -138,13 +125,13 @@ Use the special `NAME` “default” for the default notification sound.
 
 -------------------------------------------------------------------------------
 
-`-reply` **[10.9+ only]**
+`-reply`
 
 Display the notification as a reply type alert.
 
 -------------------------------------------------------------------------------
 
-`-actions VALUE1,VALUE2,"VALUE 3"` **[10.9+ only]**
+`-actions VALUE1,VALUE2,"VALUE 3"`
 
 Use `VALUE*` as actions for the notification.
 When you provide more than one value, a dropdown will be displayed.
@@ -155,7 +142,7 @@ Does not work when `-reply` is used.
 
 -------------------------------------------------------------------------------
 
-`-dropdownLabel VALUE` **[10.9+ only]**
+`-dropdownLabel VALUE`
 
 Use the `VALUE` label for the notification’s dropdown menu actions
 (only when multiple `-actions` values are provided).
@@ -164,7 +151,7 @@ Does not work when `-reply` is used.
 
 -------------------------------------------------------------------------------
 
-`-closeLabel VALUE` **[10.9+ only]**
+`-closeLabel VALUE`
 
 Use the `VALUE` label for the notification’s “Close” button.
 
@@ -244,7 +231,7 @@ For information on the `ID`, see the `-activate` option.
 
 -------------------------------------------------------------------------------
 
-`-appIcon PATH` **[10.9+ only]**
+`-appIcon PATH`
 
 Specify an image `PATH` to display instead of the application icon.
 
@@ -252,7 +239,7 @@ Specify an image `PATH` to display instead of the application icon.
 
 -------------------------------------------------------------------------------
 
-`-contentImage PATH` **[10.9+ only]**
+`-contentImage PATH`
 
 Specify an image `PATH` to attach inside of the notification.
 
@@ -298,4 +285,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
