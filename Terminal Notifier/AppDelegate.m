@@ -562,4 +562,15 @@ InstallFakeBundleIdentifierHook()
   }
 }
 
+- (void) bye; {
+  //Look for the notification sent, remove it when found
+  NSString *UUID = currentNotification.userInfo[@"uuid"] ;
+  for (NSUserNotification *nox in [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications]) {
+    if ([nox.userInfo[@"uuid"] isEqualToString:UUID ]){
+      [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:nox] ;
+      [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:nox] ;
+    }
+  }
+}
+
 @end

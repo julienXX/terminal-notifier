@@ -30,7 +30,7 @@
 		<true/>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2015 Valere JEANTET, based on Eloy Durán and Julien Blanchard works on terminal-notification.</string>
+	<string>Copyright © 2012-2017 Eloy Durán, Julien Blanchard and Valere Jeantet. All rights reserved.</string>
 	<key>NSUserNotificationAlertStyle</key>
 	<string>alert</string>
 </dict>

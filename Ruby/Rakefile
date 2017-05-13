@@ -1,6 +1,6 @@
 def version
   @version ||= begin
-    plist = File.expand_path('../../Terminal Notifier/Terminal Notifier-Info.plist', __FILE__)
+    plist = File.expand_path('../../Terminal Notifier/Info.plist', __FILE__)
     `/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' '#{plist}'`.strip
   end
 end
