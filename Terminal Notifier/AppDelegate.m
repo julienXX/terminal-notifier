@@ -205,17 +205,12 @@ InstallFakeBundleIdentifierHook()
       if (options[@"reply"] || defaults[@"timeout"] || defaults[@"actions"] || defaults[@"execute"] || defaults[@"open"] || options[@"bundleID"]) options[@"waitForResponse"] = @YES;
 
       if (defaults[@"open"]) {
-        /*
-         * it may be better to use stringByAddingPercentEncodingWithAllowedCharacters instead of stringByAddingPercentEscapesUsingEncoding,
-         * but stringByAddingPercentEncodingWithAllowedCharacters is only available on OS X 10.9 or higher.
-         */
-        NSString *encodedURL = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSURL *url = [NSURL URLWithString:defaults[@"open"]];
-        NSString *fragment = [url fragment];
-        if (fragment) {
-          options[@"open"] = [self decodeFragmentInURL:encodedURL fragment:fragment];
-        } else {
-          options[@"open"] = encodedURL;
+        if (url && url.scheme && url.host) {
+          options[@"open"] = defaults[@"open"];
+        }else{
+          printf("%s", "Error: You need to pass a valid URI to -open.\n");
+          exit(1);
         }
       }
 
@@ -238,20 +233,6 @@ InstallFakeBundleIdentifierHook()
     imageURL = [NSURL fileURLWithPath:url];
   }
   return [[NSImage alloc] initWithContentsOfURL:imageURL];
-}
-
-/**
- * Decode fragment identifier
- *
- * @see http://tools.ietf.org/html/rfc3986#section-2.1
- * @see http://en.wikipedia.org/wiki/URI_scheme
- */
-- (NSString*)decodeFragmentInURL:(NSString *) encodedURL fragment:(NSString *) framgent
-{
-  NSString *beforeStr = [@"%23" stringByAppendingString:framgent];
-  NSString *afterStr = [@"#" stringByAppendingString:framgent];
-  NSString *decodedURL = [encodedURL stringByReplacingOccurrencesOfString:beforeStr withString:afterStr];
-  return decodedURL;
 }
 
 - (void)deliverNotificationWithTitle:(NSString *)title
