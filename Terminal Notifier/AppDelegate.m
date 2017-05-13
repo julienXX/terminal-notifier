@@ -209,7 +209,7 @@ InstallFakeBundleIdentifierHook()
         if (url && url.scheme && url.host) {
           options[@"open"] = defaults[@"open"];
         }else{
-          printf("%s", "Error: You need to pass a valid URI to -open.\n");
+          NSLog(@"'%@' is not a valid URI.", defaults[@"open"]);
           exit(1);
         }
       }
@@ -452,19 +452,19 @@ InstallFakeBundleIdentifierHook()
   if ([notification.userInfo[@"output"] isEqualToString:@"outputEvent"]) {
     if ([udict[@"activationType"] isEqualToString:@"closed"]) {
       if ([udict[@"activationValue"] isEqualToString:@""]) {
-        printf("%s", "@CLOSED");
+        NSLog(@"@CLOSED");
       }else{
-        printf("%s", [udict[@"activationValue"] UTF8String]);
+        NSLog(@"@%s", [udict[@"activationValue"] UTF8String]);
       }
     } else  if ([udict[@"activationType"] isEqualToString:@"timeout"]) {
-      printf("%s", "@TIMEOUT");
+      NSLog(@"@TIMEOUT");
     } else  if ([udict[@"activationType"] isEqualToString:@"contentsClicked"]) {
-      printf("%s", "@CONTENTCLICKED");
+      NSLog(@"@CONTENTCLICKED");
     } else{
       if ([udict[@"activationValue"] isEqualToString:@""]) {
-        printf("%s", "@ACTIONCLICKED");
+        NSLog(@"@ACTIONCLICKED");
       }else{
-        printf("%s", [udict[@"activationValue"] UTF8String]);
+        NSLog(@"@%s", [udict[@"activationValue"] UTF8String]);
       }
     }
 
