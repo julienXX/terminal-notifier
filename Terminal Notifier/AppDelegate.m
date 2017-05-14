@@ -70,6 +70,7 @@ InstallFakeBundleIdentifierHook()
          "   Either of these is required (unless message data is piped to the tool):\n" \
          "\n" \
          "       -help              Display this help banner.\n" \
+         "       -version           Display terminal-notifier version.\n" \
          "       -message VALUE     The notification message.\n" \
          "       -remove ID         Removes a notification with the specified ‘group’ ID.\n" \
          "       -list ID           If the specified ‘group’ ID exists show when it was delivered,\n" \
@@ -118,6 +119,13 @@ InstallFakeBundleIdentifierHook()
          appName, appVersion, appName);
 }
 
+- (void)printVersion;
+{
+  const char *appName = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"] UTF8String];
+  const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
+  printf("%s %s.\n", appName, appVersion);
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
   NSUserNotification *userNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
@@ -127,6 +135,11 @@ InstallFakeBundleIdentifierHook()
   } else {
     if ([[[NSProcessInfo processInfo] arguments] indexOfObject:@"-help"] != NSNotFound) {
       [self printHelpBanner];
+      exit(0);
+    }
+    
+    if ([[[NSProcessInfo processInfo] arguments] indexOfObject:@"-version"] != NSNotFound) {
+      [self printVersion];
       exit(0);
     }
 
