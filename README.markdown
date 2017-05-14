@@ -263,6 +263,27 @@ or any custom URL scheme.
 Run the shell command `COMMAND` when the user clicks the notification.
 
 
+## Exemple Actions usage with a Shell script and [jq](https://github.com/stedolan/jq)
+
+```shell
+ANSWER="$(terminal-notifier -message 'Start now ?' -closeLabel No -actions YES,MAYBE,'one more action' -timeout 10 -json | jq .activationType,.activationValue)"
+
+stringarray=($ANSWER)
+type=${stringarray[0]}
+value=${stringarray[1]}
+
+case $type in
+    \"timeout\") echo "Timeout man, sorry" ;;
+    \"closed\") echo "You clicked on the default alert' close button" ;;
+    \"contentsClicked\") echo "You clicked the alert's content !" ;;
+    **) case $value in
+            \"YES\") echo "Action YES" ;;
+            \"MAYBE\") echo "Action MAYBE" ;;
+            **) echo "None of the above" ;;
+        esac;;
+esac
+```
+
 ## License
 
 All the works are available under the MIT license. **Except** for
