@@ -219,7 +219,7 @@ InstallFakeBundleIdentifierHook()
 
       if (defaults[@"open"]) {
         NSURL *url = [NSURL URLWithString:defaults[@"open"]];
-        if (url && url.scheme && url.host) {
+        if ((url && url.scheme && url.host) || [url isFileURL]) {
           options[@"open"] = defaults[@"open"];
         }else{
           NSLog(@"'%@' is not a valid URI.", defaults[@"open"]);
