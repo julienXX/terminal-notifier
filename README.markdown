@@ -22,6 +22,12 @@ which are available on macOS 10.10 and higher.
 Prebuilt binaries are available from the
 [releases section](https://github.com/julienXX/terminal-notifier/releases).
 
+
+You can also install it via [Homebrew](https://github.com/Homebrew/homebrew):
+```
+$ brew install terminal-notifier
+```
+
 Or if you want to use this from
 [Ruby](https://github.com/alloy/terminal-notifier/tree/master/Ruby), you can
 install it through RubyGems:
@@ -29,29 +35,6 @@ install it through RubyGems:
 ```
 $ [sudo] gem install terminal-notifier
 ```
-
-You can also install it via [Homebrew](https://github.com/Homebrew/homebrew):
-```
-$ brew install terminal-notifier
-```
-
-## Usage
-
-```
-$ terminal-notifier -[message|group|list] [VALUE|ID|ID] [options]
-```
-
-In order to use terminal-notifier, you have to call the binary _inside_ the
-application bundle.
-
-The Ruby gem, which wraps this tool, _does_ have a bin wrapper. If installed
-you can simply do:
-
-```
-$ terminal-notifier -[message|group|list] [VALUE|ID|ID] [options]
-```
-
-This will obviously be a bit slower than using the tool without the wrapper.
 
 
 ### Example Uses
