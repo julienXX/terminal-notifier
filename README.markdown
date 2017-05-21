@@ -38,7 +38,7 @@ $ brew install terminal-notifier
 ## Usage
 
 ```
-$ ./terminal-notifier.app/Contents/MacOS/terminal-notifier -[message|group|list] [VALUE|ID|ID] [options]
+$ terminal-notifier -[message|group|list] [VALUE|ID|ID] [options]
 ```
 
 In order to use terminal-notifier, you have to call the binary _inside_ the
