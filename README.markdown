@@ -245,6 +245,14 @@ or any custom URL scheme.
 
 Run the shell command `COMMAND` when the user clicks the notification.
 
+-------------------------------------------------------------------------------
+
+Unfortunately, there is no way to change the icon the notification displays. 
+Please see issue #1: https://github.com/alloy/terminal-notifier/issues/1
+
+
+
+
 
 ## Exemple Actions usage with a Shell script and [jq](https://github.com/stedolan/jq)
 
