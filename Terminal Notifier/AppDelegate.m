@@ -215,7 +215,7 @@ InstallFakeBundleIdentifierHook()
       options[@"uuid"] = [NSString stringWithFormat:@"%ld", self.hash];
       options[@"timeout"] = defaults[@"timeout"] ? defaults[@"timeout"] : @"0";
 
-      if (options[@"reply"] || defaults[@"timeout"] || defaults[@"actions"] || defaults[@"execute"] || defaults[@"open"] || options[@"bundleID"]) options[@"waitForResponse"] = @YES;
+      if (options[@"reply"] || defaults[@"timeout"] || defaults[@"actions"] || defaults[@"execute"] || defaults[@"open"]) options[@"waitForResponse"] = @YES;
 
       if (defaults[@"open"]) {
         NSURL *url = [NSURL URLWithString:defaults[@"open"]];
