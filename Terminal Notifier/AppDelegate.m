@@ -107,6 +107,7 @@ InstallFakeBundleIdentifierHook()
          "       -open URL          The URL of a resource to open when the user clicks the notification.\n" \
          "       -execute COMMAND   A shell command to perform when the user clicks the notification.\n" \
          "       -timeout NUMBER    Close the notification after NUMBER seconds.\n" \
+         "       -ignoreDnD         Send notification even if Do Not Disturb is enabled.\n" \
          "       -json              Output event or value to stdout as JSON.\n" \
          "\n" \
          "When the user activates a notification, the results are logged to the system logs.\n" \
@@ -212,6 +213,10 @@ InstallFakeBundleIdentifierHook()
         options[@"output"] = @"json";
       }
 
+      if([[[NSProcessInfo processInfo] arguments] containsObject:@"-ignoreDnD"] == true) {
+        options[@"ignoreDnD"] = @YES;
+      }
+
       options[@"uuid"] = [NSString stringWithFormat:@"%ld", self.hash];
       options[@"timeout"] = defaults[@"timeout"] ? defaults[@"timeout"] : @"0";
 
@@ -301,6 +306,10 @@ InstallFakeBundleIdentifierHook()
 
   if (sound != nil) {
     userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound;
+  }
+
+  if(options[@"ignoreDnD"]){
+    [userNotification setValue:@YES forKey:@"_ignoresDoNotDisturb"];
   }
 
   NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
