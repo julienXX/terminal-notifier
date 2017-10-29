@@ -32,14 +32,14 @@ module TerminalNotifier
   end
 
   # Cleans up the result of a notification, making it easier to work it
-  # 
+  #
   # The result of a notification is downcased, then groups of 1 or more
   # non-word characters are replaced with an underscore, before being
-  # symbolised. 
+  # symbolised.
   #
-  # If the reply option was given, then instead of going through the 
+  # If the reply option was given, then instead of going through the
   # above process, the result is returned with no changes as a string.
-  # 
+  #
   # If the always_string param is set to true, a the result is returned
   # with no changes as a string, like above.
   #
@@ -61,11 +61,11 @@ module TerminalNotifier
     end
   end
   module_function :notify_result
-  
+
   # Sends a User Notification and returns whether or not it was a success.
   #
   # The available options are `:title`, `:group`, `:activate`, `:open`,
-  # `:execute`, `:sender`, and `:sound`. For a description of each option see:
+  # `:execute`, `:sender`, `:sound`, and `:ignoreDnD`. For descriptions, see
   #
   #   https://github.com/alloy/terminal-notifier/blob/master/README.markdown
   #
@@ -79,6 +79,7 @@ module TerminalNotifier
   #   TerminalNotifier.notify('Hello World', :execute => 'say "OMG"')
   #   TerminalNotifier.notify('Hello World', :sender => 'com.apple.Safari')
   #   TerminalNotifier.notify('Hello World', :sound => 'default')
+  #   TerminalNotifier.notify('Hello World', :ignoreDnD => true)
   #
   # Raises if not supported on the current platform.
   def notify(message, options = {}, verbose = false, always_string = false)

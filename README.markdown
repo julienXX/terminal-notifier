@@ -150,6 +150,12 @@ Automatically close the alert notification after `NUMBER` seconds.
 
 -------------------------------------------------------------------------------
 
+`-ignoreDnD`
+
+Ignore Do Not Disturb settings and unconditionally show the notification
+
+-------------------------------------------------------------------------------
+
 `-json`
 
 Output the event as JSON.
