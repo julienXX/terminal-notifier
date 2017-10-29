@@ -117,6 +117,7 @@ isMavericks()
          "       -contentImage URL  The URL of a image to display attached to the notification (Mavericks+ only)\n" \
          "       -open URL          The URL of a resource to open when the user clicks the notification.\n" \
          "       -execute COMMAND   A shell command to perform when the user clicks the notification.\n" \
+         "       -ignoreDnD         Send notification even if Do Not Disturb is enabled.\n" \
          "\n" \
          "When the user activates a notification, the results are logged to the system logs.\n" \
          "Use Console.app to view these logs.\n" \
@@ -205,19 +206,19 @@ isMavericks()
       if (defaults[@"execute"])  options[@"command"]          = defaults[@"execute"];
       if (defaults[@"appIcon"])  options[@"appIcon"]          = defaults[@"appIcon"];
       if (defaults[@"contentImage"]) options[@"contentImage"] = defaults[@"contentImage"];
+      
       if (defaults[@"open"]) {
-          /*
-           * it may be better to use stringByAddingPercentEncodingWithAllowedCharacters instead of stringByAddingPercentEscapesUsingEncoding,
-           * but stringByAddingPercentEncodingWithAllowedCharacters is only available on OS X 10.9 or higher.
-           */
-          NSString *encodedURL = [defaults[@"open"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-          NSURL *url = [NSURL URLWithString:defaults[@"open"]];
-          NSString *fragment = [url fragment];
-          if (fragment) {
-              options[@"open"] = [self decodeFragmentInURL:encodedURL fragment:fragment];
-          } else {
-              options[@"open"] = encodedURL;
-          }
+        NSURL *url = [NSURL URLWithString:defaults[@"open"]];
+        if ((url && url.scheme && url.host) || [url isFileURL]) {
+          options[@"open"] = defaults[@"open"];
+        }else{
+          NSLog(@"'%@' is not a valid URI.", defaults[@"open"]);
+          exit(1);
+        }
+      }
+      
+      if([[[NSProcessInfo processInfo] arguments] containsObject:@"-ignoreDnD"] == true) {
+        options[@"ignoreDnD"] = @YES;
       }
 
       [self deliverNotificationWithTitle:defaults[@"title"] ?: @"Terminal"
@@ -283,6 +284,10 @@ isMavericks()
 
   if (sound != nil) {
     userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound ;
+  }
+  
+  if(options[@"ignoreDnD"]){
+    [userNotification setValue:@YES forKey:@"_ignoresDoNotDisturb"];
   }
 
   NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
