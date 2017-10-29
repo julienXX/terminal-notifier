@@ -1,20 +1,10 @@
 # terminal-notifier
 
 terminal-notifier is a command-line tool to send macOS User Notifications,
-which are available on macOS 10.8 and higher.
+which are available on macOS 10.10 and higher.
 
 
 ## Caveats
-
-* On macOS 10.8, the `-appIcon` and `-contentImage` options do nothing.
-  This is because Notification Center on 10.8 _always_ uses the application’s own icon.
-
-  You can do one of the following to work around this limitation on 10.8:
-    - Use the `-sender` option to  “fake it” (see below)
-    - Include a build of terminal-notifier with your icon **and a different bundle identifier**.
-    (If you don’t change the bundle identifier, launch services uses a cached version of the icon.)
-
-  However, you _can_ use unicode symbols and emojis! See the examples.
 
 * It is currently packaged as an application bundle, because `NSUserNotification`
   does not work from a ‘Foundation tool’. [radar://11956694](radar://11956694)

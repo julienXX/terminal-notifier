@@ -8,7 +8,7 @@ version = File.read(plist).match(%r{<string>(\d+\.\d+\.\d+)</string>})[1]
 Gem::Specification.new do |gem|
   gem.name             = "terminal-notifier"
   gem.version          = version
-  gem.summary          = 'Send User Notifications on Mac OS X 10.8 or higher.'
+  gem.summary          = 'Send User Notifications on macOS 10.10 or higher.'
   gem.authors          = ["Eloy Duran", "Julien Blanchard"]
   gem.email            = ["eloy.de.enige@gmail.com", "julien@sideburns.eu"]
   gem.homepage         = 'https://github.com/julienXX/terminal-notifier'

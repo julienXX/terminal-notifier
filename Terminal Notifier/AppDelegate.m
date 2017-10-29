@@ -2,12 +2,11 @@
 #import <ScriptingBridge/ScriptingBridge.h>
 #import <objc/runtime.h>
 
-NSString * const TerminalNotifierBundleID = @"nl.superalloy.oss.terminal-notifier";
+NSString * const TerminalNotifierBundleID = @"fr.julienxx.oss.terminal-notifier";
 NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui";
 
 // Set OS Params
-#define NSAppKitVersionNumber10_8 1187
-#define NSAppKitVersionNumber10_9 1265
+#define NSAppKitVersionNumber10_10 1343
 
 #define contains(str1, str2) ([str1 rangeOfString: str2 ].location != NSNotFound)
 
@@ -40,18 +39,6 @@ InstallFakeBundleIdentifierHook()
   return NO;
 }
 
-static BOOL
-isMavericks()
-{
-  if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_8) {
-    /* On a 10.8 - 10.8.x system */
-    return NO;
-  } else {
-    /* 10.9 or later system */
-    return YES;
-  }
-}
-
 @implementation NSUserDefaults (SubscriptAndUnescape)
 - (id)objectForKeyedSubscript:(id)key;
 {
@@ -72,14 +59,7 @@ isMavericks()
 
   // initialize the dictionary with default values depending on OS level
   NSDictionary *appDefaults;
-
-  if (isMavericks()) {
-    //10.9
-    appDefaults = @{@"sender": @"com.apple.Terminal"};
-  } else {
-    //10.8
-    appDefaults = @{@"": @"message"};
-  }
+  appDefaults = @{@"sender": @"com.apple.Terminal"};
 
   // and set them appropriately
   [defaults registerDefaults:appDefaults];
@@ -89,7 +69,7 @@ isMavericks()
 {
   const char *appName = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"] UTF8String];
   const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
-  printf("%s (%s) is a command-line tool to send OS X User Notifications.\n" \
+  printf("%s (%s) is a command-line tool to send macOS User Notifications.\n" \
          "\n" \
          "Usage: %s -[message|list|remove] [VALUE|ID|ID] [options]\n" \
          "\n" \
@@ -147,7 +127,7 @@ isMavericks()
       [self printHelpBanner];
       exit(0);
     }
-    
+
     if ([[[NSProcessInfo processInfo] arguments] indexOfObject:@"-version"] != NSNotFound) {
       [self printVersion];
       exit(0);
@@ -208,7 +188,7 @@ isMavericks()
       if (defaults[@"execute"])  options[@"command"]          = defaults[@"execute"];
       if (defaults[@"appIcon"])  options[@"appIcon"]          = defaults[@"appIcon"];
       if (defaults[@"contentImage"]) options[@"contentImage"] = defaults[@"contentImage"];
-      
+
       if (defaults[@"open"]) {
         NSURL *url = [NSURL URLWithString:defaults[@"open"]];
         if ((url && url.scheme && url.host) || [url isFileURL]) {
@@ -218,7 +198,7 @@ isMavericks()
           exit(1);
         }
       }
-      
+
       if([[[NSProcessInfo processInfo] arguments] containsObject:@"-ignoreDnD"] == true) {
         options[@"ignoreDnD"] = @YES;
       }
@@ -271,23 +251,20 @@ isMavericks()
   userNotification.informativeText = message;
   userNotification.userInfo = options;
 
-  if(isMavericks()){
-    // Mavericks options
-    if(options[@"appIcon"]){
-      // replacement app icon
-      [userNotification setValue:[self getImageFromURL:options[@"appIcon"]] forKey:@"_identityImage"];
-      [userNotification setValue:@(false) forKey:@"_identityImageHasBorder"];
-    }
-    if(options[@"contentImage"]){
-      // content image
-      userNotification.contentImage = [self getImageFromURL:options[@"contentImage"]];
-    }
+  if(options[@"appIcon"]){
+    // replacement app icon
+    [userNotification setValue:[self getImageFromURL:options[@"appIcon"]] forKey:@"_identityImage"];
+    [userNotification setValue:@(false) forKey:@"_identityImageHasBorder"];
+  }
+  if(options[@"contentImage"]){
+    // content image
+    userNotification.contentImage = [self getImageFromURL:options[@"contentImage"]];
   }
 
   if (sound != nil) {
     userNotification.soundName = [sound isEqualToString: @"default"] ? NSUserNotificationDefaultSoundName : sound ;
   }
-  
+
   if(options[@"ignoreDnD"]){
     [userNotification setValue:@YES forKey:@"_ignoresDoNotDisturb"];
   }

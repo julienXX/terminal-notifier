@@ -2,7 +2,7 @@
 
 A simple Ruby wrapper around the [`terminal-notifier`][HOMEPAGE] command-line
 tool, which allows you to send User Notifications to the Notification Center on
-Mac OS X 10.8, or higher.
+macOS 10.10, or higher.
 
 
 ## Installation
