@@ -19,10 +19,10 @@ which are available on macOS 10.10 and higher.
 ## Download
 
 Prebuilt binaries are available from the
-[releases section](https://github.com/alloy/terminal-notifier/releases).
+[releases section](https://github.com/julienXX/terminal-notifier/releases).
 
 Or if you want to use this from
-[Ruby](https://github.com/alloy/terminal-notifier/tree/master/Ruby), you can
+[Ruby](https://github.com/julienXX/terminal-notifier/tree/master/Ruby), you can
 install it through RubyGems:
 
 ```

@@ -11,7 +11,7 @@
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>9F67DD19109869B0F5A85172DA9B0D3E8F7EF383</key>
-		<string>github.com:alloy/terminal-notifier.git</string>
+		<string>github.com:julienXX/terminal-notifier.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Terminal Notifier.xcodeproj</string>
@@ -21,7 +21,7 @@
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>github.com:alloy/terminal-notifier.git</string>
+	<string>github.com:julienXX/terminal-notifier.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>

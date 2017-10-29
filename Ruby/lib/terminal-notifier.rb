@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'shellwords'
 require 'rbconfig'
 
@@ -60,13 +61,13 @@ module TerminalNotifier
     end
   end
   module_function :notify_result
-  
+
   # Sends a User Notification and returns whether or not it was a success.
   #
   # The available options are `:title`, `:group`, `:activate`, `:open`,
   # `:execute`, `:sender`, and `:sound`. For a description of each option see:
   #
-  #   https://github.com/alloy/terminal-notifier/blob/master/README.markdown
+  #   https://github.com/julienXX/terminal-notifier/blob/master/README.markdown
   #
   # Examples are:
   #
@@ -74,7 +75,7 @@ module TerminalNotifier
   #   TerminalNotifier.notify('Hello World', :title => 'Ruby')
   #   TerminalNotifier.notify('Hello World', :group => Process.pid)
   #   TerminalNotifier.notify('Hello World', :activate => 'com.apple.Safari')
-  #   TerminalNotifier.notify('Hello World', :open => 'http://twitter.com/alloy')
+  #   TerminalNotifier.notify('Hello World', :open => 'http://twitter.com/julienXX')
   #   TerminalNotifier.notify('Hello World', :execute => 'say "OMG"')
   #   TerminalNotifier.notify('Hello World', :sender => 'com.apple.Safari')
   #   TerminalNotifier.notify('Hello World', :sound => 'default')
