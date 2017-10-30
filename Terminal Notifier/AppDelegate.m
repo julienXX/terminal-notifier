@@ -121,7 +121,7 @@ InstallFakeBundleIdentifierHook()
   NSUserNotification *userNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
   if (userNotification) {
     [self userActivatedNotification:userNotification];
-
+    
   } else {
     if ([[[NSProcessInfo processInfo] arguments] indexOfObject:@"-help"] != NSNotFound) {
       [self printHelpBanner];
@@ -252,12 +252,10 @@ InstallFakeBundleIdentifierHook()
   userNotification.userInfo = options;
 
   if(options[@"appIcon"]){
-    // replacement app icon
     [userNotification setValue:[self getImageFromURL:options[@"appIcon"]] forKey:@"_identityImage"];
     [userNotification setValue:@(false) forKey:@"_identityImageHasBorder"];
   }
   if(options[@"contentImage"]){
-    // content image
     userNotification.contentImage = [self getImageFromURL:options[@"contentImage"]];
   }
 
