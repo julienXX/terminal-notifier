@@ -17,17 +17,17 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6.3</string>
+	<string>2.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>20</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2012-2015 Eloy Durán, Julien Blanchard. All rights reserved.</string>
+	<string>Copyright © 2012-2017 Eloy Durán, Julien Blanchard. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
@@ -38,6 +38,6 @@
 		<true/>
 	</dict>
 	<key>NSUserNotificationAlertStyle</key>
-	<string>alert</string>
+	<string>banner</string>
 </dict>
 </plist>
