@@ -4,6 +4,15 @@ terminal-notifier is a command-line tool to send macOS User Notifications,
 which are available on macOS 10.10 and higher.
 
 
+## News
+
+[alerter](https://github.com/vjeantet/alerter) features were merged in terminal-notifier 1.7. This led to some issues and even more issues in the 1.8 release. We decided with [Valère Jeantet](https://github.com/vjeantet) to rollback this merge.
+
+From now on terminal-notifier won't have the sticky notification feature nor the actions buttons. If you need them please use [alerter](https://github.com/vjeantet/alerter). I also want to follow [semver](http://semver.org) hence this latest version starts at 2.0.0.
+
+Sticking to two smaller specialized tools will hopefully make them easier to maintain and less error prone.
+
+
 ## Caveats
 
 * It is currently packaged as an application bundle, because `NSUserNotification`
