@@ -13,5 +13,6 @@
 - I'm using tmux -> see #115
 - I'm using iterm2 -> see #147
 - I want to change the icon -> see https://github.com/julienXX/terminal-notifier/issues/197#issuecomment-301305576
+- I want sticky notifications or action buttons -> please use [alerter](https://github.com/vjeantet/alerter)
 
 Thanks!
