@@ -5,11 +5,6 @@
 NSString * const TerminalNotifierBundleID = @"fr.julienxx.oss.terminal-notifier";
 NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui";
 
-// Set OS Params
-#define NSAppKitVersionNumber10_10 1343
-
-#define contains(str1, str2) ([str1 rangeOfString: str2 ].location != NSNotFound)
-
 NSString *_fakeBundleIdentifier = nil;
 
 @implementation NSBundle (FakeBundleIdentifier)
