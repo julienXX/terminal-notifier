@@ -116,7 +116,7 @@ InstallFakeBundleIdentifierHook()
   NSUserNotification *userNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
   if (userNotification) {
     [self userActivatedNotification:userNotification];
-    
+
   } else {
     if ([[[NSProcessInfo processInfo] arguments] indexOfObject:@"-help"] != NSNotFound) {
       [self printHelpBanner];
