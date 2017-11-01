@@ -11,6 +11,9 @@ which are available on macOS 10.10 and higher.
 
 * If you intend to package terminal-notifier with your app to distribute it on the Mac App Store, please use 1.5.2; version 1.6.0+ uses a private method override, which is not allowed in the App Store Guidelines.
 
+* If you're using macOS < 10.10 you should use terminal-notifier 1.6.3.
+
+* If you're looking for sticky notifications or more actions on a notification please use [alerter](https://github.com/vjeantet/alerter)
 
 ## Download
 
@@ -55,6 +58,15 @@ Display piped data with a sound:
 ```
 $ echo 'Piped Message Data!' | terminal-notifier -sound default
 ```
+
+![Example 1](assets/Example_1.png)
+
+Use a custom icon:
+```
+$ terminal-notifier -title ProjectX -subtitle "new tag detected" -message "Finished" -appIcon http://vjeantet.fr/images/logo.png
+```
+
+![Example 3](assets/Example_3.png)
 
 Open an URL when the notification is clicked:
 ```
@@ -205,6 +217,7 @@ Run the shell command `COMMAND` when the user clicks the notification.
 
 Ignore Do Not Disturb settings and unconditionally show the notification.
 
+**WARNING: This option is subject to change since it relies on a private method.**
 
 ## License
 
