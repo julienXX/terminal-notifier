@@ -1,5 +1,7 @@
 # terminal-notifier
 
+[![GitHub release](https://img.shields.io/github/release/julienXX/terminal-notifier.svg)](https://github.com/julienXX/terminal-notifier/releases)
+
 terminal-notifier is a command-line tool to send macOS User Notifications,
 which are available on macOS 10.10 and higher.
 
