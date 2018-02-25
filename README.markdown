@@ -62,6 +62,8 @@ $ terminal-notifier -[message|group|list] [VALUE|ID|ID] [options]
 
 This will obviously be a bit slower than using the tool without the wrapper.
 
+If you'd like notifications to stay on the screen until dismissed, go to System Preferences -> Notifications -> terminal-notifier and change the style from Banners to Alerts. You cannot do this on a per-notification basis.
+
 
 ### Example Uses
 
