@@ -82,7 +82,7 @@ module TerminalNotifier
   #
   # Raises if not supported on the current platform.
   def notify(message, options = {}, verbose = false, always_string = false)
-    result = TerminalNotifier.execute(verbose, options.merge(:message => message))
+    result = TerminalNotifier.execute(verbose, options.merge(:message => message)) || ''
     $? && $?.success? && notify_result(result, options, always_string)
   end
   module_function :notify
