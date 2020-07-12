@@ -3,7 +3,7 @@
 #import <objc/runtime.h>
 
 NSString * const TerminalNotifierBundleID = @"fr.julienxx.oss.terminal-notifier";
-NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui";
+
 
 NSString *_fakeBundleIdentifier = nil;
 
@@ -129,7 +129,13 @@ InstallFakeBundleIdentifierHook()
     }
 
     NSArray *runningProcesses = [[[NSWorkspace sharedWorkspace] runningApplications] valueForKey:@"bundleIdentifier"];
-    if ([runningProcesses indexOfObject:NotificationCenterUIBundleID] == NSNotFound) {
+    NSString *notificationCenterUIBundleID;
+    if (@available(macOS 10.16, *)) {
+        notificationCenterUIBundleID = @"com.apple.notificationcenterui2";
+    } else {
+        notificationCenterUIBundleID = @"com.apple.notificationcenterui";
+    }
+    if ([runningProcesses indexOfObject:notificationCenterUIBundleID] == NSNotFound) {
       NSLog(@"[!] Unable to post a notification for the current user (%@), as it has no running NotificationCenter instance.", NSUserName());
       exit(1);
     }
