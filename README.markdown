@@ -127,7 +127,7 @@ The subtitle of the notification.
 `-sound NAME`
 
 Play the `NAME` sound when the notification appears.
-Sound names are listed in Sound Preferences.
+Sound names are listed in `/System/Library/Sounds`.
 
 Use the special `NAME` “default” for the default notification sound.
 
