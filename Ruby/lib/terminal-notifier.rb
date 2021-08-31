@@ -54,6 +54,7 @@ module TerminalNotifier
   # notify_result('@timeout', {'reply' => true}) #=> '@timeout'
   # notify_result('I may like pie', {}) #=> :i_may_like_pie
   def notify_result(result, options, always_string = false)
+    result = result.to_s
     if options[:reply] || options['reply'] || always_string
       result
     else
