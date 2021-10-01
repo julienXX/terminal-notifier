@@ -45,6 +45,9 @@ InstallFakeBundleIdentifierHook()
 }
 @end
 
+@interface AppDelegate()
+@property BOOL isDaemon;
+@end
 
 @implementation AppDelegate
 
@@ -113,6 +116,29 @@ InstallFakeBundleIdentifierHook()
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
+    self.isDaemon = NO;
+    
+    if ([[[NSProcessInfo processInfo] arguments] indexOfObject:@"-daemon"] != NSNotFound) {
+        NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
+        center.delegate = self;
+        self.isDaemon = YES;
+        return;
+    }
+    
+    NSString *bundleIdentifier = NSBundle.mainBundle.bundleIdentifier;
+    //NSLog(@"gaga: id:%@", bundleIdentifier);
+    NSArray *apps = [NSRunningApplication runningApplicationsWithBundleIdentifier:bundleIdentifier];
+    if (apps.count < 2) {
+        NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+        NSWorkspaceOpenConfiguration *config = [NSWorkspaceOpenConfiguration configuration];
+        config.createsNewApplicationInstance = YES;
+        config.arguments = @[@"-daemon"];
+        NSURL *url = NSBundle.mainBundle.bundleURL;
+        [workspace openApplicationAtURL:url configuration:config completionHandler:^(NSRunningApplication *app, NSError *error){
+            //NSLog(@"gaga: app:%@, err:%@", app, error);
+        }];
+    }
+    
   NSUserNotification *userNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
   if (userNotification) {
     [self userActivatedNotification:userNotification];
@@ -326,6 +352,10 @@ InstallFakeBundleIdentifierHook()
   if (bundleID) success &= [self activateAppWithBundleID:bundleID];
   if (command)  success &= [self executeShellCommand:command];
   if (open)     success &= [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:open]];
+    
+    if (self.isDaemon) {
+        return;
+    }
 
   exit(success ? 0 : 1);
 }
@@ -376,7 +406,15 @@ InstallFakeBundleIdentifierHook()
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
         didDeliverNotification:(NSUserNotification *)userNotification;
 {
+    if (self.isDaemon) {
+        return;
+    }
   exit(0);
 }
 
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification {
+    if (self.isDaemon) {
+        [self userActivatedNotification:notification];
+    }
+}
 @end
