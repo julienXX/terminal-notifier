@@ -273,7 +273,7 @@ InstallFakeBundleIdentifierHook()
   for (NSUserNotification *userNotification in center.deliveredNotifications) {
     if ([@"ALL" isEqualToString:groupID] || [userNotification.userInfo[@"groupID"] isEqualToString:groupID]) {
       NSString *deliveredAt = [userNotification.actualDeliveryDate description];
-      printf("* Removing previously sent notification, which was sent on: %s\n", [deliveredAt UTF8String]);
+        fprintf(stderr,"* Removing previously sent notification, which was sent on: %s\n", [deliveredAt UTF8String]);
       [center removeDeliveredNotification:userNotification];
     }
   }
