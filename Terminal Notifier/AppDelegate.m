@@ -66,7 +66,7 @@ InstallFakeBundleIdentifierHook()
   const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
   printf("%s (%s) is a command-line tool to send macOS User Notifications.\n" \
          "\n" \
-         "Usage: %s -[message|list|remove] [VALUE|ID|ID] [options]\n" \
+         "Usage: %s -[message|list|remove] [VALUE|ID] [options]\n" \
          "\n" \
          "   Either of these is required (unless message data is piped to the tool):\n" \
          "\n" \
