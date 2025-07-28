@@ -1,0 +1,14 @@
+#!/bin/bash
+# Terminal-notifier réparé avec callbacks fonctionnels
+# Ce script utilise la version recompilée et signée
+
+APP_PATH="/Users/leo/Documents/Projets/Dev/Terminal-Notifier/terminal-notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier"
+
+# Vérifier que l'application existe
+if [ ! -f "$APP_PATH" ]; then
+    echo "Erreur: L'application terminal-notifier réparée n'a pas été trouvée à $APP_PATH"
+    exit 1
+fi
+
+# Passer tous les arguments à l'application
+"$APP_PATH" "$@"
