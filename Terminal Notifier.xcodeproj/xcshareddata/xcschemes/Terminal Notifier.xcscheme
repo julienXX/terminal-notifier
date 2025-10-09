@@ -106,10 +106,6 @@
             argument = "-activate com.apple.Safari"
             isEnabled = "NO">
          </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-sender com.apple.Safari"
-            isEnabled = "NO">
-         </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>

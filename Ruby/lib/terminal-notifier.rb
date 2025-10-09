@@ -65,7 +65,7 @@ module TerminalNotifier
   # Sends a User Notification and returns whether or not it was a success.
   #
   # The available options are `:title`, `:group`, `:activate`, `:open`,
-  # `:execute`, `:sender`, and `:sound`. For a description of each option see:
+  # `:execute`, and `:sound`. For a description of each option see:
   #
   #   https://github.com/julienXX/terminal-notifier/blob/master/README.markdown
   #
@@ -77,7 +77,6 @@ module TerminalNotifier
   #   TerminalNotifier.notify('Hello World', :activate => 'com.apple.Safari')
   #   TerminalNotifier.notify('Hello World', :open => 'http://twitter.com/julienXX')
   #   TerminalNotifier.notify('Hello World', :execute => 'say "OMG"')
-  #   TerminalNotifier.notify('Hello World', :sender => 'com.apple.Safari')
   #   TerminalNotifier.notify('Hello World', :sound => 'default')
   #
   # Raises if not supported on the current platform.

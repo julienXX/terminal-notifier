@@ -26,6 +26,8 @@ Sticking to two smaller specialized tools will hopefully make them easier to mai
 
 * If you're looking for sticky notifications or more actions on a notification please use [alerter](https://github.com/vjeantet/alerter)
 
+* **Note:** The `-sender` option has been removed as it no longer works on modern macOS. Use `-appIcon` to set a custom notification icon.
+
 ## Download
 
 Prebuilt binaries are available from the
@@ -179,21 +181,6 @@ Examples application IDs are:
 
 * `com.apple.Terminal` to activate Terminal.app
 * `com.apple.Safari` to activate Safari.app
-
--------------------------------------------------------------------------------
-
-`-sender ID`
-
-Fakes the sender application of the notification. This uses the specified
-application’s icon, and will launch it when the notification is clicked.
-
-Using this option fakes the sender application, so that the notification system
-will launch that application when the notification is clicked. Because of this
-it is important to note that you cannot combine this with options like
-`-execute` and `-activate` which depend on the sender of the notification to be
-‘terminal-notifier’ to perform its work.
-
-For information on the `ID`, see the `-activate` option.
 
 -------------------------------------------------------------------------------
 

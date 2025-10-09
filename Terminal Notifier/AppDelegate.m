@@ -7,33 +7,6 @@ NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui
 
 NSString *_fakeBundleIdentifier = nil;
 
-@implementation NSBundle (FakeBundleIdentifier)
-
-// Overriding bundleIdentifier works, but overriding NSUserNotificationAlertStyle does not work.
-
-- (NSString *)__bundleIdentifier;
-{
-  if (self == [NSBundle mainBundle]) {
-    return _fakeBundleIdentifier ? _fakeBundleIdentifier : TerminalNotifierBundleID;
-  } else {
-    return [self __bundleIdentifier];
-  }
-}
-
-@end
-
-static BOOL
-InstallFakeBundleIdentifierHook()
-{
-  Class class = objc_getClass("NSBundle");
-  if (class) {
-    method_exchangeImplementations(class_getInstanceMethod(class, @selector(bundleIdentifier)),
-                                   class_getInstanceMethod(class, @selector(__bundleIdentifier)));
-    return YES;
-  }
-  return NO;
-}
-
 @implementation NSUserDefaults (SubscriptAndUnescape)
 - (id)objectForKeyedSubscript:(id)key;
 {
@@ -54,7 +27,7 @@ InstallFakeBundleIdentifierHook()
 
   // initialize the dictionary with default values depending on OS level
   NSDictionary *appDefaults;
-  appDefaults = @{@"sender": @"com.apple.Terminal"};
+  appDefaults = @{}; // or set other defaults as needed
 
   // and set them appropriately
   [defaults registerDefaults:appDefaults];
@@ -87,7 +60,6 @@ InstallFakeBundleIdentifierHook()
          "       -group ID          A string which identifies the group the notifications belong to.\n" \
          "                          Old notifications with the same ID will be removed.\n" \
          "       -activate ID       The bundle identifier of the application to activate when the user clicks the notification.\n" \
-         "       -sender ID         The bundle identifier of the application that should be shown as the sender, including its icon.\n" \
          "       -appIcon URL       The URL of a image to display instead of the application icon (Mavericks+ only)\n" \
          "       -contentImage URL  The URL of a image to display attached to the notification (Mavericks+ only)\n" \
          "       -open URL          The URL of a resource to open when the user clicks the notification.\n" \
@@ -157,16 +129,6 @@ InstallFakeBundleIdentifierHook()
     if (list) {
       [self listNotificationWithGroupID:list];
       exit(0);
-    }
-
-    // Install the fake bundle ID hook so we can fake the sender. This also
-    // needs to be done to be able to remove a message.
-    if (defaults[@"sender"]) {
-      @autoreleasepool {
-        if (InstallFakeBundleIdentifierHook()) {
-          _fakeBundleIdentifier = defaults[@"sender"];
-        }
-      }
     }
 
     if (remove) {
