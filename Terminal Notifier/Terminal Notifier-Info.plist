@@ -23,7 +23,7 @@
 	<key>CFBundleVersion</key>
 	<string>15</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.10</string>
+	<string>10.14</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
@@ -37,7 +37,5 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSUserNotificationAlertStyle</key>
-	<string>banner</string>
 </dict>
 </plist>
