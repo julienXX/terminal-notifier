@@ -14,6 +14,7 @@
 		5199792C15B1F92B003AFC57 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5199792B15B1F92B003AFC57 /* AppDelegate.m */; };
 		5199792F15B1F92B003AFC57 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5199792D15B1F92B003AFC57 /* MainMenu.xib */; };
 		5199794215B2F908003AFC57 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5199794115B2F908003AFC57 /* ScriptingBridge.framework */; };
+		AA00000000000002AABBCCDD /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00000000000001AABBCCDD /* UserNotifications.framework */; };
 		5199794C15B302F1003AFC57 /* Terminal.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5199794B15B302F1003AFC57 /* Terminal.icns */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		5199792B15B1F92B003AFC57 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		5199792E15B1F92B003AFC57 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5199794115B2F908003AFC57 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
+		AA00000000000001AABBCCDD /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		5199794B15B302F1003AFC57 /* Terminal.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Terminal.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -42,6 +44,7 @@
 			files = (
 				5199794215B2F908003AFC57 /* ScriptingBridge.framework in Frameworks */,
 				5199791915B1F92B003AFC57 /* Cocoa.framework in Frameworks */,
+				AA00000000000002AABBCCDD /* UserNotifications.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +85,7 @@
 				5199791B15B1F92B003AFC57 /* AppKit.framework */,
 				5199791C15B1F92B003AFC57 /* CoreData.framework */,
 				5199791D15B1F92B003AFC57 /* Foundation.framework */,
+				AA00000000000001AABBCCDD /* UserNotifications.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -231,7 +235,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -253,7 +257,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -265,7 +269,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Terminal Notifier/Terminal Notifier-Prefix.pch";
 				INFOPLIST_FILE = "Terminal Notifier/Terminal Notifier-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
@@ -280,7 +284,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Terminal Notifier/Terminal Notifier-Prefix.pch";
 				INFOPLIST_FILE = "Terminal Notifier/Terminal Notifier-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
