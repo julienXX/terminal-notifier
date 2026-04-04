@@ -110,7 +110,7 @@
   // If there is no message and data is piped to the application, use that
   // instead.
   if (message == nil && !isatty(STDIN_FILENO)) {
-    NSData *inputData = [NSData dataWithData:[[NSFileHandle fileHandleWithStandardInput] readDataToEndOfFile]];
+    NSData *inputData = [[NSFileHandle fileHandleWithStandardInput] readDataToEndOfFile];
     message = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
   }
 
