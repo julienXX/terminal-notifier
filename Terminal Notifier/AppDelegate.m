@@ -19,13 +19,6 @@
 
 @implementation AppDelegate
 
-+(void)initializeUserDefaults
-{
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSDictionary *appDefaults = @{@"sender": @"com.apple.Terminal"};
-  [defaults registerDefaults:appDefaults];
-}
-
 - (void)printHelpBanner;
 {
   const char *appName = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"] UTF8String];
@@ -119,10 +112,6 @@
     exit(1);
   }
 
-  if (defaults[@"sender"]) {
-    NSLog(@"[!] -sender is not supported with UNUserNotificationCenter and will be ignored.");
-  }
-
   if (list) {
     [self listNotificationWithGroupID:list];
     return; // exits inside the completion handler
@@ -175,20 +164,6 @@
     url = [NSURL fileURLWithPath:urlString];
   }
   return url;
-}
-
-/**
- * Decode fragment identifier
- *
- * @see http://tools.ietf.org/html/rfc3986#section-2.1
- * @see http://en.wikipedia.org/wiki/URI_scheme
- */
-- (NSString*)decodeFragmentInURL:(NSString *) encodedURL fragment:(NSString *) framgent
-{
-    NSString *beforeStr = [@"%23" stringByAppendingString:framgent];
-    NSString *afterStr = [@"#" stringByAppendingString:framgent];
-    NSString *decodedURL = [encodedURL stringByReplacingOccurrencesOfString:beforeStr withString:afterStr];
-    return decodedURL;
 }
 
 - (void)requestAuthorizationAndThen:(void (^)(void))block;
