@@ -362,11 +362,16 @@
   NSFileHandle *fileHandle = [pipe fileHandleForReading];
 
   NSTask *task = [NSTask new];
-  task.launchPath = @"/bin/sh";
+  task.executableURL = [NSURL fileURLWithPath:@"/bin/sh"];
   task.arguments = @[@"-c", command];
   task.standardOutput = pipe;
   task.standardError = pipe;
-  [task launch];
+
+  NSError *launchError = nil;
+  if (![task launchAndReturnError:&launchError]) {
+    NSLog(@"[!] Failed to launch shell command: %@", launchError.localizedDescription);
+    return NO;
+  }
 
   NSData *data = nil;
   NSMutableData *accumulatedData = [NSMutableData data];
