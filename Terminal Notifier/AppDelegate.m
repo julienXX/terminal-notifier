@@ -376,7 +376,7 @@
     [app activate];
     return YES;
   } else {
-    NSLog(@"Unable to find an application with the specified bundle indentifier.");
+    NSLog(@"Unable to find an application with the specified bundle identifier.");
     return NO;
   }
 }
