@@ -156,7 +156,7 @@
       }
     }
 
-    if ([[[NSProcessInfo processInfo] arguments] containsObject:@"-ignoreDnD"] == true) {
+    if ([[[NSProcessInfo processInfo] arguments] containsObject:@"-ignoreDnD"]) {
       options[@"ignoreDnD"] = @YES;
     }
 
