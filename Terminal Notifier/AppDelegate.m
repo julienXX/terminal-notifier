@@ -2,6 +2,10 @@
 #import <ScriptingBridge/ScriptingBridge.h>
 #import <objc/runtime.h>
 #import <UserNotifications/UserNotifications.h>
+#import <os/log.h>
+
+// Define a logging object with a subsystem and category
+os_log_t logHandle = nil;
 
 NSString * const TerminalNotifierBundleID = @"fr.julienxx.oss.terminal-notifier";
 NSString * const NotificationCenterUIBundleID = @"com.apple.notificationcenterui";
@@ -59,10 +63,20 @@ InstallFakeBundleIdentifierHook()
   [defaults registerDefaults:appDefaults];
 }
 
+- (os_log_t) getLogHandle;
+{
+    if(logHandle == nil) {
+        logHandle = os_log_create([TerminalNotifierBundleID UTF8String], "debug");
+    }
+    return logHandle;
+}
+
 - (void)printHelpBanner;
 {
-  const char *appName = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"] UTF8String];
+    
+    const char *appName = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"] UTF8String];
   const char *appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] UTF8String];
+  os_log_debug([self getLogHandle], "printHelpBanner was called");
   printf("%s (%s) is a command-line tool to send macOS User Notifications.\n" \
          "\n" \
          "Usage: %s -[message|list|remove] [VALUE|ID|ID] [options]\n" \
@@ -314,6 +328,7 @@ InstallFakeBundleIdentifierHook()
       exit(1);
     } else {
       // Exit after successful delivery
+        os_log_debug([self getLogHandle], "Notification delivered - Title: %{public}@, Message: %{public}@", title, message);
       exit(0);
     }
   }];
@@ -333,6 +348,7 @@ InstallFakeBundleIdentifierHook()
       if ([@"ALL" isEqualToString:groupID] || [notificationGroupID isEqualToString:groupID]) {
         NSDate *deliveredAt = notification.date;
         printf("* Removing previously sent notification, which was sent on: %s\n", [[deliveredAt description] UTF8String]);
+        os_log_debug([self getLogHandle], "* Removing previously sent notification, which was sent on: %s\n", [[deliveredAt description] UTF8String]);
         [identifiersToRemove addObject:notification.request.identifier];
       }
     }
@@ -395,11 +411,12 @@ InstallFakeBundleIdentifierHook()
   NSString *command  = userInfo[@"command"];
   NSString *open     = userInfo[@"open"];
 
-  NSLog(@"User activated notification:");
-  NSLog(@" group ID: %@", groupID);
-  NSLog(@"bundle ID: %@", bundleID);
-  NSLog(@"  command: %@", command);
-  NSLog(@"     open: %@", open);
+  os_log_debug([self getLogHandle], "User activated notification:");
+  os_log_debug([self getLogHandle], " group ID: %{public}@", groupID);
+  os_log_debug([self getLogHandle], "bundle ID: %{public}@", bundleID);
+  os_log_debug([self getLogHandle], "  command: %{public}@", command);
+  os_log_debug([self getLogHandle], "     open: %{public}@", open);
+    
 
   BOOL success = YES;
   if (bundleID) success &= [self activateAppWithBundleID:bundleID];
