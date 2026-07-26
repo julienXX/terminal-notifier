@@ -1,0 +1,42 @@
+name: Ruby gem
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'Ruby/**'
+      - '.github/workflows/ruby.yml'
+  pull_request:
+    paths:
+      - 'Ruby/**'
+      - '.github/workflows/ruby.yml'
+
+defaults:
+  run:
+    working-directory: Ruby
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ['3.2', '3.3', '3.4', '4.0.6']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          working-directory: Ruby
+
+      - name: Run tests
+        run: bundle exec rspec
+
+      - name: Run RuboCop
+        run: bundle exec rubocop
+
+      - name: Run bundler-audit
+        run: bundle exec bundler-audit check --update

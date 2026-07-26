@@ -5,6 +5,11 @@ tool, which allows you to send User Notifications to the Notification Center on
 macOS 10.10, or higher.
 
 
+## Requirements
+
+Ruby 3.2 or higher.
+
+
 ## Installation
 
 ```
@@ -33,6 +38,19 @@ TerminalNotifier.remove(Process.pid)
 TerminalNotifier.list(Process.pid)
 TerminalNotifier.list
 ```
+
+
+## Development
+
+```
+$ bundle install
+$ bundle exec rake        # runs the test suite, RuboCop, and bundler-audit
+$ bundle exec rspec       # tests only
+$ bundle exec rubocop     # lint only
+```
+
+The test suite runs on any platform (macOS specifics are stubbed out), and
+enforces 100% line and branch coverage via SimpleCov.
 
 
 ## License

@@ -1,6 +1,11 @@
+# frozen_string_literal: true
+
+require 'rspec/core/rake_task'
+require 'rubocop/rake_task'
+
 def version
   @version ||= begin
-    plist = File.expand_path('../../Terminal Notifier/Terminal Notifier-Info.plist', __FILE__)
+    plist = File.expand_path('../Terminal Notifier/Terminal Notifier-Info.plist', __dir__)
     `/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' '#{plist}'`.strip
   end
 end
@@ -13,6 +18,7 @@ def zipfile
   "#{version}.zip"
 end
 
+desc 'Remove build artifacts'
 task :clean do
   rm zipfile
   rm_rf 'vendor'
@@ -20,9 +26,7 @@ end
 
 desc 'Fetch latest build from the GitHub releases'
 task :update_build do
-  unless File.exist?(zipfile)
-    sh "curl -L -O 'https://github.com/julienXX/terminal-notifier/archive/#{zipfile}'"
-  end
+  sh "curl -L -O 'https://github.com/julienXX/terminal-notifier/archive/#{zipfile}'" unless File.exist?(zipfile)
 
   rm_rf 'vendor'
   mkdir 'vendor'
@@ -32,17 +36,21 @@ task :update_build do
 
   sh 'cd .. && xcodebuild -target terminal-notifier SYMROOT=build -verbose && cd -'
   mv '../build/Release/terminal-notifier.app', 'vendor/terminal-notifier/'
-  chmod 0755, 'vendor/terminal-notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier'
+  chmod 0o755, 'vendor/terminal-notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier'
 end
 
 desc 'Build gem'
-task :gem => :update_build do
+task gem: :update_build do
   sh 'gem build terminal-notifier.gemspec'
 end
 
-desc 'Run specs'
-task :spec do
-  sh 'bundle exec ruby spec/terminal-notifier_spec.rb'
+RSpec::Core::RakeTask.new(:spec)
+
+RuboCop::RakeTask.new(:rubocop)
+
+desc 'Run bundler-audit against the Gemfile.lock'
+task :bundle_audit do
+  sh 'bundle exec bundler-audit check --update'
 end
 
-task :default => :spec
+task default: %i[spec rubocop bundle_audit]

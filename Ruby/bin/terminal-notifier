@@ -1,13 +1,8 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-if $0 == __FILE__
-  $:.unshift File.expand_path('../../lib', __FILE__)
-end
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__)) if __FILE__ == $PROGRAM_NAME
 
-require 'terminal-notifier'
+require 'terminal-notifier/cli'
 
-if !ARGV.include?("-message") && !STDIN.tty?
-  ARGV.push(*["-message", STDIN.read.chomp])
-end
-
-exec TerminalNotifier::BIN_PATH, *ARGV
+TerminalNotifier::CLI.run if __FILE__ == $PROGRAM_NAME

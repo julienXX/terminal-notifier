@@ -1,0 +1,57 @@
+plugins:
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  SuggestExtensions: false
+  Exclude:
+    - 'vendor/**/*'
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 25
+
+# The gem's file name (terminal-notifier.rb) matches its `require`d name and
+# RubyGems executable name; renaming it would be a breaking change.
+Naming/FileName:
+  Exclude:
+    - 'lib/terminal-notifier.rb'
+
+# `remove`, `notify`, `list`, etc. are long-standing public API with
+# positional boolean/verbose arguments; changing them to keyword arguments
+# or predicate names (`remove?`) would break every existing caller.
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+Naming/PredicateMethod:
+  Exclude:
+    - 'lib/terminal-notifier.rb'
+
+RSpec/MultipleExpectations:
+  Max: 3
+
+RSpec/ExampleLength:
+  Max: 20
+
+# cli_spec.rb documents both the TerminalNotifier::CLI module and the
+# bin/terminal-notifier script's process-entry guard in one file; splitting
+# them would scatter closely related coverage across files for no benefit.
+RSpec/MultipleDescribes:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/cli_spec.rb'
+
+# `expect(IO).not_to receive(:popen)` is a legitimate negative message
+# expectation; there is no clearer spy-based equivalent for "this must not
+# be called".
+RSpec/MessageSpies:
+  Enabled: false
