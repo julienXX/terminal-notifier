@@ -310,7 +310,11 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
           [bundle bundleIdentifier]]];
       }
       if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined) {
-        [problems addObject:@"Permission has never been requested. Send one notification and approve the prompt."];
+        [problems addObject:[NSString stringWithFormat:
+          @"Permission has never been requested. Send one notification and approve the prompt.\n"
+           "    If no prompt appears, launch the app bundle once:\n"
+           "      open -n \"%@\" --args -message \"Permission test\"",
+          [bundle bundlePath]]];
       }
       if (settings.alertSetting == UNNotificationSettingDisabled) {
         [problems addObject:@"Alerts are disabled, so nothing will be shown on screen."];
@@ -628,6 +632,12 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
           self.awaitingAuthorization = NO;
           if (error) {
             TNError(@"Could not request notification permission: %@", error.localizedDescription);
+            TNError(@"Run terminal-notifier -diagnose for details.");
+            TNError(@"If terminal-notifier does not appear in System Settings > Notifications,");
+            TNError(@"launch its app bundle once:");
+            TNError(@"  open -n \"%@\" --args -message \"Permission test\"",
+                    [[NSBundle mainBundle] bundlePath]);
+            TNError(@"Then allow notifications in System Settings > Notifications.");
             exit(TNExitNotAuthorized);
           }
           if (!granted) {
