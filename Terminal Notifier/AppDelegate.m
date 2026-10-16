@@ -31,6 +31,31 @@ static void TNError(NSString *format, ...)
   fprintf(stderr, "%s\n", [message UTF8String]);
 }
 
+static BOOL TNTimeSensitiveRequested(NSArray<NSString *> *arguments)
+{
+  return [arguments containsObject:@"-timeSensitive"] ||
+         [arguments containsObject:@"-ignoreDnD"];
+}
+
+// Return a diagnostic when the request cannot be honored. Keep the ordinary
+// alert in that case: losing an approval prompt would be worse than delay.
+static NSString *TNApplyTimeSensitive(UNMutableNotificationContent *content,
+                                     BOOL requested, UNNotificationSetting setting)
+{
+  if (!requested) return nil;
+  if (@available(macOS 12.0, *)) {
+    if (setting == UNNotificationSettingEnabled) {
+      content.interruptionLevel = UNNotificationInterruptionLevelTimeSensitive;
+      return nil;
+    }
+    if (setting == UNNotificationSettingDisabled) {
+      return @"Time Sensitive notifications are disabled in System Settings > Notifications.";
+    }
+    return @"This build does not support Time Sensitive notifications. Use a provisioned build; ad-hoc signing cannot enable this capability.";
+  }
+  return @"Time Sensitive notifications require macOS 12 or later.";
+}
+
 @implementation NSUserDefaults (SubscriptAndUnescape)
 - (id)objectForKeyedSubscript:(id)key;
 {
@@ -216,6 +241,9 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
          "       -subtitle VALUE    The notification subtitle.\n" \
          "       -sound NAME        The name of a sound to play when the notification appears. The names are listed\n" \
          "                          in /System/Library/Sounds. Use 'default' for the default notification sound.\n" \
+         "       -timeSensitive     Request a Time Sensitive alert (macOS 12+ and a provisioned build).\n" \
+         "                          Can pass through Focus when allowed; does not override mute.\n" \
+         "                          Warns and delivers normally when unsupported or disabled.\n" \
          "       -group ID          A string which identifies the group the notifications belong to.\n" \
          "                          Old notifications with the same ID will be removed.\n" \
          "       -activate ID       The bundle identifier of the application to activate when the user clicks the notification.\n" \
@@ -230,9 +258,7 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
          "       -in DURATION       Deliver after a delay instead of now, eg. 30s, 5m, 2h, 1d.\n" \
          "       -at TIME           Deliver at a clock time such as 09:15, meaning the next one, or at\n" \
          "                          a date such as '2026-09-01 02:00'. Cannot be combined with -in.\n" \
-         "       -ignoreDnD         Request delivery even when Do Not Disturb is enabled. Best effort only:\n" \
-         "                          this needs an Apple-granted entitlement that this build does not carry,\n" \
-         "                          so it is usually a no-op. See the README.\n" \
+         "       -ignoreDnD         Legacy spelling of -timeSensitive, with the same restrictions.\n" \
          "\n" \
          "   Removed:\n" \
          "\n" \
@@ -298,6 +324,12 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
       if (@available(macOS 12.0, *)) {
         printf("  time sensitive      %s\n", [TNSettingName(settings.timeSensitiveSetting) UTF8String]);
         printf("  scheduled delivery  %s\n", [TNSettingName(settings.scheduledDeliverySetting) UTF8String]);
+        if (settings.authorizationStatus == UNAuthorizationStatusAuthorized ||
+            settings.authorizationStatus == UNAuthorizationStatusProvisional) {
+          NSString *warning = TNApplyTimeSensitive([UNMutableNotificationContent new], YES,
+                                                  settings.timeSensitiveSetting);
+          if (warning != nil) printf("  time sensitive note %s\n", [warning UTF8String]);
+        }
       }
 
       NSMutableArray<NSString *> *problems = [NSMutableArray array];
@@ -459,8 +491,8 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
     }
   }
 
-  if ([arguments containsObject:@"-ignoreDnD"]) {
-    options[@"ignoreDnD"] = @YES;
+  if (TNTimeSensitiveRequested(arguments)) {
+    options[@"timeSensitive"] = @YES;
   }
 
   NSMutableArray<NSString *> *actionTitles = [NSMutableArray array];
@@ -599,16 +631,17 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
   return url;
 }
 
-- (void)withAuthorization:(void (^)(void))block;
+- (void)withAuthorization:(void (^)(UNNotificationSettings *settings))block;
 {
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
 
   [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
     switch (settings.authorizationStatus) {
       case UNAuthorizationStatusAuthorized:
-      case UNAuthorizationStatusProvisional:
-        dispatch_async(dispatch_get_main_queue(), block);
+      case UNAuthorizationStatusProvisional: {
+        dispatch_async(dispatch_get_main_queue(), ^{ block(settings); });
         break;
+      }
 
       case UNAuthorizationStatusDenied:
         TNError(@"Notifications are turned off for this application.");
@@ -635,7 +668,11 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
             TNError(@"Grant it in System Settings > Notifications, then try again.");
             exit(TNExitNotAuthorized);
           }
-          dispatch_async(dispatch_get_main_queue(), block);
+          // Read the settings again after consent, including the app's Time
+          // Sensitive setting. Ordinary deliveries still need only one query.
+          [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *updated) {
+            dispatch_async(dispatch_get_main_queue(), ^{ block(updated); });
+          }];
         }];
         break;
       }
@@ -649,7 +686,7 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
                              options:(NSDictionary *)options
                                sound:(NSString *)sound;
 {
-  [self withAuthorization:^{
+  [self withAuthorization:^(UNNotificationSettings *settings) {
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
 
     UNMutableNotificationContent *content = [UNMutableNotificationContent new];
@@ -701,11 +738,11 @@ static NSString *TNPreviewsName(UNShowPreviewsSetting setting)
       content.categoryIdentifier = TNCategoryIdentifier;
     }
 
-    if (options[@"ignoreDnD"]) {
-      if (@available(macOS 12.0, *)) {
-        content.interruptionLevel = UNNotificationInterruptionLevelTimeSensitive;
-      }
-    }
+    UNNotificationSetting timeSensitive = UNNotificationSettingNotSupported;
+    if (@available(macOS 12.0, *)) timeSensitive = settings.timeSensitiveSetting;
+    NSString *warning = TNApplyTimeSensitive(content, [options[@"timeSensitive"] boolValue],
+                                            timeSensitive);
+    if (warning != nil) TNError(@"%@ Delivering a normal alert.", warning);
 
     if (options[@"contentImage"]) {
       NSURL *imageURL = [self localFileURLFromString:options[@"contentImage"]];

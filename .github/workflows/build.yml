@@ -79,7 +79,7 @@ jobs:
       # Ruby, and `make test` runs the gem specs too.
       - name: Run the doctor's automated checks
         run: |
-          make app
+          make app test-native
           tests/doctor.sh --unattended
 
       - name: make icon

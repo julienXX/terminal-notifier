@@ -132,13 +132,13 @@ banner="$("$BIN" -help 2>/dev/null)"
 missing=""
 for opt in -help -version -diagnose -message -remove -list -title -subtitle \
            -sound -group -activate -contentImage -open -execute -action \
-           -reply -timeout -ignoreDnD "-in DURATION" "-at TIME" -sender -appIcon; do
+           -reply -timeout -timeSensitive -ignoreDnD "-in DURATION" "-at TIME" -sender -appIcon; do
   case "$banner" in *"$opt"*) ;; *) missing="$missing $opt" ;; esac
 done
 if [ -z "$missing" ]; then
-  ok "the banner documents all 22 options"
+  ok "the banner documents all 23 options"
 else
-  bad "the banner documents all 22 options" "missing:$missing"
+  bad "the banner documents all 23 options" "missing:$missing"
 fi
 
 # =============================================================================
@@ -350,10 +350,13 @@ else
     *) bad "-appIcon warns and still delivers" "no warning on stderr" ;;
   esac
 
-  # -ignoreDnD is a documented no-op, but must not break delivery.
-  clear_all
-  "$BIN" -message 'doctor: dnd' -ignoreDnD >/dev/null 2>&1; sleep 1
-  is "-ignoreDnD still delivers" "$(notifications)" "1"
+  # Both spellings must deliver, even when the capability is unavailable and
+  # the request falls back to an ordinary alert. Focus behavior needs a person.
+  for option in -timeSensitive -ignoreDnD; do
+    clear_all
+    "$BIN" -message 'doctor: time sensitive' "$option" >/dev/null 2>&1; sleep 1
+    is "$option still delivers" "$(notifications)" "1"
+  done
 
   # -action / -reply timing out is fully automatable.
   clear_all

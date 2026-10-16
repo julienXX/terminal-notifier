@@ -215,6 +215,63 @@ notification without it.
 To change the notification's **icon** rather than attach an image, see
 [Custom icons](#custom-icons).
 
+#### `-timeSensitive`
+
+Request a Time Sensitive alert for something that needs attention now, such as
+an approval waiting for a security-key touch. Ordinary notifications keep the
+default interruption level; this is opt-in for each notification.
+
+```
+$ terminal-notifier -message 'Touch your security key to continue' -sound default -timeSensitive
+```
+
+On macOS 12 or later, a provisioned build can pass through Focus when the
+person enables **Allow Time Sensitive Notifications** for that Focus and
+allows Time Sensitive notifications for the app. It does **not** override
+mute or the person's notification settings. See
+[Apple's interruption levels](https://developer.apple.com/design/human-interface-guidelines/managing-notifications).
+
+If the OS is too old, the build lacks the capability, or the person disables
+it, terminal-notifier prints a warning and delivers an ordinary alert. A
+successful delivery does not prove the alert passed through Focus.
+`-diagnose` reports whether Time Sensitive notifications are enabled, disabled,
+or unsupported.
+
+`-ignoreDnD` remains a legacy spelling of this option. It uses the same public
+Time Sensitive API and respects the same settings; it does not unconditionally
+ignore Do Not Disturb.
+
+##### Building with the capability
+
+Time Sensitive notifications require the
+`com.apple.developer.usernotifications.time-sensitive` entitlement authorized
+by a provisioning profile. Apple's
+[macOS capability table](https://developer.apple.com/help/account/reference/supported-capabilities-macos/)
+lists support for Apple Developer Program and Developer ID provisioning, not
+the free developer account. An ad-hoc signature cannot carry this restricted
+entitlement: macOS refuses to launch such a build. The ordinary build therefore
+keeps its ad-hoc signature and does not embed the entitlement.
+
+For a provisioned build, supply your signing identity and matching profile:
+
+```
+$ make app SIGN_IDENTITY='Developer ID Application: YOUR IDENTITY' \
+    ENTITLEMENTS='Terminal Notifier/terminal-notifier.entitlements' \
+    PROVISIONING_PROFILE=/path/to/terminal-notifier.provisionprofile
+```
+
+The profile must authorize the bundle identifier, signing identity and Time
+Sensitive entitlement. Make embeds it as `Contents/embedded.provisionprofile`
+before signing. In Xcode, use a signed configuration with that same entitlement
+file, team and provisioning profile; the default project remains ad-hoc signed.
+Notarization and Gatekeeper distribution requirements still apply separately.
+Neither signing nor Homebrew can turn on the person's Focus or notification
+permissions. A Homebrew cask distributing a provisioned build must preserve
+its signature and embedded profile instead of ad-hoc re-signing it.
+
+Without a provisioned build, allow the app explicitly in each relevant Focus
+to receive ordinary alerts. `-timeSensitive` alone cannot enable the capability.
+
 #### `-group ID`
 
 Group notifications under `ID`. Only one notification per group is ever shown.
@@ -403,13 +460,6 @@ click.
 **Removed in 3.0.0.** macOS has no API to override a notification's icon. It
 always comes from the sending app's bundle. See [Custom icons](#custom-icons)
 for the way around this.
-
-#### `-ignoreDnD`
-
-**Effectively removed in 3.0.0.** It used to set a private flag. The public
-equivalent needs an entitlement Apple grants on request, which the released
-binary does not carry so this option is accepted but does nothing.
-
 
 ## Interactive notifications
 
@@ -611,7 +661,7 @@ It needs no notification permission and no person, so it is what CI runs.
 Version 3 rebuilds terminal-notifier on Apple's `UserNotifications` framework because
 the `NSUserNotification` API it used before was deprecated in macOS 11.
 Everyday use is unchanged `-message`, `-title`, `-group`, `-remove`, `-list` and the click actions all work the same
-way but three options could not be carried over and two behave differently.
+way, while some options now use different APIs or have platform restrictions.
 
 ### Removed
 
@@ -619,10 +669,11 @@ way but three options could not be carried over and two behave differently.
 |---|---|
 | `-sender` | Worked by swizzling terminal-notifier's bundle identifier at runtime. `UNUserNotificationCenter` reads the real signed identity so there is nothing to override.  |
 | `-appIcon` | Set a private, undocumented property. Notification content has no icon property at all in the public API, the icon always comes from the sending bundle. See [Custom icons](#custom-icons). |
-| `-ignoreDnD` | Set a private flag. The public equivalent (a time-sensitive interruption level) needs an entitlement Apple grants on request, which the released binary does not carry. |
+| `-ignoreDnD` | Now a legacy spelling of `-timeSensitive`. A provisioned build and user permission are required to pass through Focus. |
 
-All three are still **accepted** and print a warning, so existing scripts keep
-running rather than failing outright.
+All three are still **accepted**, so existing scripts keep running. `-sender`
+and `-appIcon` print a warning and are ignored. `-ignoreDnD` requests Time
+Sensitive delivery, with a warning and ordinary delivery when unavailable.
 
 ### Changed
 

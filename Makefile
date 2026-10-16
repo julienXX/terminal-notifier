@@ -31,6 +31,12 @@ RELEASE_BRANCH ?= master
 APPDIR    ?= /Applications
 PREFIX    ?= /usr/local
 
+# Restricted entitlements need an Apple-issued provisioning profile. Ordinary
+# ad-hoc builds must stay runnable without a developer account.
+SIGN_IDENTITY ?= -
+ENTITLEMENTS ?=
+PROVISIONING_PROFILE ?=
+
 ICON      ?=
 APP_NAME  ?=
 
@@ -42,6 +48,8 @@ help:
 	@echo
 	@echo 'Targets:'
 	@echo '  make app                       build $(APP)'
+	@echo '           [SIGN_IDENTITY=...] [ENTITLEMENTS=...] [PROVISIONING_PROFILE=...]'
+	@echo '                                 optional provisioned build (see Time Sensitive in README)'
 	@echo '  make install                   install to $(APPDIR) and link into $(PREFIX)/bin'
 	@echo '  make uninstall                 remove both'
 	@echo '  make icon ICON=path/to.png     build a copy with your own icon'
@@ -49,6 +57,7 @@ help:
 	@echo '  make doctor                    check every documented option works'
 	@echo '                                 (prompts you for the interactive ones)'
 	@echo '  make test                      every automated test'
+	@echo '  make test-native               content tests; no GUI or notification permission needed'
 	@echo '  make screenshots               regenerate the images in assets/'
 	@echo '  make release                   check, build and tag a release'
 	@echo '           [PUBLISH=1]           also push the tag, release and gem'
@@ -58,6 +67,10 @@ help:
 
 .PHONY: app
 app:
+	@if [ -n '$(ENTITLEMENTS)' ]; then \
+	  test '$(SIGN_IDENTITY)' != '-' && test -f '$(PROVISIONING_PROFILE)' \
+	    || { echo 'Restricted entitlements require SIGN_IDENTITY and PROVISIONING_PROFILE.'; exit 1; }; \
+	fi
 	@echo '==> building $(NAME) $(VERSION) (universal, macOS $(MIN_MACOS)+)'
 	@rm -rf '$(APP)'
 	@mkdir -p '$(APP)/Contents/MacOS' '$(APP)/Contents/Resources'
@@ -71,9 +84,14 @@ app:
 	@printf 'APPL????' > '$(APP)/Contents/PkgInfo'
 	@cp Terminal.icns '$(APP)/Contents/Resources/Terminal.icns'
 	@cp -R '$(SRC_DIR)/en.lproj' '$(APP)/Contents/Resources/'
-	@# Ad-hoc signature. A notification is attributed to a bundle identity, so
-	@# an unsigned bundle gets unreliable permissions on modern macOS.
-	@codesign --force --sign - '$(APP)'
+	@# Default to ad-hoc signing; a provisioned build embeds its profile first.
+	@# Notifications need a signed bundle identity on modern macOS.
+	@if [ -n '$(ENTITLEMENTS)' ]; then \
+	  cp '$(PROVISIONING_PROFILE)' '$(APP)/Contents/embedded.provisionprofile' && \
+	  codesign --force --sign '$(SIGN_IDENTITY)' --entitlements '$(ENTITLEMENTS)' '$(APP)'; \
+	else \
+	  codesign --force --sign '$(SIGN_IDENTITY)' '$(APP)'; \
+	fi
 	@echo '==> $(APP)'
 	@lipo -info '$(APP)/Contents/MacOS/$(NAME)' | sed 's/^/    /'
 
@@ -127,8 +145,14 @@ icon: app
 	echo "    bundle id  $(BUNDLE_ID).$$name"; \
 	echo "    it will ask for notification permission separately the first time"
 
+.PHONY: test-native
+test-native:
+	@mkdir -p '$(BUILD_DIR)'
+	@clang $(CFLAGS) $(FRAMEWORKS) -o '$(BUILD_DIR)/time-sensitive-tests' tests/time-sensitive.m
+	@'$(BUILD_DIR)/time-sensitive-tests'
+
 .PHONY: test
-test: app
+test: app test-native
 	@tests/doctor.sh --unattended
 	@echo
 	@echo '==> ruby specs'
